@@ -5294,13 +5294,18 @@ $(document).ready(function () {
       loadTemplateBody3(object_invoce);
   }
 
-  templateObject.generateInvoiceData = function (template_title,number) {
+  templateObject.generateInvoiceData = async function (template_title, number) {
       object_invoce = [];
       switch (template_title) {
 
-      case "Cheques":
-          showChequeData1(template_title, number, false);
-          break;
+          case "Cheques":
+              showChequeData1(template_title, number, false);
+              break;
+      }
+
+      let printSettings = await getPrintSettings(template_title, number);
+      for (key in printSettings) {
+          $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
       }
   };
 

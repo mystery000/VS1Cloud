@@ -980,29 +980,27 @@ convertDateFormatForPrint3 = function(pDate) {
 
 initTemplateHeaderFooter1 = function() {
   $("#templatePreviewModal #printcomment").text("");
-  $("#templatePreviewModal .o_abn_label").text("");
-  $("#templatePreviewModal .o_abn").text("");
   $("#templatePreviewModal .pdfCustomerAddress").empty();
-  $("#templatePreviewModal .employeeName").text("");
   $("#templatePreviewModal .print-header").text("");
   $("#templatePreviewModal .modal-title").text("");
-  $("#templatePreviewModal .print-header-value").text("");
   $("#templatePreviewModal .bankname").text("");
-  $("#templatePreviewModal .bankdesc").text("");
   $("#templatePreviewModal .ban").text("");
   $("#templatePreviewModal .bsb").text("");
   $("#templatePreviewModal .account_number").text("");
-  $("#templatePreviewModal .swift").text("");
-  $("#templatePreviewModal .dateNumber").text("");
-  $("#templatePreviewModal .companyInfo1").text("");
-  $("#templatePreviewModal .companyInfo2").text("");
-  $("#templatePreviewModal .companyInfo3").text("");
+  $("#templatePreviewModal .o_name").text("");
+  $("#templatePreviewModal .o_address").text("");
+  $("#templatePreviewModal .o_city").text("");
+  $("#templatePreviewModal .o_state").text("");
+  $("#templatePreviewModal .o_phone").text("");
+  $("#templatePreviewModal .o_email").text("");
+  $("#templatePreviewModal .o_abn_label").text("");
+  $("#templatePreviewModal .o_abn").text("");
   $("#templatePreviewModal .date").text("");
-  $("#templatePreviewModal .po").text("");
   $("#templatePreviewModal .io").text("");
   $("#templatePreviewModal .ro").text("");
+  $("#templatePreviewModal .po").text("");
+  $("#templatePreviewModal .amountdue").text("");
   $("#templatePreviewModal .due").text("");
-  $("#templatePreviewModal .div_header1_1").hide();
 }
 
 initTemplateHeaderFooter2 = function() {
@@ -1058,109 +1056,89 @@ initTemplateHeaderFooter3 = function() {
 }
 
 loadTemplateHeaderFooter1 = function(object_invoce) {
-  if (object_invoce.length > 0) {
-      let pcomment = object_invoce[0]["comment"];
-      if (pcomment != "" && pcomment != null && pcomment != undefined)
-        pcomment = pcomment.replace(/[\r\n]/g, "<br/>");
-      $("#templatePreviewModal #printcomment").text(pcomment);
-      $("#templatePreviewModal .o_abn_label").text("Company #");
-      if (LoggedCountry == "South Africa")
-          $("#templatePreviewModal .o_abn_label").text("VAT #");
-      if (LoggedCountry == "Australia")
-          $("#templatePreviewModal .o_abn_label").text("ABN");
-      let companyABN = object_invoce[0]["o_abn"];
-      if (companyABN != "")
-        $("#templatePreviewModal .o_abn").text(companyABN.substring(0, 2) + "-" + companyABN.substring(2, 5) + "-" + companyABN.substring(5, 8) + "-" + companyABN.substring(8, companyABN.length));
-      else
-        $("#templatePreviewModal .o_abn").text("");
+    if (object_invoce.length > 0) {
+        let pcomment = object_invoce[0]["comment"];
+        if (pcomment != "" && pcomment != null && pcomment != undefined)
+            pcomment = pcomment.replace(/[\r\n]/g, "<br/>");
+        $("#templatePreviewModal #printcomment").text(pcomment);
 
-      let txabillingAddress = object_invoce[0]["supplier_addr"];
-      if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
-          txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
-      $("#templatePreviewModal .pdfCustomerAddress").html(txabillingAddress);
-      $("#templatePreviewModal .employeeName").text(object_invoce[0]["employee_name"]);
-      if (object_invoce[0]["title"] == "Statement") {
-        $("#templatePreviewModal .dateLabel1").text("Statement Date:");
-        $("#templatePreviewModal .div_header1").hide();
-        $("#templatePreviewModal .div_header1_1").show();
-        $("#templatePreviewModal .div_cust_no").hide();
-      } else {
-        $("#templatePreviewModal .dateLabel1").text("Date:");
-        $("#templatePreviewModal .div_header1").show();
-        $("#templatePreviewModal .div_header1_1").hide();
-        $("#templatePreviewModal .div_cust_no").show();
-      }
+        $("#templatePreviewModal .pdfCustomerAddress").empty();
+        let txabillingAddress = object_invoce[0]["supplier_addr"];
+        if (txabillingAddress != "" && txabillingAddress != null && txabillingAddress != undefined)
+            txabillingAddress = txabillingAddress.replace(/[\r\n]/g, "<br/>");
+        $("#templatePreviewModal .pdfCustomerAddress").html(txabillingAddress);
+        $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
+        $("#templatePreviewModal .modal-title").text(object_invoce[0]["title"] + " " + " Template");
+        $("#templatePreviewModal .print-header-value").text(object_invoce[0]["value"]);
 
-      $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
-      $("#templatePreviewModal .modal-title").text(object_invoce[0]["title"] + " " + " Template");
-      $("#templatePreviewModal .print-header-value").text(object_invoce[0]["value"]);
-
-      $("#templatePreviewModal .bankname").text("Bank Name : " + localStorage.getItem("vs1companyBankName"));
-      $("#templatePreviewModal .bankdesc").text(localStorage.getItem("vs1companyBankDesc"));
-      $("#templatePreviewModal .ban").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
-
-      if (LoggedCountry == "Australia")
-        $("#templatePreviewModal .bsb").text("BSB (Branch Number) : " + object_invoce[0]["bsb"]);
-      if (LoggedCountry == "United States" || LoggedCountry == "United States of America")
-        $("#templatePreviewModal .bsb").text("Routing Number : " + object_invoce[0]["bsb"]);
-      if (LoggedCountry == "South Africa")
-        $("#templatePreviewModal .bsb").text("Branch Code : " + object_invoce[0]["bsb"]);
-      $("#templatePreviewModal .account_number").text("Account Number : " + object_invoce[0]["account"]);
-      $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-      let companyName = localStorage.getItem("vs1companyName");
-      let companyReg = localStorage.getItem("vs1companyReg");
-      if (companyReg != "") {
+        $("#templatePreviewModal .bankname").text("Bank Name : " + localStorage.getItem("vs1companyBankName"));
+        $("#templatePreviewModal .ban").text("Name : " + localStorage.getItem('vs1companyBankAccountName'));
         if (LoggedCountry == "Australia")
-          $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
-        else
-          $("#templatePreviewModal .companyInfo1").text(companyName + " - " + companyReg.substring(0, 3) + " " + companyReg.substring(3, 6) + " " + companyReg.substring(6, companyReg.length));
-      } else {
+            $("#templatePreviewModal .bsb").text("BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+        if (LoggedCountry == "United States" || LoggedCountry == "United States of America")
+            $("#templatePreviewModal .bsb").text("Routing Number : " + object_invoce[0]["bsb"]);
+        if (LoggedCountry == "South Africa")
+            $("#templatePreviewModal .bsb").text("Branch Code : " + object_invoce[0]["bsb"]);
+        $("#templatePreviewModal .account_number").text("ACC : " + object_invoce[0]["account"]);
+
+        let companyName = localStorage.getItem("vs1companyName");
+        let companyReg = localStorage.getItem("vs1companyReg");
+        let companyAddr = localStorage.getItem("vs1companyaddress1");
+        if (companyAddr == "")
+            companyAddr = localStorage.getItem("vs1companyaddress");
+        let companyCity = localStorage.getItem("vs1companyCity");
+        let companyState = localStorage.getItem("companyState");
+        let companyPostcode = localStorage.getItem("vs1companyPOBox");
+        let companyCountry = localStorage.getItem("vs1companyCountry");
+        let companyPhone = localStorage.getItem("vs1companyPhone");
+
+        $("#templatePreviewModal .o_name").text(companyName);
+        $("#templatePreviewModal .o_address").text(companyAddr);
+        $("#templatePreviewModal .o_city").text(companyCity);
+        $("#templatePreviewModal .o_state").text(companyState + " " + companyPostcode);
+        if (companyPhone != "") {
+            $("#templatePreviewModal .o_phone").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
+        } else if (object_invoce[0]["o_phone"]) {
+            $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
+        }
+
+        if (object_invoce[0]["title"] == "Customer Payment") {
+            $("#templatePreviewModal .o_email").text(object_invoce[0]["supplier_name"]);
+        } else {
+            $("#templatePreviewModal .o_email").text(localStorage.getItem("VS1Accountant"));
+        }
+
+        $("#templatePreviewModal .o_abn_label").text("Company #");
+        if (LoggedCountry == "South Africa")
+            $("#templatePreviewModal .o_abn_label").text("VAT #");
         if (LoggedCountry == "Australia")
-          $("#templatePreviewModal .companyInfo1").text(companyName + " - ACN ");
+            $("#templatePreviewModal .o_abn_label").text("ABN");
+
+        let companyABN = object_invoce[0]["o_abn"];
+        if (companyABN != "")
+            $("#templatePreviewModal .o_abn").text(companyABN.substring(0, 2) + " " + companyABN.substring(2, 5) + " " + companyABN.substring(5, 8) + " " + companyABN.substring(8, companyABN.length));
         else
-          $("#templatePreviewModal .companyInfo1").text(companyName);
-      }
-      let companyAddr = localStorage.getItem("vs1companyaddress1");
-      if (companyAddr == "")
-          companyAddr = localStorage.getItem("vs1companyaddress2");
-      let companyCity = localStorage.getItem("vs1companyCity");
-      let companyState = localStorage.getItem("companyState");
-      let companyPostcode = localStorage.getItem("vs1companyPOBox");
-      let companyCountry = localStorage.getItem("vs1companyCountry");
-      $("#templatePreviewModal .companyInfo2").text(companyAddr + ", " + companyCity + ", " + companyState + " " + companyPostcode + ", " + companyCountry);
-      let companyPhone = localStorage.getItem("vs1companyPhone");
-      if (companyPhone != "")
-          $("#templatePreviewModal .companyInfo3").text("Ph: " + companyPhone.substring(0, 2) + " " + companyPhone.substring(2, 6) + " " + companyPhone.substring(6, companyPhone.length));
+            $("#templatePreviewModal .o_abn").text("");
 
-      if (object_invoce[0]["date"] != "" && object_invoce[0]["date"] != undefined)
-          $("#templatePreviewModal .date").text(convertDateFormatForPrint(object_invoce[0]["date"]));
-      $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-      $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
-      $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != undefined)
-        $("#templatePreviewModal .due").text(convertDateFormatForPrint(object_invoce[0]["duedate"]));
-      else
-        $("#templatePreviewModal .due").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+        if (object_invoce[0]["date"] != "" && object_invoce[0]["date"] != undefined)
+            $("#templatePreviewModal .date").text(convertDateFormatForPrint2(object_invoce[0]["date"]));
 
-      if (object_invoce[0]["title"] == "Customer Payment") {
-        $("#templatePreviewModal .field_payment").hide();
-        $("#templatePreviewModal .field_amount").hide();
-        $("#templatePreviewModal .div_cust_no").hide();
-      } else {
-        $("#templatePreviewModal .field_payment").show();
-        $("#templatePreviewModal .field_amount").show();
-        $("#templatePreviewModal .div_cust_no").show();
-      }
-      //   table header
-      var tbl_header = $("#templatePreviewModal .tbl_header");
-      tbl_header.empty();
-      for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
-          tbl_header.append(
-          "<th class=" + key + " style='width: " + value[0] + "%; color: rgb(0 0 0); text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
-          );
-      }
-  }
+        $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
+        $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
+        $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
+        $("#templatePreviewModal .amountdue").text(object_invoce[0]["bal_due"]);
+        if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != undefined)
+            $("#templatePreviewModal .due").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
+
+        //   table header
+        var tbl_header = $("#templatePreviewModal .tbl_header");
+        tbl_header.empty();
+        for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+            tbl_header.append(
+                "<th class=" + key + " style='width: " + value[0] + "%; color: #000000; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
+            );
+        }
+    }
 }
 
 loadTemplateHeaderFooter2 = function(object_invoce) {
@@ -1204,8 +1182,11 @@ loadTemplateHeaderFooter2 = function(object_invoce) {
       $("#templatePreviewModal .o_address2").text(companyAddr);
       $("#templatePreviewModal .o_city2").text(companyCity);
       $("#templatePreviewModal .o_state2").text(companyState + " " + companyPostcode);
-      if (companyPhone != "")
+      if (companyPhone != "") {
           $("#templatePreviewModal .o_phone2").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
+      } else if (object_invoce[0]["o_phone"]) {
+          $("#templatePreviewModal .o_phone2").text(object_invoce[0]["o_phone"]);
+      }
 
       if (object_invoce[0]["title"] == "Statement") {
         $("#templatePreviewModal .p_header2").hide();
@@ -1311,8 +1292,11 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       $("#templatePreviewModal .o_address3").text(companyAddr);
       $("#templatePreviewModal .o_city3").text(companyCity + ", " + companyState);
       $("#templatePreviewModal .o_state3").text(companyPostcode + ", " + LoggedCountry);
-      if (companyPhone != "")
+      if (companyPhone != "") {
           $("#templatePreviewModal .o_phone3").text(companyPhone.substring(0, 4) + " " + companyPhone.substring(4, 7) + " " + companyPhone.substring(7, companyPhone.length));
+      } else if (object_invoce[0]["o_phone"]) {
+          $("#templatePreviewModal .o_phone3").text(object_invoce[0]["o_phone"]);
+      }
       $("#templatePreviewModal .o_email3").text(localStorage.getItem("VS1Accountant"));
       $("#templatePreviewModal .o_url3").text(companyURL);
 
@@ -1350,6 +1334,308 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       }
   }
 }
+
+var getPrintGridSettings = function() {
+    return {
+        "Bill": {
+            "Account_Name": ["30", "left", true],
+            "Description": ["40", "left", true],
+            "Tax": ["15", "right", true],
+            "Amount": ["15", "right", true],
+        },
+        "Credit": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            Trans: ["10", "right", true],
+            Original: ["15", "right", true],
+            Due: ["15", "right", true],
+            Paid: ["15", "right", true],
+            Outstanding: ["15", "right", true],
+        },
+        "Customer Payment": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            Trans: ["10", "right", true],
+            Original: ["15", "right", true],
+            Due: ["15", "right", true],
+            Paid: ["15", "right", true],
+            Outstanding: ["15", "right", true],
+        },
+        "Customer Statement": {
+            ID: ["10", "left", true],
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            "Due_Date": ["15", "left", true],
+            Total: ["15", "right", true],
+            Paid: ["15", "right", true],
+            Balance: ["15", "right", true],
+        },
+        "Invoice": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
+        },
+        "Invoice Back Order": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
+        },
+        "Purchase Order": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
+        },
+        "Quote": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
+        },
+        "Refund": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
+        },
+        "Sales Order": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
+        },
+        "Supplier Payment": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            No: ["10", "left", true],
+            Amount: ["15", "left", true],
+            Due: ["15", "left", true],
+            Paid: ["15", "left", true],
+            Outstanding: ["15", "left", true],
+        },
+        "Statement": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            No: ["10", "left", true],
+            Amount: ["15", "left", true],
+            Due: ["15", "left", true],
+            Paid: ["15", "left", true],
+            Outstanding: ["15", "left", true],
+        },
+        "Delivery Docket": {
+            "Product_Name": ["30", "left", true],
+            Description: ["30", "left", true],
+            "Bin_Location": ["20", "left", false],
+            Qty: ["20", "left", true],
+        },
+        "Journal Entry": {
+            "Account_Name": ["30", "left", true],
+            Description: ["40", "left", true],
+            "Credit_Ex": ["15", "left", true],
+            "Debit_Ex": ["15", "left", true],
+        },
+        "Deposit": {
+            "From_Account": ["20", "left", true],
+            "Payment_Method": ["20", "left", true],
+            "Reference_No": ["20", "left", true],
+            "Received_From": ["25", "left", true],
+            Amount: ["15", "left"],
+        },
+        "Cheque": {
+            "Account_Name": ["30", "left", true],
+            Description: ["40", "left", true],
+            Tax: ["15", "left", true],
+            Amount: ["15", "left", true],
+        },
+        "Stock Transfer": {
+            "Product_Name": ["30", "left", true],
+            Description: ["30", "left", true],
+            "Bin_Location": ["20", "left", false],
+            Qty: ["20", "left", true],
+        },
+        "Stock Adjustment": {
+            "Product_Name": ["30", "left", true],
+            Description: ["30", "left", true],
+            "Bin_Location": ["20", "left", false],
+            Qty: ["20", "left", true],
+        },
+    };
+}
+getPrintMainSettings = function () {
+    return {
+        "1": {
+            "LOGO": ['', 'left', true],
+            "ABN": ['', 'left', true],
+            "HEADER_TITLE": ['', 'left', true],
+            "NO": ['', 'left', true],
+            "CUSTOMER_ADDRESS": ['', 'left', true],
+            "COMPANY_NAME": ['', 'left', true],
+            "COMPANY_ADDRESS": ['', 'left', true],
+            "COMPANY_CITY": ['', 'left', true],
+            "COMPANY_PHONE": ['', 'left', true],
+            "COMPANY_EMAIL": ['', 'left', true],
+            "COMPANY_STATE": ['', 'left', true],
+            "BARCODE": ['', 'left', true],
+            "INVOICE_NUMBER": ['', 'left', true],
+            "REFERENCE": ['', 'left', true],
+            "ACCOUNT_NUMBER": ['', 'left', true],
+            "AMOUNT_DUE": ['', 'left', true],
+            "DUE_DATE": ['', 'left', true],
+            "COMMENT": ['', 'left', true],
+            "ACCOUNT_NAME": ['', 'left', true],
+            "BANK_NAME": ['', 'left', true],
+            "BSB": ['', 'left', true],
+            "ACC": ['', 'left', true],
+            "SUB_TOTAL": ['', 'left', true],
+            "TOTAL_TAX": ['', 'left', true],
+            "GST": ['', 'left', true],
+            "BALANCE": ['', 'left', true],
+        },
+        "2": {
+            "LOGO2": ['', 'left', true],
+            "ABN2": ['', 'left', true],
+            "HEADER_TITLE2": ['', 'left', true],
+            "CUSTOMER_ADDRESS2": ['', 'left', true],
+            "COMPANY_NAME2": ['', 'left', true],
+            "COMPANY_ADDRESS2": ['', 'left', true],
+            "COMPANY_CITY2": ['', 'left', true],
+            "COMPANY_PHONE2": ['', 'left', true],
+            "COMPANY_EMAIL2": ['', 'left', true],
+            "COMPANY_STATE2": ['', 'left', true],
+            "BARCODE2": ['', 'left', true],
+            "INVOICE_DATE2": ['', 'left', true],
+            "INVOICE_NUMBER2": ['', 'left', true],
+            "REFERENCE2": ['', 'left', true],
+            "AMOUNT_DUE2": ['', 'left', true],
+            "COMMENT2": ['', 'left', true],
+            "ACCOUNT_NAME2": ['', 'left', true],
+            "BANK_NAME2": ['', 'left', true],
+            "BSB2": ['', 'left', true],
+            "ACC2": ['', 'left', true],
+            "SUB_TOTAL2": ['', 'left', true],
+            "TOTAL_AUD2": ['', 'left', true],
+            "PAID_AMOUNT2": ['', 'left', true],
+            "AMOUNT_DUE_AUD2": ['', 'left', true],
+        },
+        "3": {
+            "LOGO3": ['', 'left', true],
+            "ABN3": ['', 'left', true],
+            "HEADER_TITLE3": ['', 'left', true],
+            "BARCODE3": ['', 'left', true],
+            "BILL_TO2": ['', 'left', true],
+            "BILL_DATE3": ['', 'left', true],
+            "CUSTOMER_ADDRESS3": ['', 'left', true],
+            "INVOICE_NUMBER3": ['', 'left', true],
+            "REFERENCE3": ['', 'left', true],
+            "ACCOUNT_NUMBER3": ['', 'left', true],
+            "AMOUNT_DUE3": ['', 'left', true],
+            "DUE_DATE3": ['', 'left', true],
+            "PAYMENT_DETAILS3": ['', 'left', true],
+            "ACCOUNT_NAME3": ['', 'left', true],
+            "BANK_NAME3": ['', 'left', true],
+            "SORT_CODE3": ['', 'left', true],
+            "ACC3": ['', 'left', true],
+            "ACCOUNT_DETAIL3": ['', 'left', true],
+            "PAYMENT_TERMS3": ['', 'left', true],
+            "SUB_TOTAL3": ['', 'left', true],
+            "BOTTOM_LOGO3": ['', 'left', true],
+            "COMPANY_NAME3": ['', 'left', true],
+            "COMPANY_ADDRESS3": ['', 'left', true],
+            "COMPANY_CITY3": ['', 'left', true],
+            "COMPANY_STATE3": ['', 'left', true],
+            "COMPANY_PHONE3": ['', 'left', true],
+            "COMPANY_EMAIL3": ['', 'left', true],
+            "COMPANY_URL3": ['', 'left', true],
+        }
+    };
+};
+
+getPrintSettings = async function (type, template) {
+    if (type.lastIndexOf('s') == type.length -1 ) {
+        type = type.slice(0, -1);
+    }
+    let settings = await getVS1Data('PrintDisplaySettings');
+    if (settings.length > 0) {
+        let parsedData = JSON.parse(settings[0].data);
+        if (parsedData[type]) {
+            return parsedData[type][template];
+        }
+    }
+
+    let gridSettings = getPrintGridSettings();
+    if (!gridSettings[type]) {
+        return null;
+    }
+
+    let printSettings = getPrintMainSettings()[template];
+    if (!printSettings) {
+        printSettings = {};
+    }
+
+    for (key in gridSettings[type]) {
+        printSettings[key] = [];
+        printSettings[key] = gridSettings[type][key];
+    }
+
+    return printSettings;
+};
+
+setPrintSettings = async function (type, template, newSettings) {
+    if (type.lastIndexOf('s') == type.length -1 ) {
+        type = type.slice(0, -1);
+    }
+    let printSettings = await getVS1Data('PrintDisplaySettings');
+    if (printSettings.length > 0) {
+        let parsedData = JSON.parse(printSettings[0].data);
+        for (let key in newSettings) {
+            parsedData[type][template][key] = newSettings[key];
+        }
+        await addVS1Data('PrintDisplaySettings', JSON.stringify(parsedData));
+    } else {
+        let types = ['Bill', 'Credit', 'Customer Payment', 'Customer Statement', 'Invoice', 'Invoice Back Order', 'Purchase Order', 'Quote', 'Refund',
+            'Sales Order', 'Supplier Payment', 'Statement', 'Delivery Docket', 'Journal Entry', 'Deposit', 'Cheque', 'Stock Transfer', 'Stock Adjustment'];
+
+        printSettings = {}
+        for (let i = 0; i < types.length; i++) {
+            let templates = {'1': {}, '2': {}, '3': {}};
+            printSettings[types[i]] = Object.assign({}, templates);
+            let printMainSettings = getPrintMainSettings();
+            for (templateKey in printMainSettings) {
+                if (type == types[i] && template == templateKey) {
+                    for (key in newSettings) {
+                        printSettings[type][template][key] = newSettings[key];
+                    }
+                } else {
+                    let values = printMainSettings[templateKey];
+                    for (innerKey in values) {
+                        printSettings[types[i]][templateKey][innerKey] = values[innerKey];
+                    }
+                }
+            }
+        }
+        await addVS1Data('PrintDisplaySettings', JSON.stringify(printSettings));
+    }
+};
 
 validateEmail = (email) => {
   return String(email)
