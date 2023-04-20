@@ -828,7 +828,7 @@ Template.stockadjustmentcard.onRendered(() => {
     }
 
     /* On clik Inventory Line */
-    $(document).on("click", "#tblInventory tbody tr", function (e) {
+    $(document).on("click", ".tblInventory tbody tr", function (e) {
         let selectLineID = $('#selectLineID').val();
 
         var table = $(this);
@@ -838,11 +838,11 @@ Template.stockadjustmentcard.onRendered(() => {
         if (selectLineID) {
             // $(event.target).closest('tr').attr('id');
             let lineProductID = table.closest('tr').attr('id');
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
-            let lineUnitPrice = table.find(".salePrice").text();
-            let lineTaxRate = table.find(".taxrate").text();
-            let lineProdCost = table.find(".costPrice").text();
+            let lineProductName = table.find(".colproductName").text();
+            let lineProductDesc = table.find(".colproductDesc").text();
+            let lineUnitPrice = table.find(".colsalePrice").text();
+            let lineTaxRate = table.find(".coltaxrate").text();
+            let lineProdCost = table.find(".colcostPrice").text();
             let lineBarcode = table.find(".colBarcode").text();
             let lineAmount = 0;
             let subGrandTotal = 0;
@@ -1371,7 +1371,7 @@ Template.stockadjustmentcard.onRendered(() => {
 
     });
 
-    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+    $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
         //$(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         var table = $(this);
@@ -1804,7 +1804,7 @@ Template.stockadjustmentcard.events({
                 $('#tblInventory_filter .form-control-sm').val('');
                 $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                var datatable = $('#tblInventory').DataTable();
+                var datatable = $('.tblInventory').DataTable();
                 datatable.draw();
                 $('#tblInventory_filter .form-control-sm').trigger("input");
 
@@ -2087,7 +2087,7 @@ Template.stockadjustmentcard.events({
                     $('#tblInventory_filter .form-control-sm').val('');
                     $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                    var datatable = $('#tblInventory').DataTable();
+                    var datatable = $('.tblInventory').DataTable();
                     datatable.draw();
                     $('#tblInventory_filter .form-control-sm').trigger("input");
 

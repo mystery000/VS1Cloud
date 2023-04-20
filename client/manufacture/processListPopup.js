@@ -5,7 +5,9 @@ import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
 import './processListPopup.html';
 import { ManufacturingService } from './manufacturing-service';
+import { UtilityService } from "../utility-service";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+let utilityService = new UtilityService();
 
 Template.processlistpopup.onCreated(function (e) {
   const templateObject = Template.instance();
@@ -25,13 +27,13 @@ Template.processlistpopup.onCreated(function (e) {
       data.fields.KeyValue || "",
       data.fields.Description || "",
       data.fields.DailyHours || "",
-      Currency + data.fields.HourlyLabourCost || 0,
+      utilityService.modifynegativeCurrencyFormat(data.fields.HourlyLabourCost) || 0.0,
       data.fields.COGS || "",
       data.fields.ExpenseAccount || "",
-      Currency + data.fields.OHourlyCost || 0,
+      utilityService.modifynegativeCurrencyFormat(data.fields.OHourlyCost) || 0.0,
       data.fields.OCOGS || "",
       data.fields.OExpense || "",
-      Currency + data.fields.TotalHourlyCost || 0,
+      utilityService.modifynegativeCurrencyFormat(data.fields.TotalHourlyCost) || 0.0,
       data.fields.Wastage || "",
       linestatus
     ];
@@ -40,7 +42,7 @@ Template.processlistpopup.onCreated(function (e) {
   };
 
   let headerStructure = [
-    {
+     {
       index: 0,
       label: "ID",
       class: "colProcessId",
@@ -54,7 +56,7 @@ Template.processlistpopup.onCreated(function (e) {
       class: "colName",
       active: true,
       display: true,
-      width: "100",
+      width: "200",
     },
     {
       index: 2,
@@ -62,7 +64,7 @@ Template.processlistpopup.onCreated(function (e) {
       class: "colDescription",
       active: true,
       display: true,
-      width: "200",
+      width: "300",
     },
     {
       index: 3,
@@ -78,7 +80,7 @@ Template.processlistpopup.onCreated(function (e) {
       class: "colHourlyLabourCost",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 5,
@@ -92,7 +94,7 @@ Template.processlistpopup.onCreated(function (e) {
       index: 6,
       label: "Expense Account",
       class: "colExpense",
-      active: true,
+      active: false,
       display: true,
       width: "200",
     },
@@ -102,7 +104,7 @@ Template.processlistpopup.onCreated(function (e) {
       class: "colHourlyOverheadCost",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 8,
@@ -118,7 +120,7 @@ Template.processlistpopup.onCreated(function (e) {
       class: "colOverExpense",
       active: true,
       display: true,
-      width: "120",
+      width: "200",
     },
     {
       index: 10,
@@ -126,18 +128,18 @@ Template.processlistpopup.onCreated(function (e) {
       class: "colTotalHourlyCosts",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 11,
       label: "Inventory Asset Wastage",
       class: "colWastage",
-      active: true,
+      active: false,
       display: true,
       width: "200",
     },
     {
-      index: 11,
+      index: 12,
       label: "Status",
       class: "colStatus",
       active: true,
@@ -534,6 +536,10 @@ Template.processlistpopup.helpers({
   apiParams: () => {
     return ["limitCount", "limitFrom", "deleteFilter"];
   },
+  talbename : () => {
+    let templateObject = Template.instance();
+    return 'tblProcessList' + templateObject.data.custid;
+  }
 });
 
 Template.processlistpopup.events({
@@ -541,8 +547,8 @@ Template.processlistpopup.events({
     $("#processListModal").modal("toggle");
     $("#newProcessModal").modal("toggle");
   },
-  "click #tblProcessList tbody tr": function (e) {
-    var listData = $(e.target).closest("tr").find(".colProcessId").text();
-    FlowRouter.go("/processcard?id=" + listData);
-  },
+  // "click #tblProcessList tbody tr": function (e) {
+  //   var listData = $(e.target).closest("tr").attr('id');
+  //   FlowRouter.go("/processcard?id=" + listData);
+  // },
 });

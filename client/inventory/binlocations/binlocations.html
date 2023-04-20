@@ -55,8 +55,24 @@
                                 <div class="modal-body" style="background-color: #ededed;">
                                     <div class="row no-gutters">
                                         <div class="col-12 d-xl-flex align-items-xl-end">
-                                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department</label>
-                                                {{> vs1_dropdown id='sltDepartmentList' name='sltDepartmentList' type='search' classes='es-input'}}
+                                            <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                <!-- {{> vs1_dropdown id='sltDepartmentList' name='sltDepartmentList' type='search' classes='es-input'}} -->
+                                                {{> vs1___dropdown
+                                                    type='search'
+                                                    id='sltDepartmentList'
+                                                    name='sltDepartmentList'
+                                                    modalId= 'myModalDepartment'
+                                                    list_template_name='departmentModal'
+                                                    innerModal=true
+                                                    modal_title='Departments'
+                                                    label = 'Departments'
+                                                    colNameForValue = 'colName'
+                                                    target_modal_id= 'newDepartmentModal'
+                                                    target_template_id='newdepartmentpop'
+                                                    is_editable=true
+                                                    noBorder=false
+                                                    data="Default"
+                                            }}
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +212,7 @@
                         datahandler = datahandler
                         service=service
                         lowercaseDataName='tproductbin'
-                        exIndexDBName = 'tproductbinex'
+                        exIndexDBName = 'tproductbin'
                         exdatahandler = exDataHandler
                         searchAPI = searchAPI
                         orderby = '[[ 1, "asc" ]]'
@@ -265,7 +281,10 @@
         </div>
     </div>
     <!-- End Edit Bin Modal -->
-    {{> departmentModal}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        {{> departmentModal}}
+    </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
         {{> newdepartmentpop}}
     </div>

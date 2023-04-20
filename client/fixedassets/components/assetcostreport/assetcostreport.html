@@ -72,11 +72,31 @@
             </div>
   
             <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-              {{> export_import_print_display_button tablename="tblAssetCostReportList"}}
+              {{> export_import_print_display_button Import="hiddenColumn" tablename="tblAssetCostReportList"}}
+              {{> import_template importformName="Asset Cost Report"}}
             </div>
           </div>
           <div class="card-body">
-            {{> non_transactional_list tablename = "tblAssetCostReportList"}}
+            <style>
+              
+            </style>
+            {{>datatablelist
+              tableclass="tblAssetCostReportList"
+              tablename="tblAssetCostReportList"
+              apiName= apiFunction
+              indexeddbname = 'TCostTypes'
+              tableheaderrecords = tableheaderrecords
+              exportfilename = 'Asset Cost List'
+              istransaction = false
+              apiParams= apiParams
+              datahandler = datahandler
+              service=service
+              lowercaseDataName='tcosttypes'
+              exIndexDBName = 'tcosttypes'
+              exdatahandler = exDataHandler
+              searchAPI = searchAPI
+      }}
+            <!-- {{> non_transactional_list tablename = "tblAssetCostReportList"}} -->
           </div>
         </div>
       </div>
