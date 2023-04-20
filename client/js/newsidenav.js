@@ -232,26 +232,27 @@ Template.newsidenav.onRendered(function () {
   } else {
     templateObject.isSNTrackChecked.set(false);
   }
-  
+
   if(JSON.parse(isClockOnOff)) {
-    isAccounts = false;
-    isAppointmentScheduling = false;
-    isBanking = false;
-    isContacts = false;
-    isCRM = false;
-    isDashboard = false;
-    isFixedAssets = false;
-    isInventory = false;
-    isManufacturing = false;
-    isPayments = false;
-    isPurchases = false;  
-    isExpenseClaims = false;
-    isReports =false;
-    isSales = false;
-    isShipping = false;
-    isTimesheetEntry = false;
-    isPayroll = false;  
-    isSettings = false;      
+    /* Explain this code to Rasheed */
+    // isAccounts = false;
+    // isAppointmentScheduling = false;
+    // isBanking = false;
+    // isContacts = false;
+    // isCRM = false;
+    // isDashboard = false;
+    // isFixedAssets = false;
+    // isInventory = false;
+    // isManufacturing = false;
+    // isPayments = false;
+    // isPurchases = false;
+    // isExpenseClaims = false;
+    // isReports =false;
+    // isSales = false;
+    // isShipping = false;
+    // isTimesheetEntry = false;
+    // isPayroll = false;
+    // isSettings = false;
   }
 
   function MyPopper(button, popper) {
@@ -3087,11 +3088,11 @@ Template.newsidenav.events({
       FlowRouter.go('/clockonoff');
     } else {
       FlowRouter.go('/payrolloverview?modalId=clockonoff');
-    }    
+    }
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
-  
+
   'click #sidenavseedtosale': function (event) {
     $('.accountsLi').addClass('opacityNotActive');
     $('.appointmentsLi').addClass('opacityNotActive');
@@ -4059,7 +4060,7 @@ Template.newsidenav.helpers({
     return Template.instance().includeClockOnOff.get();
   },
 
-  
+
   checkFXCurrency: () => {
     return localStorage.getItem('CloudUseForeignLicence');
   },
