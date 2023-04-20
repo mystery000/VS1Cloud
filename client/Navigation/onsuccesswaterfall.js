@@ -374,6 +374,26 @@ Template.onsuccesswaterfall.onRendered(function () {
         }
       });
     });
+
+    // Alex: add for print templates {
+    getVS1Data("TTemplateSettings")
+        .then(function (dataObject) {
+          console.log('as');
+          if (dataObject.length == 0) {
+            sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                })
+                .catch(function (err) {
+                });
+          }
+        })
+        .catch(function (err) {
+          console.log("Getting TemplateSettings failed", err);
+        });
+    // @}
+
   let currentDate = new Date();
   let hours = currentDate.getHours();
   let minutes = currentDate.getMinutes();
@@ -5168,7 +5188,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                       $('.headerprogressbar').addClass('headerprogressbarShow');
                       $('.headerprogressbar').removeClass('headerprogressbarHidden');
                     }
-
+                    
                   } else if (Math.round(progressPercentage) >= 100) {
                     $('.checkmarkwrapper').removeClass("hide");
                     templateObject.dashboardRedirectOnLogin();

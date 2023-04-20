@@ -1,119 +1,148 @@
 <template name="preview_header2">
     <style>
-        .template-preview-header2 {
-            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-            font-family: Calibri, sans-serif !important;
-            width: 90%;
-            margin: 20px auto 0px;
+        .logo-wrap2 {
+            position: absolute !important;
+            left: 20px;
+            top: 10px;
         }
-        .label-p {
-            font-family: Calibri, sans-serif !important;
-            line-height: 1em;
-            margin-bottom: 0px;
+        .logo-wrap2 img {
+            width: 200px;
+            height: 50px;
         }
-        .label-p2 {
-            font-family: Calibri, sans-serif !important;
-            line-height: 1em;
-            margin-bottom: 10px;
+        .barcode-wrap2 {
+            position: absolute !important;
+            right: 20px;
+            top: 10px;
         }
-        .print-header2 {
-            font-family: Calibri, sans-serif !important;
-            font-size: 36px !important;
-            padding-right: 5px;
-            text-align: center;
-            font-weight: bold;
+        .print-header2_wrap {
+            top: 70px;
+            font-size: 28px;
         }
-        .o_abn_label2 {
-            font-family: Calibri, sans-serif !important;
-            text-align: right;
+        .o_name2_wrap {
+            left: 20px;
+            top: 130px;
         }
-        .pdfCustomerAddress2 {
-            font-family: Calibri, sans-serif !important;
-            font-size: 18px;
-            padding: 0px;
-            min-height: 160px;
-            width: 100%;
-            margin-bottom: 0px;
-            color: rgb(0 0 0);
-            line-height: 1.2rem;
+        .o_address2_wrap {
+            left: 20px;
+            top: 150px;
+        }
+        .o_city2_wrap {
+            left: 20px;
+            top: 170px;
+        }
+        .o_phone2_wrap {
+            left: 20px;
+            top: 190px;
+        }
+        .o_email2_wrap {
+            left: 20px;
+            top: 210px;
+        }
+        .o_state2_wrap {
+            left: 20px;
+            top: 230px;
+        }
+        .o_abn_label2_wrap {
+            left: 20px;
+            top: 250px;
+        }
+        .o_abn2_wrap {
+            left: 60px;
+            top: 250px;
+        }
+        .center-item {
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: fit-content;
+        }
+        .date2_label_wrap {
+            top: 130px;
+        }
+        .date2_wrap {
+            top: 150px;
+        }
+        .io2_label_wrap {
+            top: 170px;
+        }
+        .io2_wrap {
+            top: 190px;
+        }
+        .ro2_label_wrap {
+            top: 210px;
+        }
+        .ro2_wrap {
+            top: 230px;
+        }
+        .due2_label_wrap {
+            top: 250px;
+        }
+        .due2_wrap {
+            top: 270px;
+        }
+        .pdfCustomerAddress2_wrap {
+            left: 530px;
+            top: 170px;
+        }
+        .pay_now-wrap2 {
+            position: absolute;
+            left: 550px;
+            top: 130px;
+            width: 80px;
+            height: 30px;
+            background-color: #17a673;
+            border-color: #169b6b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .linkText {
+            color: white;
+            text-decoration: none;
         }
     </style>
-    <div class="template-preview-header2">
-        <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-bottom: 0px;">
-            <div class="col-4 col-md-4 col-sm-12">
-                
-            </div>
-            <div class="col-4 col-md-4 col-sm-12">
-                
-            </div>
-            <div class="col-4 col-md-4 col-sm-12">
-                <div style="width: 100%; text-align: right; z-index: 100;" class="draggable"><svg id="lbl_barcode2"></svg></div>
-                <script>
-                    JsBarcode(
-                        "#lbl_barcode2", 
-                        "BI-751", 
-                        {
-                            width: 2,
-                            height: 50,
-                            margin: 0,
-                            displayValue: false
-                        }
-                    );
-                </script>
-            </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex">
-            <div class="col-6 col-md-6 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center; z-index: 0;">
-                <div style="width: 100%"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <img src="assets/img/VS1.png" class="uploadedImage draggable" style="width: 50%; margin-bottom: 0px;">
-                </div>
-            </div>
-            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly; z-index: 0;">
-                <p class="label-p print-header2 draggable" style="font-size: 36px !important;"></p>
-            </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="margin: 10px 0px 0px;">
-            <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px;">
-                <div style="width: 100%; border: none !important; font-size: 18px;">
-                    <p class="label-p">
-                        <span class="o_name2 draggable"></span><br>
-                        <span class="o_address2 draggable"></span><br>
-                        <span class="o_city2 draggable"></span><br>
-                        <span class="o_phone2 draggable"></span><br>
-                        <span class="o_email2 draggable"></span><br>
-                        <span class="o_state2 draggable"></span><br>
-                    </p>
-                    <p class="label-p2">
-                        <span class="o_abn_label2 draggable"></span>&nbsp;&nbsp;
-                        <span class="o_abn2 draggable" style="left: 50px"></span>
-                    </p>
-                </div>
-            </div>
-            <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
-                <div style="width: 100%; border: none !important; font-size: 18px; min-height: 180px;">
-                    <p class="label-p2 InvoiceDate">
-                        <span style="font-weight: bold;" class="draggable">Invoice Date</span><br>
-                        <span class="date2 draggable" style="top: 25px;"></span>
-                    </p>
-                    <p class="label-p2 InvoiceNumber">
-                        <span style="font-weight: bold; top: 42px;" class="draggable">Invoice Number</span><br>
-                        <span class="io2 draggable" style="top: 65px;"></span>
-                    </p>
-                    <p class="label-p2 Reference">
-                        <span style="font-weight: bold; top: 85px;" class="draggable">Reference</span><br>
-                        <span class="ro2 draggable" style="top: 105px;"></span>
-                    </p>
-                    <p class="label-p2 Due">
-                        <span style="font-weight: bold; top: 125px;" class="draggable">Due Date</span><br>
-                        <span class="due2 draggable" style="top: 140px;"></span>
-                    </p>
-                </div>
-            </div>
-            <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
-                <div style="width: 100%; border: none !important;">
-                    <p class="pdfCustomerAddress2 draggable"></p>
-                </div>
-            </div>
-        </div>
-    </div>                       
+    <!-- header -->
+    <div class="LOGO2 logo-wrap2 divDraggable">
+        <img src="http://vs1cloud.com/images/VS1logo.png" class="divResize uploadedImage">
+    </div>
+    <div class="barcode-wrap2 divDraggable">
+        <svg id="lbl_barcode2" width="205" height="50"></svg>
+    </div>
+    <span class="COMPANY_NAME2 o_name2_wrap divDraggable divResize"><span class="o_name2"></span></span>
+    <span class="COMPANY_ADDRESS2 o_address2_wrap divDraggable divResize"><span class="o_address2"></span></span>
+    <span class="COMPANY_CITY2 o_city2_wrap divDraggable divResize"><span class="o_city2"></span></span>
+    <span class="COMPANY_PHONE2 o_phone2_wrap divDraggable divResize"><span class="o_phone2"></span></span>
+    <span class="COMPANY_EMAIL2 o_email2_wrap divDraggable divResize"><span class="o_email2"></span></span>
+    <span class="COMPANY_STATE2 o_state2_wrap divDraggable divResize"><span class="o_state2"></span></span>
+    <span class="ABN2 o_abn_label2_wrap divDraggable divResize"><span class="o_abn_label2"></span></span>
+    <span class="ABN2 o_abn2_wrap divDraggable divResize"><span class="o_abn2"></span></span>
+
+    <span class="HEADER_TITLE2 print-header2_wrap bold center-item divDraggable divResize"><span class="print-header2"></span></span>
+    <span class="INVOICE_DATE2 date2_label_wrap bold center-item divDraggable divResize"><span class="date2_label InvoiceDate">Invoice Date</span></span>
+    <span class="INVOICE_DATE2 date2_wrap InvoiceDate center-item divDraggable divResize"><span class="date2 InvoiceDate"></span></span>
+    <span class="INVOICE_NUMBER2 io2_label_wrap bold center-item divDraggable divResize"><span class="io2_label InvoiceNumber">Invoice Number</span></span>
+    <span class="INVOICE_NUMBER2 io2_wrap InvoiceNumber center-item divDraggable divResize"><span class="io2 InvoiceNumber"></span></span>
+    <span class="REFERENCE2 ro2_label_wrap bold center-item divDraggable divResize"><span class="ro2_label Reference">Reference</span></span>
+    <span class="REFERENCE2 ro2_wrap Reference_wrap bold center-item divDraggable divResize"><span class="ro2 Reference"></span></span>
+    <span class="AMOUNT_DUE2 due2_label_wrap bold center-item divDraggable divResize"><span class="due2_label Due">Due Date</span></span>
+    <span class="AMOUNT_DUE2 due2_wrap center-item divDraggable divResize"><span class="due2 Due"></span></span>
+
+    <span class="CUSTOMER_ADDRESS2 pdfCustomerAddress2_wrap divDraggable divResize"><span class="pdfCustomerAddress2"></span></span>
+    <div class="PAY_LINK2 item-wrapper pay_now-wrap2 pay-link divDraggable divResize">
+        <a class="linkText" href="">Pay Now</a>
+    </div>
+    <!-- header -->
+    <script>
+        JsBarcode(
+                "#lbl_barcode2",
+                "BI-751",
+                {
+                    width: 2,
+                    height: 50,
+                    margin: 0,
+                    displayValue: false
+                }
+        );
+    </script>
 </template>

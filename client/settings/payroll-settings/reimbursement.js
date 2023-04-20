@@ -37,8 +37,7 @@ Template.reimbursementSettings.onCreated(function() {
     { index: 0, label: 'ID', class: 'colReimbursementID', active: false, display: true, width: "" },
     { index: 1, label: 'Reimbursement Name', class: 'colReimbursementName', active: true, display: true, width: "100" },
     { index: 2, label: 'Account', class: 'colReimbursementAccount', active: true, display: true, width: "50" },
-    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
-    { index: 4, label: '', class: 'colDeleterei', active: true, display: true, width: "20" }
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords6.set(headerStructure6);
 });
