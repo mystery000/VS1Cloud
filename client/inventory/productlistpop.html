@@ -20,12 +20,13 @@
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
                     <style>
-                        td.colAmountEx, td.colTax, td.colAmount{
+                        td.colcostPrice, td.colsalePrice, td.colprdqty , td.colExtraSellPrice{
                               text-align: right !important;
                           }
                       </style>
                       {{>datatablelist
-                          tablename="tblInventory"
+                          tableclass="tblInventory"
+						  tablename=tablename
                           apiName= apiFunction
                           indexeddbname = 'TProductVS1'
                           tableheaderrecords = tableheaderrecords
@@ -35,7 +36,7 @@
                           datahandler = datahandler
                           service=service
                           lowercaseDataName='tproductvs1'
-                          exIndexDBName = 'tproductvs1ex'
+                          exIndexDBName = 'tproductvs1'
                           exdatahandler = exDataHandler
                           searchAPI = searchAPI
                           orderby = '[[ 1, "asc" ]]'
@@ -43,6 +44,7 @@
                           showPlusButtonDataTarget = "newProductModal"
                           showPlusButtonClass = "btnNewProduct"
                           showCameraButton = true
+                          showModalID="#newProductModal"
                       }}
                     <!-- <div class="table-responsive">
                         <style>

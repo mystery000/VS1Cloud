@@ -94,6 +94,8 @@ Template.new_invoice.onCreated(function () {
   templateObject.customers = new ReactiveVar([]);
   templateObject.customer = new ReactiveVar();
 
+  templateObject.print_displayfields = new ReactiveVar({});
+
   templateObject.customerRecord = new ReactiveVar();
   templateObject.headerfields = new ReactiveVar();
   templateObject.headerbuttons = new ReactiveVar();
@@ -2340,7 +2342,10 @@ Template.new_invoice.onCreated(function () {
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
 
-  templateObject.generateInvoiceData = function (template_title, number) {
+  templateObject.generateInvoiceData = async function (template_title, number) {
+    let printSettings = await getPrintSettings(template_title, number);
+    templateObject.print_displayfields.set(printSettings);
+
     object_invoce = [];
     switch (template_title) {
       case "Invoices":
@@ -2355,7 +2360,258 @@ Template.new_invoice.onCreated(function () {
         templateObject.showDeliveryDocket1(template_title, number, false);
         break;
     }
+
+    for (key in printSettings) {
+      $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
+    }
   };
+
+  templateObject.getPayUrl = function () {
+    let stripe_id = templateObject.accountID.get() || "";
+    let stripe_fee_method = templateObject.stripe_fee_method.get();
+    var url = FlowRouter.current().path;
+    var id_available = url.includes("?id=");
+    if (id_available == true) {
+      let quoteData = templateObject.invoicerecord.get();
+      let lineItems = [];
+      let total = $("#totalBalanceDue").html() || 0;
+      let tax = $("#subtotal_tax").html() || 0;
+      let customer = $("#edtCustomerName").val();
+      let company = localStorage.getItem("vs1companyName");
+      let name = $("#firstname").val();
+      let surname = $("#lastname").val();
+      $("#tblInvoiceLine > tbody > tr").each(function () {
+        var lineID = this.id;
+        let tddescription = $("#" + lineID + " .lineProductDesc").text();
+        let tdQty = $("#" + lineID + " .lineQty").val();
+        let tdunitprice = $("#" + lineID + " .colUnitPriceExChange").val();
+        const lineItemObj = {
+          description: tddescription || "",
+          quantity: tdQty || 0,
+          unitPrice: tdunitprice.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          }) || 0,
+        };
+
+        lineItems.push(lineItemObj);
+      });
+      var erpGet = erpDb();
+      let vs1User = localStorage.getItem("mySession");
+      let customerEmail = $("#edtCustomerEmail").val();
+      let currencyname = CountryAbbr.toLowerCase();
+      let stringQuery = "?";
+      let dept = $("#sltDept").val();
+      for (let l = 0; l < lineItems.length; l++) {
+        stringQuery =
+            stringQuery +
+            "product" +
+            l +
+            "=" +
+            lineItems[l].description +
+            "&price" +
+            l +
+            "=" +
+            lineItems[l].unitPrice +
+            "&qty" +
+            l +
+            "=" +
+            lineItems[l].quantity +
+            "&";
+      }
+      stringQuery =
+          stringQuery +
+          "tax=" +
+          tax +
+          "&total=" +
+          total +
+          "&customer=" +
+          customer +
+          "&name=" +
+          name +
+          "&surname=" +
+          surname +
+          "&quoteid=" +
+          quoteData.id +
+          "&transid=" +
+          stripe_id +
+          "&feemethod=" +
+          stripe_fee_method +
+          "&company=" +
+          company +
+          "&vs1email=" +
+          vs1User +
+          "&customeremail=" +
+          customerEmail +
+          "&type=Invoice&url=" +
+          window.location.href +
+          "&server=" +
+          erpGet.ERPIPAddress +
+          "&username=" +
+          erpGet.ERPUsername +
+          "&token=" +
+          erpGet.ERPPassword +
+          "&session=" +
+          erpGet.ERPDatabase +
+          "&port=" +
+          erpGet.ERPPort +
+          "&dept=" +
+          dept +
+          "&currency=" +
+          currencyname;
+      return stripeGlobalURL + stringQuery;
+    } else {
+      let name = $("#edtCustomerEmail").attr("customerfirstname");
+      let surname = $("#edtCustomerEmail").attr("customerlastname");
+      var splashLineArray = new Array();
+      let lineItemsForm = [];
+      let lineItems = [];
+      let lineItemObjForm = {};
+      var erpGet = erpDb();
+      var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+      let saleDate =
+          saledateTime.getFullYear() +
+          "-" +
+          (saledateTime.getMonth() + 1) +
+          "-" +
+          saledateTime.getDate();
+      let checkBackOrder = templateObject.includeBOnShippedQty.get();
+      $("#tblInvoiceLine > tbody > tr").each(function () {
+        var lineID = this.id;
+        let tdproduct = $("#" + lineID + " .lineProductName").val();
+        let tddescription = $("#" + lineID + " .lineProductDesc").text();
+        let tdQty = $("#" + lineID + " .lineQty").val();
+        let tdOrderd = $("#" + lineID + " .lineOrdered").val();
+        let tdunitprice = $("#" + lineID + " .colUnitPriceExChange").val();
+        let tdtaxCode = $("#" + lineID + " .lineTaxCode").val();
+        let tdlineUnit = $("#" + lineID + " .lineUOM").text() || defaultUOM;
+        let tdSalesLineCustField1 = $("#" + lineID + " .lineSalesLinesCustField1").val();
+
+        const lineItemObj = {
+          description: tddescription || "",
+          quantity: tdQty || 0,
+          unitPrice: tdunitprice.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          }) || 0,
+        };
+
+        lineItems.push(lineItemObj);
+
+        if (tdproduct != "") {
+          if (checkBackOrder == true) {
+            lineItemObjForm = {
+              type: "TInvoiceLine",
+              fields: {
+                ProductName: tdproduct || "",
+                ProductDescription: tddescription || "",
+                UOMQtySold: parseFloat(tdOrderd) || 0,
+                UOMQtyShipped: parseFloat(tdQty) || 0,
+                LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                Headershipdate: saleDate,
+                LineTaxCode: tdtaxCode || "",
+                DiscountPercent: parseFloat($("#" + lineID + " .lineDiscount").val()) || 0,
+                UnitOfMeasure: tdlineUnit,
+                SalesLinesCustField1: tdSalesLineCustField1,
+              },
+            };
+          } else {
+            lineItemObjForm = {
+              type: "TInvoiceLine",
+              fields: {
+                ProductName: tdproduct || "",
+                ProductDescription: tddescription || "",
+                UOMQtySold: parseFloat(tdQty) || 0,
+                UOMQtyShipped: parseFloat(tdQty) || 0,
+                LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                Headershipdate: saleDate,
+                LineTaxCode: tdtaxCode || "",
+                DiscountPercent: parseFloat($("#" + lineID + " .lineDiscount").val()) || 0,
+                UnitOfMeasure: tdlineUnit,
+                SalesLinesCustField1: tdSalesLineCustField1,
+              },
+            };
+          }
+
+          lineItemsForm.push(lineItemObjForm);
+          splashLineArray.push(lineItemObjForm);
+        }
+      });
+
+      let customer = $("#edtCustomerName").val();
+
+      let departement = $("#sltDept").val();
+      let total = $("#totalBalanceDue").html() || 0;
+      let tax = $("#subtotal_tax").html() || 0;
+      var getso_id = url.split("?id=");
+      if (getso_id[1]) {
+        var currentInvoice = getso_id[getso_id.length - 1];
+
+        let company = localStorage.getItem("vs1companyName");
+        let vs1User = localStorage.getItem("mySession");
+        let customerEmail = $("#edtCustomerEmail").val() || "";
+        let currencyname = CountryAbbr.toLowerCase();
+        let stringQuery = "?";
+        for (let l = 0; l < lineItems.length; l++) {
+          stringQuery =
+              stringQuery +
+              "product" +
+              l +
+              "=" +
+              lineItems[l].description +
+              "&price" +
+              l +
+              "=" +
+              lineItems[l].unitPrice +
+              "&qty" +
+              l +
+              "=" +
+              lineItems[l].quantity +
+              "&";
+        }
+        stringQuery =
+            stringQuery +
+            "tax=" +
+            tax +
+            "&total=" +
+            total +
+            "&customer=" +
+            customer +
+            "&name=" +
+            name +
+            "&surname=" +
+            surname +
+            "&quoteid=" +
+            parseInt(currentInvoice) +
+            "&transid=" +
+            stripe_id +
+            "&feemethod=" +
+            stripe_fee_method +
+            "&company=" +
+            company +
+            "&vs1email=" +
+            vs1User +
+            "&customeremail=" +
+            customerEmail +
+            "&type=Invoice&url=" +
+            window.location.href +
+            "&server=" +
+            erpGet.ERPIPAddress +
+            "&username=" +
+            erpGet.ERPUsername +
+            "&token=" +
+            erpGet.ERPPassword +
+            "&session=" +
+            erpGet.ERPDatabase +
+            "&port=" +
+            erpGet.ERPPort +
+            "&dept=" +
+            departement +
+            "&currency=" +
+            currencyname;
+        return stripeGlobalURL + stringQuery;
+      }
+    }
+    return '';
+  }
 
   templateObject.exportSalesToPdf = function (template_title, number) {
     if (template_title == "Invoices") {
@@ -2365,6 +2621,9 @@ Template.new_invoice.onCreated(function () {
     } else if (template_title == "Invoice Back Orders") {
       templateObject.showInvoiceBack1(template_title, number, true);
     } else { }
+
+    let payLink = templateObject.getPayUrl();
+    $('.linkText').attr('href', payLink);
 
     let invoice_data_info = templateObject.invoicerecord.get();
     var source;
@@ -4845,6 +5104,10 @@ Template.new_invoice.helpers({
   getTemplateNumber: function () {
     let template_numbers = ["1", "2", "3"];
     return template_numbers;
+  },
+
+  displaySettings: function() {
+    return Template.instance().print_displayfields.get();
   },
 
   isBatchSerialNoTracking: () => {

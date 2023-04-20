@@ -1,145 +1,178 @@
 <template name="preview_header1">
     <style>
-        .template-preview-header1 {
-            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-            font-family: Calibri, sans-serif !important;
-            width: 90%;
-            margin: 20px auto 0px;
+        .logo-wrap {
+            position: absolute !important;
+            top: 5px;
         }
-        .label-p {
-            font-family: Calibri, sans-serif !important;
-            margin-bottom: 0px;
+        .logo-wrap img {
+            width: 200px;
+            height: 50px;
         }
-        /* .print-header {
-            padding-right: 5px;
-            text-align: right;
-        } */
-        .print-header-value {
-            font-family: Calibri, sans-serif !important;
+        .o_abn_label_wrap {
+            top: 55px;
+            left: 280px;
+        }
+        .o_abn_wrap {
+            top: 55px;
+            left: 320px;
+        }
+        .print-header_wrap {
+            top: 75px;
+            font-size: 28px;
+        }
+        .no_label_wrap {
+            top: 130px;
+            left: 320px;
+        }
+        .print-header-value_wrap {
+            top: 130px;
+            left: 350px;
             color: red;
         }
-        .o_abn_label {
-            font-family: Calibri, sans-serif !important;
-            padding-right: 30px;
+        .pdfCustomerAddress_wrap {
+            top: 150px;
         }
-        .o_abn {
-            font-family: Calibri, sans-serif !important;
-            padding-right: 0px;
+        .barcode-wrap {
+            position: absolute !important;
+            left: 480px;
+            top: 130px;
         }
-        .pdfCustomerAddress {
-            font-family: Calibri, sans-serif !important;
-            font-size: 18px;
-            padding: 10px;
-            min-height: 160px;
+        .o_name_wrap  {
+            left: 20px;
+            top: 110px;
+        }
+        .o_address_wrap {
+            left: 20px;
+            top: 130px;
+        }
+        .o_city_wrap {
+            left: 20px;
+            top: 150px;
+        }
+        .o_phone_wrap {
+            left: 20px;
+            top: 170px;
+        }
+        .o_email_wrap {
+            left: 20px;
+            top: 190px;
+        }
+        .o_state_wrap {
+            left: 20px;
+            top: 210px;
+        }
+        .pay_now-wrap {
+            position: absolute;
+            left: 540px;
+            top: 190px;
+            width: 80px;
+            height: 30px;
+            background-color: #17a673;
+            border-color: #169b6b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .linkText {
+            color: white;
+            text-decoration: none;
+        }
+        /* Invoice Table */
+        .invoice_info_table-wrap {
+            left: 0;
+            top: 270px;
             width: 100%;
-            margin-bottom: 0px;
-            color: rgb(0 0 0);
-            line-height: 1.2rem;
+        }
+        .invoice_info_table {
+            margin: auto;
+            width: 100%;
+            border-collapse: collapse;
+            text-align:center;
+        }
+        .invoice_info_table thead th {
+            border: solid 1px black;
+            background-color: white !important;
+        }
+        .invoice_info_table p {
+            font-size: 12px !important;
         }
     </style>
-    <div class="template-preview-header1">
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="margin-bottom: 10px;">
-            <!-- <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px;">
-            </div> -->
-            <div class="col-12 col-md-12 col-sm-12" style="margin-top: 10px; padding: 0px; border: none !important; ">
-                <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-bottom: 5px;">
-                    <div class="col-4 col-md-4 col-sm-12">
-                        
-                    </div>
-                    <div class="col-4 col-md-4 col-sm-12">
-                        
-                    </div>
-                    <div class="col-4 col-md-4 col-sm-12 draggable" style="right: 2rem;">
-                        <div style="width: 100%; text-align: right;"><svg id="lbl_barcode"></svg></div>
-                        <script>
-                            JsBarcode(
-                                "#lbl_barcode",  
-                                "BI-751", 
-                                {
-                                    width: 2,
-                                    height: 50,
-                                    margin: 0,
-                                    displayValue: false
-                                }
-                            );
-                        </script>
-                    </div>
-                </div>
-                <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-bottom: 0px; font-size: 36px; font-weight: bold;">
-                    <!-- <div class="col-9 col-md-9 col-sm-12">
-                        <p class="label-p print-header"></p>
-                    </div>
-                    <div class="col-3 col-md-3 col-sm-12">
-                        <p class="label-p" style="text-align: right; padding-right: 5px;">
-                            <span style="color: black;">No:</span>&nbsp;&nbsp;
-                            <span class="print-header-value"></span>
-                        </p>
-                    </div> -->
-                    <div class="col-12 col-md-12 col-sm-12">
-                        <p class="label-p" style="text-align: right; font-size: 36px !important;">
-                            <span class="draggable" style="right: 5rem; top: 3rem">
-                                <span class="print-header"></span>&nbsp;&nbsp;
-                                <span>No:</span>&nbsp;&nbsp;&nbsp;
-                            </span>
-                            <span class="draggable" style="left: 49rem; top: 3rem">
-                                <span class="print-header-value"></span>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex">
-            <div class="col-5 col-md-5 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; justify-content: space-between;">
-                <div style="width: 100%;" class="draggable"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 60%; margin-bottom: 0px;">
-                </div>
-                <div style="width: 100%;">
-                    <p class="label-p ABN" style="font-size: 18px; padding-left: 10px; padding-bottom: 5px;">
-                        <span class="draggable" style="top: 10rem;">
-                            <span class="o_abn_label"></span>
-                            <span>:&nbsp;</span>
-                        </span>
-                        <span class="draggable" style="top: 10rem; left: 5rem;">
-                            <span class="o_abn"></span>
-                        </span>
-                    </p>
-                    <p class="label-p Rep" style="font-size: 18px; padding-left: 10px;">
-                        <span class="draggable" style="top: 11.5rem;">
-                            <span style="padding-right: 2px;">Rep</span>
-                            <span>:&nbsp;</span>
-                        </span>
-                        <span class="draggable" style="top: 11.5rem;">
-                            <span class="employeeName Rep"></span>
-                        </span>
-                    </p>
-                </div>
-            </div>
-            <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 10px; border: none !important; display: flex; justify-content: right;">
-            </div>
-            <div class="col-4 col-md-4 col-sm-12" style="margin: 0px; padding: 0px 10px; border: none !important; display: flex; justify-content: right;">
-                <div style="width: 80%; border: 1px solid black; top: 5rem;" class="draggable">
-                    <p class="pdfCustomerAddress"></p>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px; margin-bottom: 3rem; margin-top: 15.5rem;">
-            <div class="col-4 col-md-4 col-sm-12 Cust" style="margin: 0px; padding: 0px;">
-                <p style="padding-left: 10px;" class="draggable">Cust Order No:&nbsp;<span class="po"></span></p>
-            </div>
-            <div class="col-4 col-md-4 col-sm-12 Date" style="margin: 0px; padding: 0px;">
-                <p style="text-align: center;">
-                    <span  class="draggable" style="right: 10rem;">
-                        <strong>Date:</strong>&nbsp;&nbsp;
-                    </span>
-                    <span  class="draggable">
-                        <span class="date"></span>
-                    </span>
-                </p>
-            </div>
-            <div class="col-4 col-md-4 col-sm-12 Due" style="margin: 0px; padding: 0px;">
-                <p style="padding-right: 10px; text-align: right;" class="draggable"><strong>Due Date:</strong>&nbsp;&nbsp;<span class="due"></span></p>
-            </div>
-        </div>
+    <!-- header -->
+    <div class="LOGO logo-wrap center-item divDraggable">
+        <img src="http://vs1cloud.com/images/VS1logo.png" class="divResize uploadedImage">
     </div>
+    <span class="ABN o_abn_label_wrap divDraggable divResize">
+        <span class="o_abn_label">ABN</span>
+        <span>:</span>
+    </span>
+    <span class="ABN o_abn_wrap divDraggable divResize">
+        <span class="o_abn"></span>
+    </span>
+
+    <span class="HEADER_TITLE print-header_wrap bold center-item divDraggable divResize"><span class="print-header">Bill</span></span>
+    <span class="NO no_label_wrap bold divDraggable divResize"><span class="no_label">NO:</span></span>
+    <span class="NO print-header-value_wrap bold divDraggable divResize"><span class="print-header-value"></span></span>
+    <span class="CUSTOMER_ADDRESS pdfCustomerAddress_wrap center-item divDraggable divResize"><span class="pdfCustomerAddress"></span></span>
+
+    <span class="COMPANY_NAME o_name_wrap divDraggable divResize"><span class="o_name"></span></span>
+    <span class="COMPANY_ADDRESS o_address_wrap divDraggable divResize"><span class="o_address"></span></span>
+    <span class="COMPANY_CITY o_city_wrap divDraggable divResize"><span class="o_city"></span></span>
+    <span class="COMPANY_PHONE o_phone_wrap divDraggable divResize"><span class="o_phone"></span></span>
+    <span class="COMPANY_EMAIL o_email_wrap divDraggable divResize"><span class="o_email"></span></span>
+    <span class="COMPANY_STATE o_state_wrap divDraggable divResize"><span class="o_state"></span></span>
+
+    <div class="BARCODE barcode-wrap divDraggable">
+        <svg id="lbl_barcode" width="175" height="45"></svg>
+    </div>
+    <div class="PAY_LINK item-wrapper pay_now-wrap pay-link divDraggable divResize">
+        <a class="linkText" href="">Pay Now</a>
+    </div>
+
+    <div class="item-wrapper invoice_info_table-wrap divDraggable">
+        <table class="invoice_info_table">
+            <thead>
+            <tr>
+                <th class="INVOICE_NUMBER">
+                    <span>INVOICE NUMBER</span>
+                    <br>
+                    <span class="io">&nbsp;</span>
+                </th>
+                <th class="REFERENCE">
+                    <span>PO/REFERENCE</span>
+                    <br>
+                    <span class="ro">&nbsp;</span>
+                </th>
+                <th class="ACCOUNT_NUMBER">
+                    <span>ACCOUNT NUMBER</span>
+                    <br>
+                    <span class="po">&nbsp;</span>
+                </th>
+                <th class="AMOUNT_DUE">
+                    <span>AMOUNT DUE</span>
+                    <br>
+                    <span class="amountdue">&nbsp;</span>
+                </th>
+                <th class="DUE_DATE">
+                    <span>DUE DATE</span>
+                    <br>
+                    <span class="due">&nbsp;</span>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- header -->
+    <script>
+        JsBarcode(
+                "#lbl_barcode",
+                "BI-751",
+                {
+                    width: 2,
+                    height: 45,
+                    margin: 0,
+                    displayValue: false
+                }
+        );
+    </script>
 </template>

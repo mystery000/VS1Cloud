@@ -37,7 +37,6 @@ Template.deductionSettings.onCreated(function() {
         data.fields.SuperInc || false,
         data.fields.WorkCoverExempt || false,
         data.fields.Active == true ? '' : 'In-Active',
-        '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
     ];
     return dataList;
   }
@@ -52,8 +51,7 @@ Template.deductionSettings.onCreated(function() {
     { index: 7, label: 'Reduces PAYG Withholding', class: 'colDeductionsPAYG', active: false, display: true, width: "" },
     { index: 8, label: 'Reduces Superannuation Guarantee Contribution', class: 'colDeductionsSuperannuation', active: false, display: true, width: "" },
     { index: 9, label: 'Excluded from W1 on Activity Statement', class: 'colDeductionsReportableasW1', active: false, display: true, width: "" },
-    { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
-    { index: 11, label: '', class: 'colDeleteDeductions', active: true, display: true, width: "20" }
+    { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords5.set(headerStructure5);
 });
@@ -176,6 +174,9 @@ Template.deductionSettings.onRendered(function() {
                         }, {
                             className: "colDeductionsReportableasW1 hiddenColumn",
                             "targets": [9]
+                        }, {
+                            className: "colStatus",
+                            "targets": [-1]
                         }
                     ],
                     select: true,

@@ -155,7 +155,7 @@ Template.paymentcard.onRendered(() => {
 
     });
 
-    templateObject.generateInvoiceData = function (template_title, number) {
+    templateObject.generateInvoiceData = async function (template_title, number) {
 
         object_invoce = [];
         switch (template_title) {
@@ -163,6 +163,11 @@ Template.paymentcard.onRendered(() => {
             case "Customer Payments":
                 showCustomerPayment1(template_title, number, false);
                 break;
+        }
+
+        let printSettings = await getPrintSettings(template_title, number);
+        for (key in printSettings) {
+            $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
         }
 
     };

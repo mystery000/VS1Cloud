@@ -3207,7 +3207,7 @@ Template.stocktransfercard.onRendered(function() {
     });
 
     /* On clik Inventory Line */
-    $(document).on("click", "#tblInventory tbody tr", function(e) {
+    $(document).on("click", ".tblInventory tbody tr", function(e) {
         $(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         var table = $(this);

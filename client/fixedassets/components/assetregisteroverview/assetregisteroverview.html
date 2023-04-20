@@ -82,9 +82,9 @@
               {{> export_import_print_display_button Import="hiddenButton" tablename="tblAssetRegisterList"}}
           </div>
           </div>
-          <div class="card-body">
+          <div class="card-body p-1 rounded tbl">
             <style>
-              td.colAmountEx, td.colTax, td.colAmount{
+              td.colRegisterAssetCost , .colRegisterAssetRegistrationNo{
                     text-align: right !important;
                 }
             </style>
@@ -101,7 +101,7 @@
                 service=service
                 lowercaseDataName='tfixedassetslist'
                 exportfilename='Asset Register List'
-                exIndexDBName = 'tfixedassetsex'
+                exIndexDBName = 'tfixedassetslist'
                 exdatahandler = exDataHandler
                 searchAPI = searchAPI
                 orderby = '[[ 0, "asc" ]]'

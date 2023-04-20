@@ -94,15 +94,16 @@ export class TaxRateService extends BaseService {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 RegionName: regionName,
                 ListType: "Detail",
-                select: "[Active]=" + (activeFlag ? "true" : "false"),
+                select: "[Active]=true",
             };
         }else{
             options = {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 ListType: "Detail",
-                select: "[Active]=" + (activeFlag ? "true" : "false"),
+                select: "[Active]=true",
             };
         }
+        if(activeFlag = true) delete options.select;
 
         let that = this;
         let promise = new Promise(function(resolve, reject) {

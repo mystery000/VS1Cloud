@@ -1863,6 +1863,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   var tableId = 'printTemplateTable', table;
+  var tableDestroyed = false;
 
   var dataSet = [
 
@@ -1872,8 +1873,9 @@ Template.templatesettings.onRendered(function () {
   ];
 
   $("#templatePreviewModal").on("hide.bs.modal", function(){
-    if(table) {
-      table.destroy()
+    if(table && !tableDestroyed) {
+      table.destroy();
+      tableDestroyed = true;
     }
   })
 
@@ -1899,6 +1901,7 @@ Template.templatesettings.onRendered(function () {
 
       },
     });
+    tableDestroyed = false;
 
     tableResize();
   }
@@ -1933,6 +1936,14 @@ Template.templatesettings.onRendered(function () {
 
   }
 
+  function togglePayNow(template_name) {
+    let should_pay_templates = ['Quote', 'Sales Order', 'Invoice', 'Invoice Back Order', "Statement"];
+    if (should_pay_templates.indexOf(template_name) == -1) {
+      $("#templatePreviewModal .pay-link").hide();
+    } else {
+      $("#templatePreviewModal .pay-link").show();
+    }
+  }
 
   function saveColumnSettings() {
 
@@ -2378,7 +2389,7 @@ Template.templatesettings.onRendered(function () {
         break;
     }
 
-    let className = Object.entries(object_invoce[0]['fields'])
+    let className = Object.entries(object_invoce[0]['fields']);
     const data = object_invoce[0]["data"];
     let idx = 0;
 
@@ -2431,6 +2442,7 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter1(object_invoce);
     loadTemplateBody1(object_invoce);
+    togglePayNow(object_invoce[0]["title"]);
 
     let abnString = "Company #"
     let repString = "Rep"
@@ -2446,16 +2458,7 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "false";
     }
 
-    // object_invoce[0]["fields"][abnString] = ['', 'left', true]
-    // object_invoce[0]["fields"][repString] = ['', 'left', true]
-    // object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
-    // object_invoce[0]["fields"][dateString] = ['', 'left', true]
-    // object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
-
-    if(object_invoce[0]['fields']["Bin Location"])
-      object_invoce[0]['fields']["Bin Location"] = ['15', 'left', false];
-
-    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
+    await loadDisplaySettings(object_invoce[0]["title"], 1);
   }
 
   async function updateTemplate2(object_invoce) {
@@ -2467,23 +2470,13 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter2(object_invoce);
     loadTemplateBody2(object_invoce);
+    togglePayNow(object_invoce[0]["title"]);
 
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
       value[value.length] = "true";
     }
 
-    let invoiceDate = "InvoiceDate"
-    let invoiceNumber = "InvoiceNumber"
-    let reference = "Reference"
-    let dueDate = "Due Date"
-
-    object_invoce[0]["fields"][invoiceDate] = ['', 'left', true]
-    object_invoce[0]["fields"][invoiceNumber] = ['', 'left', true]
-    object_invoce[0]["fields"][reference] = ['', 'left', true]
-    object_invoce[0]["fields"][dueDate] = ['', 'left', true]
-
-    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
-
+    await loadDisplaySettings(object_invoce[0]["title"], 2);
   }
 
   async function updateTemplate3(object_invoce) {
@@ -2495,24 +2488,21 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter3(object_invoce);
     loadTemplateBody3(object_invoce);
+    togglePayNow(object_invoce[0]["title"]);
 
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
       value[value.length] = "true";
     }
 
-    let invoiceNumber = "INVOICE NUMBER"
-    let proReference = "PO/REFERENCE"
-    let accountNumber = "ACCOUNT NUMBER"
-    let amountDue = "AMOUNT DUE"
-    let dueDate = "Due Date"
+    await loadDisplaySettings(object_invoce[0]["title"], 3);
+  }
 
-    object_invoce[0]["fields"][invoiceNumber] = ['', 'left', true]
-    object_invoce[0]["fields"][proReference] = ['', 'left', true]
-    object_invoce[0]["fields"][accountNumber] = ['', 'left', true]
-    object_invoce[0]["fields"][amountDue] = ['', 'left', true]
-    object_invoce[0]["fields"][dueDate] = ['', 'left', true]
-
-    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
+  async function loadDisplaySettings(type, template) {
+    let printSettings = await getPrintSettings(type, template);
+    await templateObject.print_displayfields.set(printSettings);
+    for (key in printSettings) {
+      $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
+    }
   }
 
   // show bill data with dummy data
@@ -2725,8 +2715,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "left"],
-          Amount: ["15", "left"],
+          Tax: ["15", "right"],
+          Amount: ["15", "right"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2772,8 +2762,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "left"],
-          Amount: ["15", "left"],
+          Tax: ["15", "right"],
+          Amount: ["15", "right"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2818,8 +2808,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "left"],
-          Amount: ["15", "left"],
+          Tax: ["15", "right"],
+          Amount: ["15", "right"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2896,11 +2886,11 @@ Template.templatesettings.onRendered(function () {
         fields: {
           Date: ["15", "left"],
           Type: ["15", "left"],
-          Trans: ["10", "left"],
-          Original: ["15", "left"],
-          Due: ["15", "left"],
-          Paid: ["15", "left"],
-          Outstanding: ["15", "left"],
+          Trans: ["10", "right"],
+          Original: ["15", "right"],
+          Due: ["15", "right"],
+          Paid: ["15", "right"],
+          Outstanding: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -2945,11 +2935,11 @@ Template.templatesettings.onRendered(function () {
         fields: {
           Date: ["15", "left"],
           Type: ["15", "left"],
-          Trans: ["10", "left"],
-          Original: ["15", "left"],
-          Due: ["15", "left"],
-          Paid: ["15", "left"],
-          Outstanding: ["15", "left"],
+          Trans: ["10", "right"],
+          Original: ["15", "right"],
+          Due: ["15", "right"],
+          Paid: ["15", "right"],
+          Outstanding: ["15", "right"],
         },
         subtotal: "",
         gst: "",
@@ -2994,11 +2984,11 @@ Template.templatesettings.onRendered(function () {
         fields: {
           Date: ["15", "left"],
           Type: ["15", "left"],
-          Trans: ["10", "left"],
-          Original: ["15", "left"],
-          Due: ["15", "left"],
-          Paid: ["15", "left"],
-          Outstanding: ["15", "left"],
+          Trans: ["10", "right"],
+          Original: ["15", "right"],
+          Due: ["15", "right"],
+          Paid: ["15", "right"],
+          Outstanding: ["15", "right"],
         },
         subtotal: "",
         gst: "",
@@ -3098,9 +3088,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "left"],
-          Paid: ["15", "left"],
-          Balance: ["15", "left"],
+          Total: ["15", "right"],
+          Paid: ["15", "right"],
+          Balance: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3147,9 +3137,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "left"],
-          Paid: ["15", "left"],
-          Balance: ["15", "left"],
+          Total: ["15", "right"],
+          Paid: ["15", "right"],
+          Balance: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3196,9 +3186,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "left"],
-          Paid: ["15", "left"],
-          Balance: ["15", "left"],
+          Total: ["15", "right"],
+          Paid: ["15", "right"],
+          Balance: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3335,10 +3325,10 @@ Template.templatesettings.onRendered(function () {
           "Product Name": ["20", "left"],
           Description: ["25", "left"],
           "Bin Location": ["15", "left"],
-          Qty: ["10", "left"],
-          "Unit Price": ["10", "left"],
-          Tax: ["10", "left"],
-          Amount: ["10", "left"],
+          Qty: ["10", "right"],
+          "Unit Price": ["10", "right"],
+          Tax: ["10", "right"],
+          Amount: ["10", "right"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3387,7 +3377,7 @@ Template.templatesettings.onRendered(function () {
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["10", "left"],
+          Amount: ["10", "right"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -5550,7 +5540,7 @@ Template.templatesettings.onRendered(function () {
           "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
-        subtotal: "",
+        subtotal: "$900.00",
         gst: "",
         total: "",
         paid_amount: "",
@@ -5596,7 +5586,7 @@ Template.templatesettings.onRendered(function () {
           "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
-        subtotal: "",
+        subtotal: "$900.00",
         gst: "",
         total: "",
         paid_amount: "",
@@ -5642,7 +5632,7 @@ Template.templatesettings.onRendered(function () {
           "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
-        subtotal: "",
+        subtotal: "$900.00",
         gst: "",
         total: "",
         paid_amount: "",
@@ -5820,6 +5810,10 @@ Template.templatesettings.events({
   "click .btnTopGlobalSave": function () {
     playSaveAudio();
     setTimeout(function () {
+      // Alex: add for print options {
+      $('.top-panel').css('display', 'none');
+      localStorage.setItem("isFormUpdated", false);
+      // @}
       $(".fullScreenSpin").css("display", "inline-block");
       var bill = $('input[name="Bills"]:checked').val();
       var credits = $('input[name="Credits"]:checked').val();
@@ -10423,21 +10417,20 @@ Template.templatesettings.events({
 
   },
 
-  "click .savePrintTable": function() {
+  "click .savePrintTable": async function () {
     let templateObject = Template.instance();
     LoadingOverlay.show();
-    getVS1Data('PrintDisplaySettings').then(function (dataObject) {
-      if (dataObject.length == 0) {
-          addVS1Data('PrintDisplaySettings', JSON.stringify(PrintDisplaySettingData));
-          templateObject.print_displaysettings.set(PrintDisplaySettingData);
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        templateObject.print_displaysettings.set(data);
-      }
-    }).catch(function (err) {
-        addVS1Data('PrintDisplaySettings', JSON.stringify(PrintDisplaySettingData));
-        templateObject.print_displaysettings.set(PrintDisplaySettingData);
-    });
+
+    let type = $('#templatePreviewLabel').text().replace('Template', '').trim();
+    let template = $('#templatePreviewInput').val().replace('Template', '').trim();
+    let printSettings = await getPrintSettings(type, template);
+    for (key in printSettings) {
+      let checked = $('#formCheck-' + key).is(':checked');
+      printSettings[key][2] = checked;
+    }
+    await templateObject.print_displayfields.set(printSettings);
+    await setPrintSettings(type, template, printSettings);
+
     LoadingOverlay.hide();
   },
 
@@ -10445,6 +10438,12 @@ Template.templatesettings.events({
 
   },
   "click .btnPreviewTemplate" : function (event) {
+    // Alex: add for print options {
+    $('.divResize').resizable({ disabled: true });
+    $('.divDraggable').draggable({ disabled: true });
+    $('.barcode-wrap, .barcode-wrap2, .barcode-wrap3').resizable({disabled: true});
+    $(".invoice_info_table th, .invoice_info_table3 th").resizable({disabled: true});
+    // @}
     const title = $(event.target).parent().parent().data("id");
     const number = $(event.target).parent().parent().data("template-id");
     const templateObject = Template.instance()
@@ -10457,9 +10456,49 @@ Template.templatesettings.events({
     $("#templatePreviewModal .modal-title").text(
       $('input[name="' + title + "_" + number + '"]').val()
     );
+    $('.divDraggable').removeClass('dashedborder');
   },
 
   "click .btnEditTemplate": function(event) {
+    // Alex: add for print options {
+    $('.divResize').resizable({ disabled: false });
+    $('.divDraggable').draggable({ disabled: false });
+    $('.barcode-wrap').resizable({
+      disabled: false,
+      resize: function(e, ui) {
+        $('#lbl_barcode').attr({
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
+    $('.barcode-wrap2').resizable({
+      disabled: false,
+      resize: function(e, ui) {
+        $('#lbl_barcode2').attr({
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
+    $('.barcode-wrap3').resizable({
+      disabled: false,
+      resize: function(e, ui) {
+        $('#lbl_barcode3').attr({
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
+    $(".invoice_info_table3 th").resizable({
+      disabled: false,
+      minWidth: 100
+    });
+    $(".invoice_info_table th, .invoice_info_table3 th").resizable({
+      disabled: false,
+      minWidth: 100
+    });
+    // @}
     const title = $(event.target).parent().parent().data("id");
     const number = $(event.target).parent().parent().data("template-id");
     const templateObject = Template.instance()
@@ -10472,9 +10511,19 @@ Template.templatesettings.events({
     $("#templatePreviewModal #templatePreviewInput").val(
       $('input[name="' + title + "_" + number + '"]').val()
     );
+    $('.divDraggable').addClass('dashedborder');
     templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
   },
+
+  // Alex: add for print options {
+  'click .chkGlobalSettings, keyup .template-name-input, change input': function (event) {
+    $('.top-panel').css('display', 'inline-block');
+  },
+  // @}
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;
 });
+Template.registerHelper('getTitleFromId', function(id) {
+  return id.split('_').join(' ').replace(/[0-9]/g, '');
+})
