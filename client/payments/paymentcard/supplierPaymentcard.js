@@ -342,7 +342,7 @@ Template.supplierpaymentcard.onRendered(() => {
           });
           if( suppPayment.length > 0 ){
             $('.sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
-            let latest_rate = templateObject.getCurrencyRate(suppPayment[0].fields.ForeignExchangeCode, 0);
+            let latest_rate = templateObject.getCurrencyRate(suppPayment[0].fields.ForeignExchangeCode, 1);
             $('#exchange_rate').val(latest_rate);
           }
         }
@@ -12554,7 +12554,7 @@ Template.supplierpaymentcard.events({
         //document.getElementById("subtotal_total").innerHTML = Currency+''+subGrandTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
       }
     });
-    $("#edtPaymentAmount").val(
+    $(".edtPaymentAmount").val(
       utilityService.modifynegativeCurrencyFormat(appliedGrandTotal)
     );
     $(".appliedAmount").text(
