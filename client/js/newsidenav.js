@@ -175,7 +175,6 @@ Template.newsidenav.onRendered(function () {
   let isDashboard = localStorage.getItem('CloudDashboardModule');
   let isMain = localStorage.getItem('CloudMainModule');
   let isInventory = localStorage.getItem('CloudInventoryModule');
-  console.log(isInventory);
   let isManufacturing = localStorage.getItem('CloudManufacturingModule');
   let isAccessLevels = localStorage.getItem('CloudAccessLevelsModule');
   let isShipping = localStorage.getItem('CloudShippingModule');
