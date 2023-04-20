@@ -2458,16 +2458,7 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "false";
     }
 
-    // object_invoce[0]["fields"][abnString] = ['', 'left', true]
-    // object_invoce[0]["fields"][repString] = ['', 'left', true]
-    // object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
-    // object_invoce[0]["fields"][dateString] = ['', 'left', true]
-    // object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
-
-    if(object_invoce[0]['fields']["Bin Location"])
-      object_invoce[0]['fields']["Bin Location"] = ['15', 'left', false];
-
-    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
+    await loadDisplaySettings(object_invoce[0]["title"], 1);
   }
 
   async function updateTemplate2(object_invoce) {
@@ -2485,18 +2476,7 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "true";
     }
 
-    let invoiceDate = "InvoiceDate"
-    let invoiceNumber = "InvoiceNumber"
-    let reference = "Reference"
-    let dueDate = "Due Date"
-
-    object_invoce[0]["fields"][invoiceDate] = ['', 'left', true]
-    object_invoce[0]["fields"][invoiceNumber] = ['', 'left', true]
-    object_invoce[0]["fields"][reference] = ['', 'left', true]
-    object_invoce[0]["fields"][dueDate] = ['', 'left', true]
-
-    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
-
+    await loadDisplaySettings(object_invoce[0]["title"], 2);
   }
 
   async function updateTemplate3(object_invoce) {
@@ -2514,19 +2494,15 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "true";
     }
 
-    let invoiceNumber = "INVOICE NUMBER"
-    let proReference = "PO/REFERENCE"
-    let accountNumber = "ACCOUNT NUMBER"
-    let amountDue = "AMOUNT DUE"
-    let dueDate = "Due Date"
+    await loadDisplaySettings(object_invoce[0]["title"], 3);
+  }
 
-    object_invoce[0]["fields"][invoiceNumber] = ['', 'left', true]
-    object_invoce[0]["fields"][proReference] = ['', 'left', true]
-    object_invoce[0]["fields"][accountNumber] = ['', 'left', true]
-    object_invoce[0]["fields"][amountDue] = ['', 'left', true]
-    object_invoce[0]["fields"][dueDate] = ['', 'left', true]
-
-    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
+  async function loadDisplaySettings(type, template) {
+    let printSettings = await getPrintSettings(type, template);
+    await templateObject.print_displayfields.set(printSettings);
+    for (key in printSettings) {
+      $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
+    }
   }
 
   // show bill data with dummy data
@@ -10441,21 +10417,20 @@ Template.templatesettings.events({
 
   },
 
-  "click .savePrintTable": function() {
+  "click .savePrintTable": async function () {
     let templateObject = Template.instance();
     LoadingOverlay.show();
-    getVS1Data('PrintDisplaySettings').then(function (dataObject) {
-      if (dataObject.length == 0) {
-          addVS1Data('PrintDisplaySettings', JSON.stringify(PrintDisplaySettingData));
-          templateObject.print_displaysettings.set(PrintDisplaySettingData);
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        templateObject.print_displaysettings.set(data);
-      }
-    }).catch(function (err) {
-        addVS1Data('PrintDisplaySettings', JSON.stringify(PrintDisplaySettingData));
-        templateObject.print_displaysettings.set(PrintDisplaySettingData);
-    });
+
+    let type = $('#templatePreviewLabel').text().replace('Template', '').trim();
+    let template = $('#templatePreviewInput').val().replace('Template', '').trim();
+    let printSettings = await getPrintSettings(type, template);
+    for (key in printSettings) {
+      let checked = $('#formCheck-' + key).is(':checked');
+      printSettings[key][2] = checked;
+    }
+    await templateObject.print_displayfields.set(printSettings);
+    await setPrintSettings(type, template, printSettings);
+
     LoadingOverlay.hide();
   },
 
@@ -10463,6 +10438,12 @@ Template.templatesettings.events({
 
   },
   "click .btnPreviewTemplate" : function (event) {
+    // Alex: add for print options {
+    $('.divResize').resizable({ disabled: true });
+    $('.divDraggable').draggable({ disabled: true });
+    $('.barcode-wrap, .barcode-wrap2, .barcode-wrap3').resizable({disabled: true});
+    $(".invoice_info_table th, .invoice_info_table3 th").resizable({disabled: true});
+    // @}
     const title = $(event.target).parent().parent().data("id");
     const number = $(event.target).parent().parent().data("template-id");
     const templateObject = Template.instance()
@@ -10479,10 +10460,45 @@ Template.templatesettings.events({
   },
 
   "click .btnEditTemplate": function(event) {
-
-    $('.divResize').resizable();
-    $('.divDraggable').draggable();
-
+    // Alex: add for print options {
+    $('.divResize').resizable({ disabled: false });
+    $('.divDraggable').draggable({ disabled: false });
+    $('.barcode-wrap').resizable({
+      disabled: false,
+      resize: function(e, ui) {
+        $('#lbl_barcode').attr({
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
+    $('.barcode-wrap2').resizable({
+      disabled: false,
+      resize: function(e, ui) {
+        $('#lbl_barcode2').attr({
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
+    $('.barcode-wrap3').resizable({
+      disabled: false,
+      resize: function(e, ui) {
+        $('#lbl_barcode3').attr({
+          width: ui.size.width,
+          height: ui.size.height
+        });
+      }
+    });
+    $(".invoice_info_table3 th").resizable({
+      disabled: false,
+      minWidth: 100
+    });
+    $(".invoice_info_table th, .invoice_info_table3 th").resizable({
+      disabled: false,
+      minWidth: 100
+    });
+    // @}
     const title = $(event.target).parent().parent().data("id");
     const number = $(event.target).parent().parent().data("template-id");
     const templateObject = Template.instance()
@@ -10508,3 +10524,6 @@ Template.templatesettings.events({
 Template.registerHelper("equals", function (a, b) {
   return a === b;
 });
+Template.registerHelper('getTitleFromId', function(id) {
+  return id.split('_').join(' ').replace(/[0-9]/g, '');
+})

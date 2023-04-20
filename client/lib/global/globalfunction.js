@@ -1337,147 +1337,147 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
 
 var getPrintGridSettings = function() {
     return {
-        "Bills": {
-            "Account Name": ["30", "left"],
-            "Description": ["40", "left"],
-            "Tax": ["15", "right"],
-            "Amount": ["15", "right"],
+        "Bill": {
+            "Account_Name": ["30", "left", true],
+            "Description": ["40", "left", true],
+            "Tax": ["15", "right", true],
+            "Amount": ["15", "right", true],
         },
-        "Credits": {
-            Date: ["15", "left"],
-            Type: ["15", "left"],
-            Trans: ["10", "right"],
-            Original: ["15", "right"],
-            Due: ["15", "right"],
-            Paid: ["15", "right"],
-            Outstanding: ["15", "right"],
+        "Credit": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            Trans: ["10", "right", true],
+            Original: ["15", "right", true],
+            Due: ["15", "right", true],
+            Paid: ["15", "right", true],
+            Outstanding: ["15", "right", true],
         },
-        "Customer Payments": {
-            Date: ["15", "left"],
-            Type: ["15", "left"],
-            Trans: ["10", "right"],
-            Original: ["15", "right"],
-            Due: ["15", "right"],
-            Paid: ["15", "right"],
-            Outstanding: ["15", "right"],
+        "Customer Payment": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            Trans: ["10", "right", true],
+            Original: ["15", "right", true],
+            Due: ["15", "right", true],
+            Paid: ["15", "right", true],
+            Outstanding: ["15", "right", true],
         },
-        "Customer Statements": {
-            ID: ["10", "left"],
-            Date: ["15", "left"],
-            Type: ["15", "left"],
-            "Due Date": ["15", "left"],
-            Total: ["15", "right"],
-            Paid: ["15", "right"],
-            Balance: ["15", "right"],
+        "Customer Statement": {
+            ID: ["10", "left", true],
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            "Due_Date": ["15", "left", true],
+            Total: ["15", "right", true],
+            Paid: ["15", "right", true],
+            Balance: ["15", "right", true],
         },
-        "Invoices": {
-            "Product Name": ["20", "left"],
-            Description: ["25", "left"],
-            "Bin Location": ["15", "left", false],
-            Qty: ["10", "left"],
-            "Unit Price": ["10", "left"],
-            Tax: ["10", "left"],
-            Amount: ["10", "left"],
+        "Invoice": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
         },
-        "Invoice Back Orders": {
-            "Product Name": ["20", "left"],
-            Description: ["25", "left"],
-            "Bin Location": ["15", "left", false],
-            Qty: ["10", "left"],
-            "Unit Price": ["10", "left"],
-            Tax: ["10", "left"],
-            Amount: ["10", "left"],
+        "Invoice Back Order": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
         },
-        "Purchase Orders": {
-            "Product Name": ["20", "left"],
-            Description: ["25", "left"],
-            "Bin Location": ["15", "left", false],
-            Qty: ["10", "left"],
-            "Unit Price": ["10", "left"],
-            Tax: ["10", "left"],
-            Amount: ["10", "left"],
+        "Purchase Order": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
         },
-        "Quotes": {
-            "Product Name": ["20", "left"],
-            Description: ["25", "left"],
-            "Bin Location": ["15", "left", false],
-            Qty: ["10", "left"],
-            "Unit Price": ["10", "left"],
-            Tax: ["10", "left"],
-            Amount: ["10", "left"],
+        "Quote": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
         },
-        "Refunds": {
-            "Product Name": ["20", "left"],
-            Description: ["25", "left"],
-            "Bin Location": ["15", "left", false],
-            Qty: ["10", "left"],
-            "Unit Price": ["10", "left"],
-            Tax: ["10", "left"],
-            Amount: ["10", "left"],
+        "Refund": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
         },
-        "Sales Orders": {
-            "Product Name": ["20", "left"],
-            Description: ["25", "left"],
-            "Bin Location": ["15", "left", false],
-            Qty: ["10", "left"],
-            "Unit Price": ["10", "left"],
-            Tax: ["10", "left"],
-            Amount: ["10", "left"],
+        "Sales Order": {
+            "Product_Name": ["20", "left", true],
+            Description: ["25", "left", true],
+            "Bin_Location": ["15", "left", false],
+            Qty: ["10", "left", true],
+            "Unit_Price": ["10", "left", true],
+            Tax: ["10", "left", true],
+            Amount: ["10", "left", true],
         },
-        "Supplier Payments": {
-            Date: ["15", "left"],
-            Type: ["15", "left"],
-            No: ["10", "left"],
-            Amount: ["15", "left"],
-            Due: ["15", "left"],
-            Paid: ["15", "left"],
-            Outstanding: ["15", "left"],
+        "Supplier Payment": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            No: ["10", "left", true],
+            Amount: ["15", "left", true],
+            Due: ["15", "left", true],
+            Paid: ["15", "left", true],
+            Outstanding: ["15", "left", true],
         },
-        "Statements": {
-            Date: ["15", "left"],
-            Type: ["15", "left"],
-            No: ["10", "left"],
-            Amount: ["15", "left"],
-            Due: ["15", "left"],
-            Paid: ["15", "left"],
-            Outstanding: ["15", "left"],
+        "Statement": {
+            Date: ["15", "left", true],
+            Type: ["15", "left", true],
+            No: ["10", "left", true],
+            Amount: ["15", "left", true],
+            Due: ["15", "left", true],
+            Paid: ["15", "left", true],
+            Outstanding: ["15", "left", true],
         },
         "Delivery Docket": {
-            "Product Name": ["30", "left"],
-            Description: ["30", "left"],
-            "Bin Location": ["20", "left", false],
-            Qty: ["20", "left"],
+            "Product_Name": ["30", "left", true],
+            Description: ["30", "left", true],
+            "Bin_Location": ["20", "left", false],
+            Qty: ["20", "left", true],
         },
         "Journal Entry": {
-            "Account Name": ["30", "left"],
-            Description: ["40", "left"],
-            "Credit (Ex)": ["15", "left"],
-            "Debit (Ex)": ["15", "left"],
+            "Account_Name": ["30", "left", true],
+            Description: ["40", "left", true],
+            "Credit_Ex": ["15", "left", true],
+            "Debit_Ex": ["15", "left", true],
         },
-        "Deposits": {
-            "From Account": ["20", "left"],
-            "Payment Method": ["20", "left"],
-            "Reference No": ["20", "left"],
-            "Received From": ["25", "left"],
+        "Deposit": {
+            "From_Account": ["20", "left", true],
+            "Payment_Method": ["20", "left", true],
+            "Reference_No": ["20", "left", true],
+            "Received_From": ["25", "left", true],
             Amount: ["15", "left"],
         },
-        "Cheques": {
-            "Account Name": ["30", "left"],
-            Description: ["40", "left"],
-            Tax: ["15", "left"],
-            Amount: ["15", "left"],
+        "Cheque": {
+            "Account_Name": ["30", "left", true],
+            Description: ["40", "left", true],
+            Tax: ["15", "left", true],
+            Amount: ["15", "left", true],
         },
         "Stock Transfer": {
-            "Product Name": ["30", "left"],
-            Description: ["30", "left"],
-            "Bin Location": ["20", "left", false],
-            Qty: ["20", "left"],
+            "Product_Name": ["30", "left", true],
+            Description: ["30", "left", true],
+            "Bin_Location": ["20", "left", false],
+            Qty: ["20", "left", true],
         },
         "Stock Adjustment": {
-            "Product Name": ["30", "left"],
-            Description: ["30", "left"],
-            "Bin Location": ["20", "left", false],
-            Qty: ["20", "left"],
+            "Product_Name": ["30", "left", true],
+            Description: ["30", "left", true],
+            "Bin_Location": ["20", "left", false],
+            Qty: ["20", "left", true],
         },
     };
 }
@@ -1496,7 +1496,6 @@ getPrintMainSettings = function () {
             "COMPANY_EMAIL": ['', 'left', true],
             "COMPANY_STATE": ['', 'left', true],
             "BARCODE": ['', 'left', true],
-            "PAY_LINK": ['', 'left', true],
             "INVOICE_NUMBER": ['', 'left', true],
             "REFERENCE": ['', 'left', true],
             "ACCOUNT_NUMBER": ['', 'left', true],
@@ -1524,7 +1523,6 @@ getPrintMainSettings = function () {
             "COMPANY_EMAIL2": ['', 'left', true],
             "COMPANY_STATE2": ['', 'left', true],
             "BARCODE2": ['', 'left', true],
-            "PAY_LINK2": ['', 'left', true],
             "INVOICE_DATE2": ['', 'left', true],
             "INVOICE_NUMBER2": ['', 'left', true],
             "REFERENCE2": ['', 'left', true],
@@ -1547,7 +1545,6 @@ getPrintMainSettings = function () {
             "BILL_TO2": ['', 'left', true],
             "BILL_DATE3": ['', 'left', true],
             "CUSTOMER_ADDRESS3": ['', 'left', true],
-            "PAY_LINK3": ['', 'left', true],
             "INVOICE_NUMBER3": ['', 'left', true],
             "REFERENCE3": ['', 'left', true],
             "ACCOUNT_NUMBER3": ['', 'left', true],
@@ -1574,11 +1571,14 @@ getPrintMainSettings = function () {
 };
 
 getPrintSettings = async function (type, template) {
+    if (type.lastIndexOf('s') == type.length -1 ) {
+        type = type.slice(0, -1);
+    }
     let settings = await getVS1Data('PrintDisplaySettings');
     if (settings.length > 0) {
-        let parsedData = JSON.parse(settings);
+        let parsedData = JSON.parse(settings[0].data);
         if (parsedData[type]) {
-            return parsedData[type];
+            return parsedData[type][template];
         }
     }
 
@@ -1601,16 +1601,19 @@ getPrintSettings = async function (type, template) {
 };
 
 setPrintSettings = async function (type, template, newSettings) {
+    if (type.lastIndexOf('s') == type.length -1 ) {
+        type = type.slice(0, -1);
+    }
     let printSettings = await getVS1Data('PrintDisplaySettings');
-    if (printSettings) {
-        let parsedData = JSON.parse(printSettings);
+    if (printSettings.length > 0) {
+        let parsedData = JSON.parse(printSettings[0].data);
         for (let key in newSettings) {
             parsedData[type][template][key] = newSettings[key];
         }
         await addVS1Data('PrintDisplaySettings', JSON.stringify(parsedData));
     } else {
-        let types = ['Bills', 'Credits', 'Customer Payments', 'Customer Statements', 'Invoices', 'Invoice Back Orders', 'Purchase Orders', 'Quotes', 'Refunds',
-            'Sales Orders', 'Supplier Payments', 'Statements', 'Delivery Docket', 'Journal Entry', 'Deposits', 'Cheques', 'Stock Transfer', 'Stock Adjustment'];
+        let types = ['Bill', 'Credit', 'Customer Payment', 'Customer Statement', 'Invoice', 'Invoice Back Order', 'Purchase Order', 'Quote', 'Refund',
+            'Sales Order', 'Supplier Payment', 'Statement', 'Delivery Docket', 'Journal Entry', 'Deposit', 'Cheque', 'Stock Transfer', 'Stock Adjustment'];
 
         printSettings = {}
         for (let i = 0; i < types.length; i++) {
@@ -1618,7 +1621,7 @@ setPrintSettings = async function (type, template, newSettings) {
             printSettings[types[i]] = Object.assign({}, templates);
             let printMainSettings = getPrintMainSettings();
             for (templateKey in printMainSettings) {
-                if (type = types[i] && template == templateKey) {
+                if (type == types[i] && template == templateKey) {
                     for (key in newSettings) {
                         printSettings[type][template][key] = newSettings[key];
                     }
@@ -1630,7 +1633,6 @@ setPrintSettings = async function (type, template, newSettings) {
                 }
             }
         }
-
         await addVS1Data('PrintDisplaySettings', JSON.stringify(printSettings));
     }
 };

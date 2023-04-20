@@ -143,7 +143,7 @@
                                     <div class="custom-control custom-switch" style="margin: 8px; ">
                                         <input class="custom-control-input chkDatatable" name="front" type="checkbox" id="formCheck-{{name}}" data-displaysetting-type="front{{value.[0]}}" onclick="showOrHidden(this)" checked="{{value.[2]}}">
                                         <label class="custom-control-label" for="formCheck-{{name}}">
-                                            {{name}}
+                                            {{ getTitleFromId name}}
                                         </label>
                                         <input type="checkbox" name="end" id="{{value.[0]}}new" style="margin: 5px !important; float: right; display: none;" data-display-type="end{{value.[0]}}" onchange="grid_main(this)" checked="true">
                                         <label style="float: right" for="{{value.[0]}}new">
@@ -255,7 +255,7 @@
         }
 
         $('#templatePreviewModal .btnCopyReport').css("display", "none");
-        // $('#templatePreviewModal .btnImportReport').css("display", "none");
+        $('#templatePreviewModal .btnImportReport').css("display", "none");
         $("#editPrintMore").css("display", "none");
     </script>
 </template>

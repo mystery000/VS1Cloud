@@ -2343,7 +2343,7 @@ Template.new_invoice.onCreated(function () {
   }
 
   templateObject.generateInvoiceData = async function (template_title, number) {
-    let printSettings = await getPrintSettings(template_title, number);;
+    let printSettings = await getPrintSettings(template_title, number);
     templateObject.print_displayfields.set(printSettings);
 
     object_invoce = [];
@@ -2359,6 +2359,10 @@ Template.new_invoice.onCreated(function () {
       case "Delivery Docket":
         templateObject.showDeliveryDocket1(template_title, number, false);
         break;
+    }
+
+    for (key in printSettings) {
+      $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
     }
   };
 
