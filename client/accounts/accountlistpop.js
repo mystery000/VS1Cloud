@@ -296,25 +296,25 @@ Template.accountlistpop.helpers({
 
 Template.accountlistpop.events({
     'click .btnAddNewAccount': function(event) {
-      $('#add-account-title').text('Add New Account');
-      $('#edtAccountID').val('');
-      $('#sltAccountType').val('');
-      $('#sltAccountType').removeAttr('readonly', true);
-      $('#sltAccountType').removeAttr('disabled', 'disabled');
-      $('#edtAccountName').val('');
-      $('#edtAccountName').attr('readonly', false);
-      $('#edtAccountNo').val('');
-      $('#sltTaxCode').val('NT' || '');
-      $('#txaAccountDescription').val('');
-      $('#edtBankAccountName').val('');
-      $('#edtBSB').val('');
-      $('#edtBankAccountNo').val('');
-      $('#routingNo').val('');
-      $('#edtBankName').val('');
-      $('#swiftCode').val('');
-      $('.showOnTransactions').prop('checked', false);
-      $('.isBankAccount').addClass('isNotBankAccount');
-      $('.isCreditAccount').addClass('isNotCreditAccount');
+      $('#addAccountModal').find('#add-account-title').text('Add New Account');
+      $('#addAccountModal').find('#edtAccountID').val('');
+      $('#addAccountModal').find('#sltAccountType').val('');
+      $('#addAccountModal').find('#sltAccountType').removeAttr('readonly', true);
+      $('#addAccountModal').find('#sltAccountType').removeAttr('disabled', 'disabled');
+      $('#addAccountModal').find('#edtAccountName').val('');
+      $('#addAccountModal').find('#edtAccountName').attr('readonly', false);
+      $('#addAccountModal').find('#edtAccountNo').val('');
+      $('#addAccountModal').find('#sltTaxCode').val('NT' || '');
+      $('#addAccountModal').find('#txaAccountDescription').val('');
+      $('#addAccountModal').find('#edtBankAccountName').val('');
+      $('#addAccountModal').find('#edtBSB').val('');
+      $('#addAccountModal').find('#edtBankAccountNo').val('');
+      $('#addAccountModal').find('#routingNo').val('');
+      $('#addAccountModal').find('#edtBankName').val('');
+      $('#addAccountModal').find('#swiftCode').val('');
+      $('#addAccountModal').find('.showOnTransactions').prop('checked', false);
+      $('#addAccountModal').find('.isBankAccount').addClass('isNotBankAccount');
+      $('#addAccountModal').find('.isCreditAccount').addClass('isNotCreditAccount');
     },
     'click .btnRefreshAccount, click .btnRefreshList': function (event) {
         let templateObject = Template.instance();

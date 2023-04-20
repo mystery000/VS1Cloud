@@ -8,13 +8,13 @@
                 data=record
             }}
 
-            <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
                 {{> departmentpop}}
-            </div>
+            </div> -->
 
-            <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
                 {{> newdepartmentpop}}
-            </div>
+            </div>  -->
             <div class="row no-gutters">
                 <div class="col">
                     <div class="card-body p-3 rounded">
@@ -461,14 +461,54 @@
                                             {{#each item in record.LineItems}}
                                                 <tr class="dnd-moved" id={{item.lineID}}>
                                                     <!-- <td contenteditable="false" class="lineProductName colProductName pointer" productid="{{item.productid}}" productcost="{{item.productcost}}">{{item.productname}}</td> -->
-                                                    <td contenteditable="false" class="colProductName" style="border-right: 0px;"><input class="es-input highlightSelect lineProductName" type="search" value="{{item.productname}}" productid="{{item.productid}}"
-                                                            productcost="{{item.productcost}}"></td>
+                                                    <td contenteditable="false" class="colProductName" style="border-right: 0px;">
+                                                        <!-- <input class="es-input highlightSelect lineProductName" type="search" value="{{item.productname}}" productid="{{item.productid}}"
+                                                            productcost="{{item.productcost}}"> -->
+                                                            {{> vs1___dropdown
+                                                                type='search'
+                                                                id='lineProductName'
+                                                                name='lineProductName'
+                                                                modalId= 'productListModal'
+                                                                list_template_name='productlistpop'
+                                                                innerModal=true
+                                                                modal_title='Product List'
+                                                                label = ''
+                                                                colNameForValue = 'colproductName'
+                                                                target_modal_id= 'newProductModal'
+                                                                target_template_id='newproductpop'
+                                                                is_editable=true
+                                                                noBorder=true
+                                                                custid=item.lineID
+                                                            }}
+                                                        
+                                                    </td>
                                                     <td contenteditable="false" class="colBarcodeScanner" style="border-left: 0px;">
                                                         <button type="button" class="btn btn-sm btn-success" id="tdBarcodeScannerMobile" data-toggle="modal" data-target="#scanBarcodeModal"><i class="fas fa-camera"></i></button>
                                                     </td>
                                                     <td contenteditable="true" class="lineProductBarCode colProductBarCode">{{item.productbarcode}}</td>
                                                     <td contenteditable="true" class="lineDescription colDescription">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colDepartment"><input class="es-input highlightSelect lineDepartment" type="search" value="{{item.department}}"></td>
+                                                    <td contenteditable="false" class="colDepartment">
+                                                        
+                                                        <!-- <input class="es-input highlightSelect lineDepartment" type="search" value="{{item.department}}"> -->
+                                                        {{> vs1___dropdown
+                                                            type='search'
+                                                            id='lineDepartment'
+                                                            name='lineDepartment'
+                                                            modalId= 'departmentModal'
+                                                            list_template_name='departmentpop'
+                                                            innerModal=true
+                                                            modal_title='Department List'
+                                                            label = ''
+                                                            colNameForValue = 'colDeptName'
+                                                            target_modal_id= 'newDepartmentModal'
+                                                            target_template_id='newdepartmentpop'
+                                                            is_editable=true
+                                                            noBorder=true
+                                                            data="Default"
+                                                            custid=item.lineID
+                                                        }}
+                                                    
+                                                    </td>
                                                     {{#if equals productcost true}}
                                                         <td class="lineProductCost">{{item.productcost}}</td>
                                                     {{/if}}
@@ -664,21 +704,21 @@
         {{> taxratelistpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> productlistpop}}
-    </div>
+    </div>-->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
         {{> newproductpop}}
-    </div>
+    </div> 
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
-    </div>
+    </div>-->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-        {{> addaccountpop}}
-    </div>
+        {{> addAccountModal}}
+    </div> 
 
      <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal" style="">
          {{> newtaxratepop}}
@@ -697,6 +737,11 @@
                 </div>
             </div>
         </div>
+                
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="addEmployeeModal">
+        {{> addemployeepop}}
     </div>
 
     <!-- Start Help Video Modal -->

@@ -1270,4 +1270,11 @@ Template.currencypop.helpers({
   apiParams: function() {
     return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
+
+  tablename : function() {
+    let templateObject = Template.instance();
+    return "tblCurrencyPopList" + templateObject.data.custid;
+  }
+
+  
 });

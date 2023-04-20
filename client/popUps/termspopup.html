@@ -11,7 +11,7 @@
                     <!-- {{> non_transactional_list tablename='termsList'}} -->
                     {{> datatablelist
                         tableclass="tblTermsList"
-                        tablename="tblTermsList"
+                        tablename=tablename
                         apiName= apiFunction
                         service = service
                         indexeddbname = 'TTermsVS1List'
@@ -24,6 +24,10 @@
                         exIndexDBName = 'ttermsvs1list'
                         exdatahandler = exDataHandler
                         searchAPI = searchAPI
+                        showPlusButton = true
+                        showPlusButtonDataTarget = "newTermsModal"
+                        showPlusButtonClass = "btnAddNewTerm"
+                        showModalID="#newTermsModal"
                     }}
                 </div>
             </div>

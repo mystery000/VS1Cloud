@@ -25,15 +25,47 @@ data
           <div class="row">
             <div class="col-12 col-lg-6">
               {{#if equals type "Customer"}}
-                {{> customer_selector
+                <!-- {{> customer_selector
                 label="Customer"
-                }}
+                }} -->
+                {{> vs1___dropdown
+                  type='search'
+                  id='edtCustomerName'
+                  name='edtCustomerName'
+                  modalId= 'customerListModal'
+                  list_template_name='customerlistpop'
+                  innerModal=false
+                  modal_title='Customer List'
+                  label = 'Customer'
+                  colNameForValue = 'colCompany'
+                  target_modal_id= 'edtCustomerModal'
+                  target_template_id='addcustomerpop'
+                  is_editable=true
+                  noBorder=false
+                  custid="transaction_payment_header"
+              }}
               {{else}}
-              {{> customer_selector
+              <!-- {{> customer_selector
                 label="Supplier"
                 id="edtSupplierName"
                 name="edtSupplierName"
-                }}
+                }} -->
+                {{> vs1___dropdown
+                  type='search'
+                  id='edtSupplierName'
+                  name='edtSupplierName'
+                  modalId= 'supplierListModal'
+                  list_template_name='supplierlistpop'
+                  innerModal=false
+                  modal_title='Supplier List'
+                  label = 'Supplier'
+                  colNameForValue = 'colCompany'
+                  target_modal_id= 'edtSupplierModal'
+                  target_template_id='addsupplierpop'
+                  is_editable=true
+                  noBorder=false
+                  custid="transaction_payment_header"
+              }}
               {{/if}}
             </div>
             <div class="col-12 col-lg-6">
@@ -78,19 +110,35 @@ data
                                   }}
                               </div>
                               <div class="col-6 col-md-12 col-lg-12 currency-js" type="sell">
-                                  {{> currencydropdown}}
+                                  {{> currencydropdown custid="tp"}}
                               </div>
                           </div>
                       </div>
                       <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="row">
                               <div class="col-6 col-md-12 col-lg-12">
-                                  {{> default_select
+                                  <!-- {{> default_select
                                           label="Bank Account"
                                           type="search"
                                           id="edtSelectBankAccountName"
                                           name="edtSelectBankAccountName"
-                                  }}
+                                  }} -->
+                                  {{> vs1___dropdown
+                                    type='search'
+                                    id='edtSelectBankAccountName'
+                                    name='edtSelectBankAccountName'
+                                    modalId= 'accountListModal'
+                                    list_template_name='accountlistpop'
+                                    innerModal=true
+                                    modal_title='Account List'
+                                    label = 'Bank Account'
+                                    colNameForValue = 'colAccountName'
+                                    target_modal_id= 'addAccountModal'
+                                    target_template_id='addAccountModal'
+                                    is_editable=true
+                                    noBorder=false
+                                    cust_id="transaction_payment_header"
+                                }}
                               </div>
                               <div class="col-6 col-md-12 col-lg-12">
                                   {{> default_input
@@ -157,12 +205,28 @@ data
                       <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="row">
                               <div class="col-6 col-md-12 col-lg-12">
-                                  {{> default_select
+                                  <!-- {{> default_select
                                           label="Payment Method"
                                           type="search"
                                           id="sltPaymentMethod"
                                           name="sltPaymentMethod"
-                                  }}
+                                  }} -->
+                                  {{> vs1___dropdown
+                                    type='search'
+                                    id='sltPaymentMethod'
+                                    name='sltPaymentMethod'
+                                    modalId= 'paymentMethodModal'
+                                    list_template_name='paymentmethodpop'
+                                    innerModal=true
+                                    modal_title='Payment Method List'
+                                    label = 'Payment Method'
+                                    colNameForValue = 'colName'
+                                    target_modal_id= 'newPaymentMethodModal'
+                                    target_template_id='newpaymentmethodpop'
+                                    is_editable=true
+                                    noBorder=false
+                                    cust_id="transaction_payment_header"
+                                }}
                               </div>
                               <div class="col-6 col-md-12 col-lg-12">
                                   {{> default_input
@@ -180,12 +244,29 @@ data
                       <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="row">
                               <div class="col-6 col-md-12 col-lg-12">
-                                  {{> default_select
+                                  <!-- {{> default_select
                                           label="Department"
                                           type="search"
                                           id="sltDepartment"
                                           name="sltDepartment"
-                                  }}
+                                  }} -->
+                                  {{> vs1___dropdown
+                                    type='search'
+                                    id='sltDepartment'
+                                    name='sltDepartment'
+                                    modalId= 'departmentModal'
+                                    list_template_name='departmentpop'
+                                    innerModal=true
+                                    modal_title='Departments'
+                                    label = 'Department'
+                                    colNameForValue = 'colDeptName'
+                                    target_modal_id= 'newDepartmentModal'
+                                    target_template_id='newdepartmentpop'
+                                    is_editable=true
+                                    noBorder=false
+                                    data="Default"
+                                    cust_id="transaction_payment_header"
+                            }}
                               </div>
                               <div class="col-6 col-md-12 col-lg-12">
                                   {{> default_input
