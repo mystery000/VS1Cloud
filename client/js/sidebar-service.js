@@ -463,8 +463,7 @@ export class SideBarService extends BaseService {
     options = {
       ListType: "Detail",
       OrderBy: '"PARTSID desc"',
-      LimitCount: parseInt(initialReportLoad),
-      search: 'ProductName="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
+      select: '[ProductName] f7like "'+ dataSearchName+ '" OR [BARCODE] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TProductQtyList, options);
   }
@@ -1030,7 +1029,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select: '[AccountName] f7like "' + dataSearchName + '"',
+      Search: 'AccountName like "%' + dataSearchName + '%"',
     };
     return this.getList(this.ERPObjects.TAccountVS1List, options);
   }
@@ -2555,6 +2554,38 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TStockAdjustEntry, options);
   }
 
+  getAllStockAdjustEntryByName(dataName) {
+    let options = "";
+    // if (limitcount == "All") {
+    //   options = {
+    //     ListType: "Detail",
+    //     select: "[Deleted]=false",
+    //   };
+    // } else {
+    //   options = {
+    //     orderby: '"StockAdjustEntryID desc"',
+    //     ListType: "Detail",
+    //     select: "[Deleted]=false",
+    //     LimitCount: parseInt(limitcount)||initialReportLoad,
+    //     LimitFrom: parseInt(limitfrom)||0,
+    //   };
+    // }
+    if(dataName && dataName != ""){
+      options = {
+        ListType : "Detail",
+        select : "[Employee]  like '%" + dataName + "%' OR [AccountName] like '%" + dataName + "%'",
+      }
+    }
+    else{
+      options = {
+        orderby: '"StockAdjustEntryID desc"',
+        ListType : "Detail",
+        select : "[Deleted]=false",
+      }
+    }
+    return this.getList(this.ERPObjects.TStockAdjustEntry, options);
+  }
+
   getAllSerialNumber() {
     let options = "";
     options = {};
@@ -2662,49 +2693,130 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TARReport, options);
   }
 
-  getTAPReport(dateFrom, dateTo, ignoreDate) {
+  getTAPReport(dateFrom, dateTo, ignoreDate, limitCount, limitFrom) {
     let options = "";
-    if (ignoreDate == true) {
-      options = {
-        IgnoreDates: true,
-        select: "[deleted]=false",
-      };
+    if(limitCount == undefined || limitCount == 'All') {
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          select: "[deleted]=false",
+        };
+      } else {
+        options = {
+          IgnoreDates: false,
+          select: "[deleted]=false",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: parseInt(initialReportLoad),
+        };
+      }
     } else {
-      options = {
-        IgnoreDates: false,
-        select: "[deleted]=false",
-        DateFrom: '"' + dateFrom + '"',
-        DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(initialReportLoad),
-      };
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          select: "[deleted]=false",
+          LimitCount: limitCount,
+          LimitFrom:limitFrom
+        };
+      } else {
+        options = {
+          IgnoreDates: false,
+          select: "[deleted]=false",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
+      }
     }
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
-  getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID) {
+  getTAPReportPage(limitCount, limitFrom, dateFrom, dateTo, ignoreDate,contactID) {
     let options = "";
-    if(contactID && contactID != ''){
-      options = {
-        IgnoreDates: true,
-        ClientID:contactID,
-        AgeByTransactionDate:true
-      };
-    }else{
-    if (ignoreDate == true) {
-      options = {
-        IgnoreDates: true,
-        AgeByTransactionDate:true
-      };
+    if(limitCount == undefined || limitCount == 'All') {
+      if(contactID && contactID != ''){
+        options = {
+          IgnoreDates: true,
+          ClientID:contactID,
+          AgeByTransactionDate:true
+        };
+      }else{
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(initialReportLoad),
+            AgeByTransactionDate:true
+          };
+        }
+      }
     } else {
-      options = {
-        IgnoreDates: false,
-        DateFrom: '"' + dateFrom + '"',
-        DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(initialReportLoad),
-        AgeByTransactionDate:true
-      };
+      if(contactID && contactID != ''){
+        options = {
+          IgnoreDates: true,
+          ClientID:contactID,
+          AgeByTransactionDate:true,
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
+      }else{
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true,
+            LimitCount: limitCount,
+            LimitFrom: limitFrom
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            AgeByTransactionDate:true,
+            LimitCount: limitCount,
+            LimitFrom: limitFrom
+          };
+        }
+      }
     }
+    return this.getList(this.ERPObjects.TAPReport, options);
   }
+
+  getTAPReportByKeyword(limitCount, limitFrom, dateFrom, dateTo, ignoreDate, name) {
+    let options = "";
+    if(limitCount == undefined || limitCount == 'All') {
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true,
+            Search:"Name='"+name+"'"
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(initialReportLoad),
+            AgeByTransactionDate:true,
+            Search:"Name='"+name+"'"
+          };
+        }
+    } else {
+        options = {
+          IgnoreDates: true,
+          Search:"Name='"+name+"'",
+          AgeByTransactionDate:true,
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
+    }
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
@@ -2806,7 +2918,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 
-  getAllAppointmentList(limitcount, limitfrom, deletefilter) {
+  getAllAppointmentList(limitcount, limitfrom) {
     let options = "";
     let checkOwnAppointment = localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly");
     let selectedEmployeeName = localStorage.getItem("mySessionEmployee");
@@ -2814,22 +2926,23 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        //select: "[Active]=true",
-        Search: "Active=true",
+        select: "[Active]=true",
+        //Search: "Active=true",
       };
     } else {
       options = {
         // orderby: '"AppointID desc"',
         OrderBy: "CreationDate desc",
         ListType: "Detail",
-        //select: "[Active]=true",
-        Search: "Active=true",
+        select: "[Active]=true",
+        //Search: "Active=true",
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
     }
-    if(deletefilter) options.Search = "";
-    return this.getList(this.ERPObjects.TAppointmentList, options);
+    //if(deletefilter) options.Search = "";
+    //return this.getList(this.ERPObjects.TAppointmentList, options);
+    return this.getList(this.ERPObjects.TAppointment, options);
   }
 
   getAllCorrespondenceList(limitcount, limitfrom) {

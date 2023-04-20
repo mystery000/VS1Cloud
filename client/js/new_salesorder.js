@@ -222,7 +222,7 @@ Template.new_salesorder.onCreated(function () {
     });
   };
 
-  templateObject.generateInvoiceData = function (template_title, number) {
+  templateObject.generateInvoiceData = async function (template_title, number) {
     switch (template_title) {
       case "Sales Orders":
         showSealsOrder1(template_title, number, false);
@@ -230,6 +230,10 @@ Template.new_salesorder.onCreated(function () {
       case "Delivery Docket":
         showDeliveryDocket1(template_title, number, false);
         break;
+    }
+    let printSettings = await getPrintSettings(template_title, number);
+    for (key in printSettings) {
+      $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
     }
   };
 

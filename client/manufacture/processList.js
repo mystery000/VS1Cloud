@@ -8,6 +8,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ManufacturingService } from './manufacturing-service';
 import { UtilityService } from "../utility-service";
 import XLSX from "xlsx";
+let utilityService = new UtilityService();
 
 Template.processList.onCreated(function () {
   const templateObject = Template.instance();
@@ -27,13 +28,13 @@ Template.processList.onCreated(function () {
       data.fields.KeyValue || "",
       data.fields.Description || "",
       data.fields.DailyHours || "",
-      Currency + data.fields.HourlyLabourCost || 0,
+      utilityService.modifynegativeCurrencyFormat(data.fields.HourlyLabourCost) || 0.0,
       data.fields.COGS || "",
       data.fields.ExpenseAccount || "",
-      Currency + data.fields.OHourlyCost || 0,
+      utilityService.modifynegativeCurrencyFormat(data.fields.OHourlyCost) || 0.0,
       data.fields.OCOGS || "",
       data.fields.OExpense || "",
-      Currency + data.fields.TotalHourlyCost || 0,
+      utilityService.modifynegativeCurrencyFormat(data.fields.TotalHourlyCost) || 0.0,
       data.fields.Wastage || "",
       linestatus
     ];
@@ -56,7 +57,7 @@ Template.processList.onCreated(function () {
       class: "colName",
       active: true,
       display: true,
-      width: "100",
+      width: "200",
     },
     {
       index: 2,
@@ -64,7 +65,7 @@ Template.processList.onCreated(function () {
       class: "colDescription",
       active: true,
       display: true,
-      width: "200",
+      width: "300",
     },
     {
       index: 3,
@@ -80,7 +81,7 @@ Template.processList.onCreated(function () {
       class: "colHourlyLabourCost",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 5,
@@ -94,7 +95,7 @@ Template.processList.onCreated(function () {
       index: 6,
       label: "Expense Account",
       class: "colExpense",
-      active: true,
+      active: false,
       display: true,
       width: "200",
     },
@@ -104,7 +105,7 @@ Template.processList.onCreated(function () {
       class: "colHourlyOverheadCost",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 8,
@@ -120,7 +121,7 @@ Template.processList.onCreated(function () {
       class: "colOverExpense",
       active: true,
       display: true,
-      width: "120",
+      width: "200",
     },
     {
       index: 10,
@@ -128,13 +129,13 @@ Template.processList.onCreated(function () {
       class: "colTotalHourlyCosts",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 11,
       label: "Inventory Asset Wastage",
       class: "colWastage",
-      active: true,
+      active: false,
       display: true,
       width: "200",
     },
@@ -223,8 +224,8 @@ Template.processList.events({
         FlowRouter.go('/processcard');
     },
 
-  "click #tblProcessList tbody tr": function (e) {
-    var listData = $(e.target).closest("tr").find(".colProcessId").text();
+  "click .tblProcessList tbody tr": function (e) {
+    var listData = $(e.target).closest("tr").attr('id');
     FlowRouter.go("/processcard?id=" + listData);
   },
 
@@ -467,5 +468,57 @@ Template.processList.events({
         }
       },
     });
+  },
+  'blur .divcolumn': function(event) {
+    let columData = $(event.target).html();
+    let columHeaderUpdate = $(event.target).attr("valueupdate");
+    $("th." + columHeaderUpdate + "").html(columData);
+
+},
+
+  'change .rngRange': function(event) {
+        let range = $(event.target).val();
+        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+        var datable = $('#tblProcessList th');
+        $.each(datable, function(i, v) {
+            if (v.innerText == columnDataValue) {
+                let className = v.className;
+                let replaceClass = className.replace(/ /g, ".");
+                $("." + replaceClass + "").css('width', range + 'px');
+
+            }
+        });
+
+    },
+  'click .btnOpenSettings': function(event) {
+      let templateObject = Template.instance();
+      var columns = $('#tblProcessList th');
+      const tableHeaderList = [];
+      let sTible = "";
+      let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
+      let columVisible = false;
+      let sClass = "";
+      $.each(columns, function(i, v) {
+          if (v.hidden == false) {
+              columVisible = true;
+          }
+          if ((v.className.includes("hiddenColumn"))) {
+              columVisible = false;
+          }
+          sWidth = v.style.width.replace('px', "");
+
+          let datatablerecordObj = {
+              sTitle: v.innerText || '',
+              sWidth: sWidth || '',
+              sIndex: v.cellIndex || 0,
+              sVisible: columVisible || false,
+              sClass: v.className || ''
+          };
+          tableHeaderList.push(datatablerecordObj);
+      });
+
+      templateObject.tableheaderrecords.set(tableHeaderList);
   },
 });

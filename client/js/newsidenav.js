@@ -232,6 +232,27 @@ Template.newsidenav.onRendered(function () {
   } else {
     templateObject.isSNTrackChecked.set(false);
   }
+  
+  if(JSON.parse(isClockOnOff)) {
+    isAccounts = false;
+    isAppointmentScheduling = false;
+    isBanking = false;
+    isContacts = false;
+    isCRM = false;
+    isDashboard = false;
+    isFixedAssets = false;
+    isInventory = false;
+    isManufacturing = false;
+    isPayments = false;
+    isPurchases = false;  
+    isExpenseClaims = false;
+    isReports =false;
+    isSales = false;
+    isShipping = false;
+    isTimesheetEntry = false;
+    isPayroll = false;  
+    isSettings = false;      
+  }
 
   function MyPopper(button, popper) {
     this.timer = null;
@@ -3055,7 +3076,6 @@ Template.newsidenav.events({
   },
 
 
-
   'click #sidenavtimeclock': function (event) {
     // if (FlowRouter.current().path == "/payrolloverview") {
     //   $("#btnClockOnOff").trigger("click");
@@ -3063,7 +3083,11 @@ Template.newsidenav.events({
     //   window.open('/payrolloverview#clockOnOff', '_self');
     // }
     event.preventDefault();
-    FlowRouter.go('/payrolloverview?modalId=clockonoff');
+    if (FlowRouter.current().path == "/payrolloverview") {
+      FlowRouter.go('/clockonoff');
+    } else {
+      FlowRouter.go('/payrolloverview?modalId=clockonoff');
+    }    
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
@@ -4034,6 +4058,8 @@ Template.newsidenav.helpers({
   includeClockOnOff: () => {
     return Template.instance().includeClockOnOff.get();
   },
+
+  
   checkFXCurrency: () => {
     return localStorage.getItem('CloudUseForeignLicence');
   },

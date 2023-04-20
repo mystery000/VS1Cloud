@@ -289,7 +289,7 @@ const erpObject = {
     VS1_Customize: "VS1_Customize",
     TProductQtyList: "TProductQtyList",
     TProductMovementList: "TProductMovementList",
-    TCardDataReport: "TCardDataReport",
+    TDashboardExecData1: "TDashboardExecData1",
     TProcTree: "TProcTree",
     TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
     TRateTypes: "TRateTypes",
@@ -323,6 +323,7 @@ const erpObject = {
     TVS1ClockOnReport: "TVS1ClockOnReport",
     TVS1EmployeeClockStatus: "TVS1EmployeeClockStatus",
     TVS1BuildCostReport : "TVS1BuildCostReport", 
+    TClockOnStatus : "TClockOnStatus",
 
 
     TCostTypes: "TCostTypes",
