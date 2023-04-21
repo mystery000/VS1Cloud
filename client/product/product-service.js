@@ -570,7 +570,7 @@ export class ProductService extends BaseService {
         let options = "";
         options = {
           PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-          search: 'BinLocation="'+ dataSearchName+ '" OR BinNumber="' + dataSearchName + '"',
+          select: 'BinLocation="'+ dataSearchName+ '" OR BinNumber="' + dataSearchName + '"',
         };
         return this.getList(this.ERPObjects.TProductBin, options);
     }

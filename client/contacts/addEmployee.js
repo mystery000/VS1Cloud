@@ -63,6 +63,9 @@ function MakeNegative() {
 Template.employeescard.onCreated(function () {
   const templateObject = Template.instance();
 
+  templateObject.paysliptableheaderrecords = new ReactiveVar([]);
+  templateObject.tableheaderrecordspayrun = new ReactiveVar([]);
+
   templateObject.AppTableModalData = new ReactiveVar([]);
   templateObject.ResidencyStatusList = new ReactiveVar();
   templateObject.EmploymentBasisList = new ReactiveVar();
@@ -128,30 +131,90 @@ Template.employeescard.onCreated(function () {
   templateObject.taskrecords = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
 
-  templateObject.getDataTableList = function(data) {
-    let currentId = FlowRouter.current().queryParams;
-    let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
-    let dataList = [];
-    if(parseInt(data.fields.EmployeeID) == parseInt(employeeID)){
-      dataList = [
-        data.fields.ID || '',
-        data.fields.Description || '',
-        data.fields.PayPeriod || '',
-        data.fields.LeaveMethod || '',
-        data.fields.Status || '',
-        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
-      ];
+  templateObject.getPaysLipsDataTableList = function (data) {
+    let linestatus = '';
+    if (data.fields.Active == true) {
+      linestatus = "";
+    } else if (data.fields.Active == false) {
+      linestatus = "In-Active";
     }
+    let paymentDate = '<span style="display:none;">'+(data.fields.PaymentDate !=''? moment(data.fields.PaymentDate).format("YYYY/MM/DD"): data.fields.PaymentDate)+'</span>'+(data.fields.PaymentDate !=''? moment(data.fields.PaymentDate).format("DD/MM/YYYY"): data.fields.PaymentDate);
+
+    let dataList = [
+        data.fields.ID || '0',
+        data.fields.Period,
+        paymentDate,
+        utilityService.modifynegativeCurrencyFormat(data.fields.TotalPay) || '',
+        linestatus,
+        `<button type="button"" class="btn btn-success btn-rounded btn-sm btnDownloadPayslip smallFontSizeBtn"><i class="fas fa-file-download"></i></button>
+        <button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
+    ];
+
     return dataList;
   }
+  let headerstructurepayslip = [
+    { index: 0, label: 'ID', class:'colPayslipID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Period', class:'colPayslipPeriod', active: true, display: true, width: "1000" },
+    { index: 2, label: 'Payment Date', class:'colPayslipPaymentDate', active: true, display: true, width: "200" },
+    { index: 3, label: 'Total Pay', class:'colPayslipTotalPay', active: true, display: true, width: "200" },
+    { index: 4, label: 'Status', class:'colStatus', active: true, display: true, width: "120" },
+    { index: 5, label: '', class:'colPayslipDownload', active: true, display: false, width: "10" },
+  ]
+  templateObject.paysliptableheaderrecords.set(headerstructurepayslip);
 
-  let headerStructure = [
-    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
-    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
-    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
-    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
-    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
-    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+
+  templateObject.getDataTableListpayrun = function(data){
+    let linestatus = '';
+    if (data.fields.PayrollCalendarActive == true) {
+      linestatus = "";
+    } else if (data.fields.PayrollCalendarActive == false) {
+      linestatus = "In-Active";
+    }
+    var status = data.fields.PayrollCalendarActive == true ? 'In-Active' : 'Active';
+    let dataList = [
+        data.fields.ID || "",
+        data.fields.PayrollCalendarName || "",
+        data.fields.PayrollCalendarPayPeriod || "",
+        moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
+        moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
+        linestatus
+    ];
+    return dataList;
+}
+let headerStructurepayrun  = [
+    { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
+    { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "100" },
+    { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
+    { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "100" },
+    { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "100" },
+    { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+];
+templateObject.tableheaderrecordspayrun.set(headerStructurepayrun);
+
+templateObject.getDataTableList = function(data) {
+  let currentId = FlowRouter.current().queryParams;
+  let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
+  let dataList = [];
+  if(parseInt(data.fields.EmployeeID) == parseInt(employeeID)){
+    dataList = [
+      data.fields.ID || '',
+      data.fields.Description || '',
+      data.fields.PayPeriod || '',
+      data.fields.LeaveMethod || '',
+      data.fields.Active == true ? '' : 'In-Active',
+    ];
+  }
+
+  
+  return dataList;
+}
+
+let headerStructure = [
+  { index: 0, label: 'ID', class: 'colLRID', active: false, display: true, width: "150" },
+  { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
+  { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
+  { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
+  { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "120" },
 ];
 templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
 
@@ -474,7 +537,7 @@ Template.employeescard.onRendered(function () {
     const filterProducts = (productToRemove = [], productList = []) => {
       return productList.filter(p => !productToRemove.some(pr => pr.Id == p.Id));
     }
-    let productIds = $("#tblInventoryService").find("input.chkServiceCard:checked");
+    let productIds = $(".tblInventoryService").find("input.chkServiceCard:checked");
     selectedProducts.push(...filterProducts(selectedProducts, productIds.map((index, input) => allProducts.find(p => p.Id == parseInt($(input).attr("product-id")))).toArray()));
 
     // We do this to avoid undefined valeus
@@ -2145,35 +2208,48 @@ Template.employeescard.onRendered(function () {
       $('#edtResidencyStatus').editableSelect('add', 'Australian Resident');
       $('#edtResidencyStatus').editableSelect('add', 'Foreign Resident');
       $('#edtResidencyStatus').editableSelect('add', 'Working Holiday Maker');
-      
+
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
       $('#obEarningsRate').editableSelect();
-      
+
       $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
           // let $search = $(this);
           // let offset = $search.offset();
           // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-            $('#payrollCalendarPopModal').modal("toggle");
+            // var datatable = $('#tblPayCalendars').DataTable();
+            // datatable.draw();
+            $('#payrollCalendarPopModal').modal("toggle");                                                                                                    
           // } else {
+          //   var datatable = $('#tblPayCalendars').DataTable();
+          //   datatable.draw();
           //   $('#payrollCalendarPopModal').modal("toggle");
           // }
       });
 
+      $('#edtPayPeriod').editableSelect()
+        .on('click.editable-select', async function (e, li) {
+          $('#SelectPayRunModal').modal("toggle");
+      });
+
       $('#edtHolidays').editableSelect()
         .on('click.editable-select', async function (e, li) {
-          let $search = $(this);
-          let offset = $search.offset();
-          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+          // let $search = $(this);
+          // let offset = $search.offset();
+          // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#holidaysPopModal').modal("toggle");
-          } else {
-            $('#holidaysPopModal').modal("toggle");
-          }
+          // } else {
+          //   $('#holidaysPopModal').modal("toggle");
+          // }
         });
-    }, 1000)
+
+        $('#edtPayPeriod').editableSelect().on('click.editable-select', async function (e, li) {
+          $('#SelectPayRunModal').modal("show");
+        });
+    }, 1000);
 
     //On Click Client Type List
-    $(document).on("click", "#tblInventoryService tbody tr", function (e) {
+    $(document).on("click", ".tblInventoryService tbody tr", function (e) {
       const table = $(this);
       if (edtProductSelect == "appointment") {
         let productName = table.find(".productName").text() || '';
@@ -2212,7 +2288,7 @@ Template.employeescard.onRendered(function () {
       $('#holidaysPopModal').modal('toggle');
     });
 
-    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+    $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
         var table = $(this);
         const id = table.find('.colAccountID').text();
         const accountName = table.find('.colAccountName').text();
@@ -2221,7 +2297,7 @@ Template.employeescard.onRendered(function () {
         $(".paste-expenses").attr('account-id', id);
         $(".paste-expenses").removeClass('paste-expenses')
         $("#accountListModal").modal("toggle");
-    });    
+    });
   });
 
   $(document).on('click', '#editEmployeeTitle', function (e, li) {
@@ -2845,7 +2921,7 @@ Template.employeescard.onRendered(function () {
             let $search = $(this);
             let offset = $search.offset();
             if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-              $('#earningRateSettingsModal').modal('show');            
+              $('#earningRateSettingsModal').modal('show');
             } else {
               $('#earningRateSettingsModal').modal('show');
             }
@@ -2853,7 +2929,7 @@ Template.employeescard.onRendered(function () {
           $('#ptEarningRate'+earningLines[i].ID).val(earningLines[i].EarningRate);
       }
     }, 1000);
-    
+
     templateObject.setEarningLineDropDown();
 
   };
@@ -3611,7 +3687,7 @@ Template.employeescard.onRendered(function () {
       }
 
       // templateObject.datatablerecords.set(splashArrayPaySlipList);
-
+      /*
       setTimeout(function () {
         $('#tblPayslipHistory').DataTable({
           data: splashArrayPaySlipList,
@@ -3694,7 +3770,7 @@ Template.employeescard.onRendered(function () {
                   datatable.clear();
                   datatable.rows.add(uniqueChars);
                   datatable.draw(false);
-                  setTimeout(function () {
+                  setTimeout(function () { 
                     $("#tblPayslipHistory").dataTable().fnPageChange('last');
                   }, 400);
 
@@ -3752,12 +3828,12 @@ Template.employeescard.onRendered(function () {
           }, 100);
         });
       }, 1000);
-
+      */
     } catch (error) {
       $('.fullScreenSpin').css('display', 'none');
     }
   };
-  templateObject.getPaySlips();
+  //templateObject.getPaySlips();
 
   // Display pay template tab inputs
   templateObject.displayPayTempEarningLines = function () {
@@ -5075,13 +5151,13 @@ Template.employeescard.events({
           var enteredEmail = $("#cloudEmpEmailAddress").val();
           var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
           var enteredPassword = $("#cloudEmpUserPassword").val();
-          let cloudpassword = $("#cloudEmpUserPassword").val() && $("#cloudEmpUserPassword").val().replace(/;/g, ",");
+          let cloudpassword = $("#cloudEmpUserPassword").val();
+          //&& $("#cloudEmpUserPassword").val().replace(/;/g, ",");
           let cloudcheckpassword = $("#cloudCheckEmpUserPassword").val();
           if (($.trim(enteredEmail).length != 0) && ($.trim(enteredPassword).length != 0)) {
-            if (cloudpassword && cloudcheckpassword && cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
+            if ((cloudpassword) && (cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase())) {
               var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
               if ($.trim(checkifupdate).length != 0) {
-
                 if (cloudpassword.length < 8) {
 
                   swal('Invalid VS1 Password', 'Password must be at least eight characters including one capital letter and one number!', 'error');
@@ -5326,7 +5402,6 @@ Template.employeescard.events({
               } else {
                 $('.fullScreenSpin').css('display', 'none');
                 $('#addvs1userModal').modal('toggle');
-
               }
 
             } else {
@@ -5335,6 +5410,7 @@ Template.employeescard.events({
 
           } else {
             if (employeeSaveID) {
+
               sideBarService.getAllEmployees(25, 0).then(function (dataReload) {
                 addVS1Data('TEmployee', JSON.stringify(dataReload)).then(function (datareturn) {
                   sideBarService.getAllAppointmentPredList().then(function (dataAPPPref) {
@@ -5360,6 +5436,7 @@ Template.employeescard.events({
                   FlowRouter.go('/employeelist?success=true');
                 });
               });
+
             }
           }
         });
@@ -5956,7 +6033,7 @@ Template.employeescard.events({
       let HoursAccruedAnnuallyFullTimeEmp = 0;
       let HoursFullTimeEmpFortnightlyPay = 0;
       let HoursAccruedAnnually = 0;
-    
+
       if (LeaveType == "") {
         handleValidationError('Please select a Leave!', 'leaveTypeSelect');
         return false;
@@ -6086,6 +6163,7 @@ Template.employeescard.events({
     }, delayTimeAfterSound);
   },
   'click #savePayRollNotes': async function () {
+    LoadingOverlay.show();
     let templateObject = Template.instance();
 
     const employeePayrolApis = new EmployeePayrollApi();
@@ -10097,6 +10175,8 @@ Template.employeescard.events({
     $('#SelectPayRunModal').modal("show");
   },
   // "click input#edtPayrollCalendar": (e, ui) => {
+  //   var datatable = $('#tblPayCalendars').DataTable();
+  //   datatable.draw();
   //   $('#payrollCalendarPopModal').modal("show");
   // },
   // "click input#edtHolidays": (e, ui) => {
@@ -10110,7 +10190,7 @@ Template.employeescard.events({
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
   },
-  
+
   "click #tblEarnings tbody tr": (e, ui) => {
     const tr = $(e.currentTarget);
     const id = parseInt(tr.find('.colEarningsID').text());
@@ -10236,6 +10316,35 @@ Template.employeescard.events({
 });
 
 Template.employeescard.helpers({
+
+apiFunctionpayrun:function() {
+    return sideBarService.getCalender;
+},
+searchAPIpayrun: function() {
+    return sideBarService.getNewCalenderByNameOrPayPeriod;
+},
+servicepayrun: ()=>{
+    return sideBarService;
+},
+datahandlerpayrun: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableListpayrun(data);
+        return dataReturn;
+    }
+},
+exDataHandlerpayrun: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableListpayrun(data);
+        return dataReturn;
+    }
+},
+apiParamspayrun: ()=>{
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+},
+
+
   AppTableModalData: () => {
     return Template.instance().AppTableModalData.get();
   },
@@ -10502,6 +10611,35 @@ Template.employeescard.helpers({
   service: ()=>{
     let sideBarService = new SideBarService();
     return sideBarService;
+  },
+
+
+  paysliptableheaderrecords: () => {
+    return Template.instance().paysliptableheaderrecords.get();
+  },
+
+  apiFunction4:function() {
+      return sideBarService.getPaySlips;
+  },
+
+  searchAPI4: function() {
+      return sideBarService.getPaySlips;
+  },
+
+  datahandler4: function () {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getPaysLipsDataTableList(data);
+          return dataReturn;
+      }
+  },
+  
+  exDataHandler4: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getPaysLipsDataTableList(data);
+        return dataReturn;
+    }
   },
 });
 

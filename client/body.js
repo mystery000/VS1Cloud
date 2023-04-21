@@ -596,6 +596,7 @@ import '../public/js/cdnjs/vfs_fonts.js';
 import './vs1_templates/title_list_pop/title_list_pop.js';
 import './expenseclaim/expenseclaims.html';
 import './packages/currency/editcurrencypop.js';
+import '../public/js/tree.jquery.js';
 /* Stefan */
 
 /* Arthlo */
@@ -674,6 +675,8 @@ import './reports/exeposition/exeposition.js';
 import './reports/exeprofitability/exeprofitability.js';
 import './reconciliation/newstatementrule.js';
 import './vs1_templates/template_buttons/report_export_import_print_display_button.js';
+import './contacts/customerlistpopup.html';
+import './contacts/supplierlistpopup.html';
 /* Scott */
 
 /* Mainstar */

@@ -1483,4 +1483,9 @@ Template.departmentpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
+    tablename: function () {
+        let templateObject = Template.instance();
+        let custID = templateObject.data.custid ? templateObject.data.custid : '';
+        return 'departmentList'+ custID;
+    }
 });

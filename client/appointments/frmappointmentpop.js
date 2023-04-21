@@ -58,7 +58,7 @@ Template.frmappointmentpop.onRendered(function() {
     const templateObject = Template.instance();
 
     $('#edtFrequencyDetail').css('display', 'none');
-    $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
+    $("#dtSODate,#dtSODate2,#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
         buttonImageOnly: true,
@@ -3926,7 +3926,7 @@ Template.frmappointmentpop.onRendered(function() {
         }, 1000);
     });
 
-    $(document).on("click", "#tblInventory tbody tr", async function(e) {
+    $(document).on("click", ".tblInventory tbody tr", async function(e) {
         $(".colProductName").removeClass("boldtablealertsborder");
         let selectLineID = $("#selectLineID").val();
         var table = $(this);
@@ -7535,7 +7535,7 @@ Template.frmappointmentpop.events({
                 $("#tblInventory_filter .form-control-sm").val("");
                 $("#tblInventory_filter .form-control-sm").trigger("input");
 
-                var datatable = $("#tblInventory").DataTable();
+                var datatable = $(".tblInventory").DataTable();
                 datatable.draw();
                 $("#tblInventory_filter .form-control-sm").trigger("input");
             }, 500);

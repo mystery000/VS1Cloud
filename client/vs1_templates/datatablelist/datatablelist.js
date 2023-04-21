@@ -547,7 +547,7 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: false,
+                responsive: true,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 //"autoWidth": false,
                 action: function () {
@@ -664,7 +664,7 @@ Template.datatablelist.onRendered(async function () {
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
-                    $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;margin-right: 14px;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     if(typeof templateObject.data.callBack == 'function'){//Alexei
                       templateObject.data.callBackFunc();
                     }
@@ -1511,7 +1511,7 @@ Template.datatablelist.events({
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.value) {
-                            $('#myModal2').modal('hide');
+                            $('#'+tableName+'_Modal').modal('hide');
                         }
                     });
                 });

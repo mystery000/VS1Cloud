@@ -21,7 +21,7 @@ Template.process_clock_template.onCreated(function() {
 
     templateObject.getDataTableList = function(data) {    
 
-        let linestatus;
+        let linestatus
      
         if (data.Active  == false) {
             linestatus = "";
@@ -94,7 +94,8 @@ Template.process_clock_template.onRendered(function() {
                     bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
                     
                     let bomdetails = JSON.parse(bomData.Details);
-    
+
+   
                     for(let i = 0; i < bomdetails.length; i++) {
                         
                         if(bomdetails[i].process != '' ){
@@ -180,12 +181,9 @@ Template.process_clock_template.onRendered(function() {
                 let format_date = moment().format('DD/MM/YYYY');
     
                 for (let t = 0; t < workorderdata.length; t++) {
-                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);         
-                    
+                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);                     
                     let bomdetails = JSON.parse(bomData.Details);
-
-                    for(let i = 0; i < bomdetails.length; i++) {
-                        
+                    for(let i = 0; i < bomdetails.length; i++) {                        
                         if(bomdetails[i].process != '' ){
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
@@ -206,8 +204,7 @@ Template.process_clock_template.onRendered(function() {
                         }
                         
                     }           
-                }
-    
+                }    
                 addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
                 }).catch(function(err){
                 });

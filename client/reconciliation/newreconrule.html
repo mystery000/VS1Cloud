@@ -251,7 +251,26 @@
                                 <div class="form-group"  style="padding: 0 20px;">
                                     <label style="margin-right: 20px;">Customer: </label>
                                     <input type="hidden" id="sltCustomerID" value="">
-                                    <select type="search" class="form-control" id="sltCustomer" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+<!--                                    <select type="search" class="form-control" id="sltCustomer" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>-->
+                                    <div style="display:inline-block; width: 300px; cursor: pointer;">
+                                        {{> vs1___dropdown
+                                                type='search'
+                                                id='sltCustomer'
+                                                name='sltCustomer'
+                                                usedModal=false
+                                                modalId= 'customerlistpopModal'
+                                                list_template_name='customerlistpopup'
+                                                innerModal=true
+                                                modal_title='Account List'
+                                                label = ''
+                                                colNameForValue = 'colCompany'
+                                                target_modal_id= 'addAccountModal'
+                                                target_template_id='addaccountpop'
+                                                custid='rcq7ZWZnptT6TzBwP'
+                                                is_editable=false
+                                                noBorder=false
+                                        }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -287,7 +306,7 @@
                                                                 <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
                                                             </td>
                                                             <td class="colAccount">
-                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+                                                                <input id="lineAccountName" class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
                                                             </td>
                                                             <td class="colTaxCode">
                                                                 <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
@@ -309,7 +328,7 @@
                                                     </tr>
                                                 {{/unless}}
                                                 <tr class="dnd-moved" id="sampleData" style="display:none">
-                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
+                                                    <td contenteditable="false" class="colID hiddenColumn">12</td>
                                                     <td class="colDesc">
                                                         <input class="highlightInput lineDesc" type="text" value="">
                                                     </td>
@@ -551,7 +570,26 @@
                                 <div class="form-group"  style="padding: 0 20px;">
                                     <label style="margin-right: 20px;">Supplier: </label>
                                     <input type="hidden" id="sltSupplierID" value="">
-                                    <select type="search" class="form-control" id="sltSupplier" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+<!--                                    <select type="search" class="form-control" id="sltSupplier" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>-->
+                                    <div style="display:inline-block; width: 300px; cursor: pointer;">
+                                        {{> vs1___dropdown
+                                                type='search'
+                                                id='sltSupplier'
+                                                name='sltSupplier'
+                                                usedModal=false
+                                                modalId= 'supplierlistpopModal'
+                                                list_template_name='supplierlistpopup'
+                                                innerModal=true
+                                                modal_title='Account List'
+                                                label = ''
+                                                colNameForValue = 'colCompany'
+                                                target_modal_id= 'addsupplierpopModal'
+                                                target_template_id='addsupplierpop'
+                                                custid='rcq7ZWZnptT6TzBwP'
+                                                is_editable=true
+                                                noBorder=false
+                                        }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -588,9 +626,11 @@
                                                             </td>
                                                             <td class="colAccount">
                                                                 <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+
                                                             </td>
                                                             <td class="colTaxCode">
                                                                 <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+
                                                             </td>
                                                             <td class="colAmount text-right">
                                                                 <input class="highlightInput lineAmount text-right" type="search" value="{{item.amount}}">
@@ -615,9 +655,11 @@
                                                     </td>
                                                     <td class="colAccount">
                                                         <input class="es-input highlightSelect lineAccountName" type="search" value="">
+
                                                     </td>
                                                     <td class="colTaxCode">
                                                         <input class="es-input highlightSelect lineTaxCode" type="search" value="">
+
                                                     </td>
                                                     <td class="colAmount text-right">
                                                         <input class="highlightInput lineAmount text-right" type="number" value="">
@@ -666,9 +708,11 @@
                                                             </td>
                                                             <td class="colAccount">
                                                                 <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+
                                                             </td>
                                                             <td class="colTaxCode">
                                                                 <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+
                                                             </td>
                                                             <td class="colPercent text-right">
                                                                 <input class="highlightInput linePercent text-right" type="number" value="{{item.percent}}">
@@ -693,9 +737,11 @@
                                                     </td>
                                                     <td class="colAccount">
                                                         <input class="es-input highlightSelect lineAccountName" type="search" value="">
+
                                                     </td>
                                                     <td class="colTaxCode">
                                                         <input class="es-input highlightSelect lineTaxCode" type="search" value="">
+
                                                     </td>
                                                     <td class="linePercent">
                                                         <input class="highlightInput linePercent text-right" type="number" value="">
@@ -854,7 +900,25 @@
                                 <div class="form-group"  style="padding: 0 20px;">
                                     <label style="margin-right: 20px;">Bank Account: </label>
                                     <input type="hidden" id="sltBankAccountID" value="">
-                                    <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+                                    <div style="display:inline-block; width: 300px; cursor: pointer;">
+                                        {{> vs1___dropdown
+                                                type='search'
+                                                id='sltBankAccount'
+                                                name='sltBankAccount'
+                                                usedModal=false
+                                                modalId= 'accountlistpopModal'
+                                                list_template_name='accountlistpop'
+                                                innerModal=true
+                                                modal_title='Account List'
+                                                label = ''
+                                                colNameForValue = 'colAccountName'
+                                                target_modal_id= 'addsupplierpopModal'
+                                                target_template_id='addsupplierpop'
+                                                custid='rcq7ZWZnptT6TzBwP'
+                                                is_editable=false
+                                                noBorder=false
+                                        }}
+                                    </div>
                                 </div>
                             </div>
                         </div>

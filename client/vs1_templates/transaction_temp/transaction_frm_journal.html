@@ -146,13 +146,13 @@
             <th class="th colAccountName" style="width: 300px;">Account Name</th>
             <!-- <th class="th colAccountNo" style="width: 300px;">Account No</th> -->
             <th class="th colMemo">Memo</th>
+            <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
             <th colspan="{{displayFieldColspan }}" class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
             <th colspan="{{displayFieldColspan }}" class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
             <th colspan="{{displayFieldColspan }}" class="th colDebitEx colDebitExCheck" style="width: 130px; text-align: left!important;">Debit (Ex) <i class="fas fa-random"></i></th>
             <th colspan="{{displayFieldColspan }}" class="th colDebitInc colDebitIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Debit (Inc) <i class="fas fa-random fa-trans"></i></th>
             <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
             <th colspan="{{displayFieldColspan }}" class="th colTaxAmount hiddenColumn" style="width: 95px; text-align: left!important;">Tax Amt</th>
-            <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
             <!-- <th class="th">Tax Price</th> -->
             <th class="th colDepartment" style="width: 95px; text-align: left!important;">Department</th>
             <th class="th colCustomerJob" style="width: 95px; text-align: left!important;">Customer/Job</th>
@@ -179,13 +179,59 @@
         <tbody>
         {{#each item in recordLineItems}}
             <tr class="dnd-moved" id="{{item.lineID}}">
-                <!-- <td contenteditable="false" class="lineAccountName colAccountName" taxCode="{{item.taxCode}}" lineid="{{item.id}}">{{item.accountname}}</td> -->
-                <td contenteditable="false" class="colAccountName"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}"></td>
+                <td contenteditable="false" class="colAccountName">
+                    {{#let
+                            accountID = (addString 'select-account-' item.lineID)
+                            accountModalID = (addString 'accountModal-' item.lineID)
+                    }}
+                    {{> vs1___dropdown
+                            type='search'
+                            classes='lineAccountName'
+                            id=accountID
+                            name=accountID
+                            modalId= accountModalID
+                            usedModal=false
+                            list_template_name='accountlistpop'
+                            innerModal=true
+                            modal_title='Account List'
+                            label = ''
+                            colNameForValue = 'colAccountName'
+                            target_modal_id= 'addAccountModal'
+                            target_template_id='addaccountpop'
+                            custid=item.lineID
+                            is_editable=false
+                            noBorder=true
+                    }}
+                    {{/let}}
+                </td>
                 <!-- <td contenteditable="true" class="lineAccountNo colAccountNo">{{item.accountno}}</td> -->
                 <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
 
                 <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
-                <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+                <td contenteditable="false" class="colTaxCode">
+                    {{#let
+                            taxID = (addString 'select-tax-' item.lineID)
+                            taxModalID = (addString 'taxModal-' item.lineID)
+                    }}
+                    {{> vs1___dropdown
+                            type='search'
+                            classes='lineTaxCode'
+                            id=taxID
+                            name=taxID
+                            modalId= taxModalID
+                            list_template_name='taxratelistpop'
+                            innerModal=true
+                            modal_title='Tax Code List'
+                            label = ''
+                            colNameForValue = 'taxName'
+                            target_modal_id= 'taxratelistModal'
+                            target_template_id='EditTaxRateModal'
+                            custid=item.lineID
+                            is_editable=false
+                            noBorder=true
+                    }}
+                    {{/let}}
+                </td>
 
 
                 <td class="BcolCreditExCheck-{{item.lineID}}" style="text-align: right!important;">
@@ -215,16 +261,51 @@
                 <!-- Department -->
                 <td contenteditable="false" class="colDepartment" id="department-select-{{item.lineID}}">
                     <div class="form-group">
-                        <select type="search" class="form-control select-department" id="select-department-{{item.lineID}}" name="department-{{item.lineID}}"
-                                style="background-color:rgb(255, 255, 255); cursor: pointer;" onloadeddata={{onloadDepartmentSelect item.lineID item.department}} value="{{item.department}}">
-                            <option value="{{item.department}}" selected>{{item.department}}</option>
-                        </select>
+                        {{#let
+                                departmentID = (addString 'select-department-' item.lineID)
+                                departmentModalID = (addString 'departModal-' item.lineID)
+                        }}
+                        {{> vs1___dropdown
+                                type='search'
+                                classes='select-department'
+                                id=departmentID
+                                name=departmentID
+                                modalId=departmentModalID
+                                list_template_name='departmentpop'
+                                innerModal=true
+                                modal_title='Department List'
+                                colNameForValue = 'colDeptName'
+                                target_modal_id= 'newDepartModal'
+                                target_template_id='newDepartmentPop'
+                                custid=item.lineID
+                                is_editable=false
+                                noBorder=true
+                        }}
+                        {{/let}}
                     </div>
                 </td>
                 <td contenteditable="false" class="colCustomerJob" id="td-customer-{{item.lineID}}">
-                    {{> vs1_dropdown name='lineCustomerJob' type='search' classes='es-input lineCustomerJob' value=item.customerJob
-                            onloadeddata=onloadedLineCustomerJob
+                    {{#let
+                            customerID = (addString 'select-customer-' item.lineID)
+                            customerModalID = (addString 'customerModal-' item.lineID)
                     }}
+                    {{> vs1___dropdown
+                            type='search'
+                            classes='lineCustomerJob'
+                            id=customerID
+                            name=customerID
+                            modalId=customerModalID
+                            list_template_name='customerlistpopup'
+                            innerModal=true
+                            modal_title='Customer List'
+                            colNameForValue = 'colCompany'
+                            target_modal_id='addAccountModal'
+                            target_template_id='addaccountpop'
+                            custid=item.lineID
+                            is_editable=false
+                            noBorder=true
+                    }}
+                    {{/let}}
                 </td>
                 <td class="th colFixedAsset" assetID="{{item.fixedAssetID}}" assetname="{{item.fixedAssetName}}"
                     costTypeID="{{item.costTypeID}}" costtypename="{{item.costTypeName}}" id="td-fixedasset-{{item.lineID}}">

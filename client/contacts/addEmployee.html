@@ -1671,6 +1671,8 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
+                                    <label>Ordinary Earnings Rate</label>
+                                    <!-- {{> vs1_dropdown id='edtEarningRate' name='edtEarningRate' value=bindept type='search' classes='es-input'}} -->
                                     {{> vs1___dropdown
                                       data=item.item
                                       type='search'
@@ -1941,8 +1943,8 @@
                                       style="position: absolute; margin-top: 8px;"
                                       for="taxesEligibleReceiveLeaveLoading">Eligible to Receive Leave Loading</label>
                                   </div>
-                                  <br />
-                                  <div class="custom-control custom-switch"
+                                  <!-- <br /> -->
+                                  <!-- <div class="custom-control custom-switch"
                                     style="margin: 8px; display: inline-flex !important;">
                                     {{#if equals employeePaySetting.SeniorandPensionersTaxOffsetClaimed true}}
                                     <input class="custom-control-input" type="checkbox"
@@ -1957,6 +1959,24 @@
                                       style="position: absolute; margin-top: 8px;"
                                       for="taxesSeniorPensionersTaxOffsetClaimed">Senior and Pensioners Tax Offset
                                       Claimed</label>
+                                  </div> -->
+                                </div>
+                                <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
+                                  <div class="custom-control custom-switch"
+                                  style="margin: 8px; display: inline-flex !important;">
+                                  {{#if equals employeePaySetting.SeniorandPensionersTaxOffsetClaimed true}}
+                                  <input class="custom-control-input" type="checkbox"
+                                    name="taxesSeniorPensionersTaxOffsetClaimed"
+                                    id="taxesSeniorPensionersTaxOffsetClaimed" checked>
+                                  {{else}}
+                                  <input class="custom-control-input" type="checkbox"
+                                    name="taxesSeniorPensionersTaxOffsetClaimed"
+                                    id="taxesSeniorPensionersTaxOffsetClaimed">
+                                  {{/if}}
+                                  <label class="custom-control-label mobileLabel"
+                                    style="position: absolute; margin-top: 8px;"
+                                    for="taxesSeniorPensionersTaxOffsetClaimed">Senior and Pensioners Tax Offset
+                                    Claimed</label>
                                   </div>
                                 </div>
                               </div>
@@ -2398,56 +2418,37 @@
                               </div>
                               <div class="row">
                                 <div class="col-12">
-                                  <div class="table-responsive">
-                                    <style>
-                                      .hiddenColumn {
-                                        display: none;
-                                      }
-
-                                      .showColumn {
-                                        display: table-cell;
-                                        padding: .75rem;
-                                        vertical-align: top;
-                                      }
-
-                                      #tblLeaveRequests tr th {
-                                        /* width: calc(100% / 4 - 30px) !important; */
-                                        width: 100% !important;
-                                      }
-
-                                      #tblLeaveRequests tr th.width30Px {
-                                        max-width: 8px !important;
-                                        width: 8px !important;
-                                      }
-
-                                      #tblPayslipHistory tr th {
-                                        width: calc(100% / 3 - 30px) !important;
-                                      }
-
-                                      #tblPayslipHistory tr th.width30Px {
-                                        max-width: 8px !important;
-                                        width: 8px !important;
-                                      }
-                                    </style>
-                                      {{>datatablelist
-                                        tablename="tblLeaveRequests"
-                                        apiName= apiFunction
-                                        indexeddbname = 'TLeavRequest'
-                                        tableheaderrecords = tableLeaveRequestheaderrecords
-                                        exportfilename = 'Payroll Leave Request'
-                                        istransaction = false
-                                        apiParams= apiParams
-                                        datahandler = datahandler
-                                        service=service
-                                        lowercaseDataName='tleavrequest'
-                                        exIndexDBName = 'tleavrequest'
-                                        exdatahandler = exDataHandler
-                                        viewAddLeaveRequest = true
-                                        showPlusButton=true
-                                        showPlusButtonClass='btnLeaveRequestBtn'
-                                        showModalID='#newLeaveRequestModal'
-                                    }}
-                                  </div>
+                                  <style>
+                                    .hiddenColumn {
+                                      display: none;
+                                    }
+                                    .showColumn {
+                                      display: table-cell;
+                                      padding: .75rem;
+                                      vertical-align: top;
+                                    }
+                                    #tblLeaveRequests {
+                                      width: 100% !important;
+                                    }
+                                  </style>
+                                    {{>datatablelist
+                                      tablename="tblLeaveRequests"
+                                      apiName= apiFunction
+                                      indexeddbname = 'TLeavRequest'
+                                      tableheaderrecords = tableLeaveRequestheaderrecords
+                                      exportfilename = 'Payroll Leave Request'
+                                      istransaction = false
+                                      apiParams= apiParams
+                                      datahandler = datahandler
+                                      service=service
+                                      lowercaseDataName='tleavrequest'
+                                      exIndexDBName = 'tleavrequest'
+                                      exdatahandler = exDataHandler
+                                      viewAddLeaveRequest = true
+                                      showPlusButton=true
+                                      showPlusButtonClass='btnLeaveRequestBtn'
+                                      showModalID='#newLeaveRequestModal'
+                                  }}
                                 </div>
                               </div>
                             </div>
@@ -2528,6 +2529,10 @@
                               <div class="row mb-2">
                                 <div class="col-12 col-md-6">
                                   <h4>Payslip</h4>
+                                </div>
+                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start"
+                                      style="padding: 0px !important">
+                                    {{> export_import_print_display_button Import="hiddenButton" tablename="tblPayslipHistory"}}
                                 </div>
                               </div>
 
@@ -2622,50 +2627,36 @@
                                   </div>
                                 </div>
                               </div>
+
                               <div class="row">
+                                <style>
+                                  .tblPayslipHistory td.colPayslipTotalPay{
+                                    text-align: right;
+                                  }
+                                  .tblPayslipHistory td.colPayslipDownload{
+                                    text-align: center;
+                                  }
+                                </style>
                                 <div class="col-12">
-                                  <div class="table-responsive">
-                                    <style>
-                                      .hiddenColumn {
-                                        display: none;
-                                      }
-
-                                      .showColumn {
-                                        display: table-cell;
-                                        padding: .75rem;
-                                        vertical-align: top;
-                                      }
-
-                                      .smallFontSizeBtn i {
-                                        font-size: 12px;
-                                      }
-
-                                      .smallFontSizeBtn {
-                                        padding: 0;
-                                        width: 25px;
-                                        height: 25px;
-                                        display: inline-flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                      }
-                                    </style>
-                                    <table id="tblPayslipHistory" style="width:100%"
-                                      class="dataTable table table-hover table-striped table-bordered tblPayslipHistory">
-                                      <thead>
-                                        <tr class="dnd-moved">
-                                          <th class="th colPayslipID hiddenColumn">ID</th>
-                                          <th class="th colPayslipPeriod">Period</th>
-                                          <th class="th colPayslipPaymentDate">Payment Date</th>
-                                          <th class="th colPayslipTotalPay">Total Pay</th>
-                                          <th class="th colPayslipDownload width30Px" style="width: 3% !important;">
-                                          </th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-
-                                      </tbody>
-                                    </table>
-                                  </div>
+                                  {{> datatablelist
+                                    tablename="tblPayslipHistory"
+                                    tableclass="tblPayslipHistory"
+                                    apiName=apiFunction8
+                                    indexeddbname='TPaySlips'
+                                    tableheaderrecords=paysliptableheaderrecords
+                                    exportfilename='PaySlips'
+                                    istransaction = false
+                                    apiParams=apiParams4
+                                    datahandler=datahandler4
+                                    service=service
+                                    lowercaseDataName='tpayslips'
+                                    exIndexDBName='tpayslips'
+                                    exdatahandler=exDataHandler4
+                                    searchAPI=searchAPI4
+                                    showPlusButton=true
+                                    showPlusButtonClass='addNewSlip'
+                                    showModalID='#paySlipModal'
+                                  }}
                                 </div>
                               </div>
                             </div>
@@ -3069,7 +3060,7 @@
                                                       <label>Calculation Type</label><br />
                                                       <div class="d-inline-block">
                                                         <div
-                                                          class="custom-control custom-switch mr-3 d-inline-block float-left">
+                                                          class="custom-control custom-switch mr-3">
                                                           <input class="custom-control-input" type="radio"
                                                             name="calculationTypeSuperannuation"
                                                             id="calculationTypeSuperannuation1" value="1">
@@ -3077,7 +3068,7 @@
                                                             for="calculationTypeSuperannuation1">Fixed Amount</label>
                                                         </div>
                                                         <div
-                                                          class="custom-control custom-switch mr-3 d-inline-block float-left">
+                                                          class="custom-control custom-switch mr-3">
                                                           <input class="custom-control-input" type="radio"
                                                             name="calculationTypeSuperannuation"
                                                             id="calculationTypeSuperannuation2" value="2">
@@ -3086,7 +3077,7 @@
                                                             Earnings</label>
                                                         </div>
                                                         <div
-                                                          class="custom-control custom-switch mr-3 d-inline-block float-left">
+                                                          class="custom-control custom-switch mr-3">
                                                           <input class="custom-control-input" type="radio"
                                                             name="calculationTypeSuperannuation"
                                                             id="calculationTypeSuperannuation3" value="3">
@@ -3704,7 +3695,7 @@
                                   <h4>Notes</h4>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                  <a href="#newNoteModal" data-toggle="modal">
+                                  <!-- <a href="#newNoteModal" data-toggle="modal">
                                     {{> vs1_button
                                         color='primary'
                                         classes='float-right btnAddNewNotes'
@@ -3713,7 +3704,7 @@
                                         iconName='plus'
                                         title='Add New Note'
                                     }}
-                                  </a>
+                                  </a> -->
                                 </div>
                                 <div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog"
                                     aria-labelledby="" aria-hidden="true">
@@ -3951,7 +3942,6 @@
                           </div>
                         </div>
                         <!-- End -->
-                        <div class="table-responsive">
                           <style>
                             th {
                               background-color: #ededed;
@@ -3987,7 +3977,6 @@
 
                           </style>
                           {{> non_transactional_list tablename="tblEmployeeTransactionList"}}
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -4173,20 +4162,11 @@
         </div>
         <div class="modal-body">
           <style>
-              #tblPayCalendars .colPayCalendarName{
-                  width: 30%!important;
-              }
-              #tblPayCalendars .colPayPeriod{
-                  width: 20%!important;
-              }
-              #tblPayCalendars .colNextPayPeriod{
-                  width: 20%!important;
-              }
-              #tblPayCalendars .colNextPaymentDate{
-                  width: 20%!important;
+              #tblPayCalendars {
+                width: 100% !important;
               }
               #tblPayCalendars .colStatus{
-                  width: 10%!important;
+                  width: 120px !important;
               }              
           </style>
           {{> non_transactional_list tablename="tblPayCalendars"}}
@@ -4217,14 +4197,11 @@
         </div>
         <div class="modal-body">
           <style>
-              #tblHolidays .colHolidayName{
-                  width: 45%!important;
-              }
-              #tblHolidays .colHolidayDate{
-                  width: 45%!important;
+              #tblHolidays {
+                width: 100% !important;
               }
               #tblHolidays .colStatus{
-                  width: 10%!important;
+                  width: 120px !important;
               }              
           </style>
           {{> non_transactional_list tablename="tblHolidays"}}
@@ -4246,7 +4223,7 @@
   </div>
 
   {{> taskDetailModal}}
-  {{> frmappointmentpop}}
+  <!-- {{> frmappointmentpop}} -->
   {{> newTaskModal}}
 
   {{> SelectPayCalendar }}

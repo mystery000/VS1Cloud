@@ -459,13 +459,18 @@ Template.refundcard.onCreated(() => {
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
 
-  templateObject.generateInvoiceData = function (template_title, number) {
+  templateObject.generateInvoiceData = async function (template_title, number) {
     object_invoce = [];
     switch (template_title) {
       case "Refunds":
         templateObject.showRefund1(template_title, number, false);
         break;
-      default: null
+      default:
+        null
+    }
+    let printSettings = await getPrintSettings(template_title, number);
+    for (key in printSettings) {
+      $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
     }
   };
 
