@@ -30,7 +30,7 @@
                         </table> -->
                         {{>datatablelist
                             tableclass="tblShipViaPopList"
-                            tablename="tblShipViaPopList"
+                            tablename=tablename
                             apiName= apiFunction
                             service = service
                             indexeddbname = 'TShippingMethod'
@@ -43,6 +43,10 @@
                             exIndexDBName = 'tshippingmethod'
                             exdatahandler = exDataHandler
                             searchAPI = searchAPI
+                            showPlusButton = true
+                            showPlusButtonDataTarget = "newShipViaModal"
+                            showPlusButtonClass = "btnAddNewShipVia"
+                            showModalID ="#newShipViaModal"
                         }}
                 </div>
             </div>

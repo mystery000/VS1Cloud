@@ -8,6 +8,7 @@ import AssignLeaveType from "../../js/Api/Model/AssignLeaveType";
 import LeaveRequest from "../../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../../js/Api/Model/LeaveRequestFields";
 import ApiService from "../../js/Api/Module/ApiService";
+import EmployeePaySettings from "../../js/Api/Model/EmployeePaySettings";
 import { Template } from 'meteor/templating';
 import './newLeaveRequest.html';
 
@@ -17,6 +18,7 @@ Template.newLeaveRequestModal.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.assignLeaveTypeInfos = new ReactiveVar();
     templateObject.currentDrpDownID = new ReactiveVar();
+    templateObject.employeePaySettings = new ReactiveVar();
 });
 
 Template.newLeaveRequestModal.onRendered(() => {
@@ -25,9 +27,51 @@ Template.newLeaveRequestModal.onRendered(() => {
         let empID = $('#edtEmpID').val() || 0;
         if (empID) {
             $('.fullScreenSpin').css('display', 'inline-block');
+            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+            if (TEmployeepaysettings.length == 0) {
+                data = templateObject.saveEmployeePaySettingsLocalDB();
+            } else {
+                data = JSON.parse(TEmployeepaysettings[0].data);
+            }
+            
+            let useData = EmployeePaySettings.fromList(data.temployeepaysettings).filter((item) => {
+                if (item.fields.Employeeid == empID) {
+                    return item;
+                }
+            });
+            if (useData.length !== 0) {
+                let employeePaySettings = useData[0]
+                let objEmployeePaySettings = {
+                  ID: employeePaySettings.fields.ID,
+                  Payperiod: employeePaySettings.fields.Payperiod
+                }
+        
+                templateObject.employeePaySettings.set(objEmployeePaySettings);
+                $(`#edtLeavePayPeriod`).val(objEmployeePaySettings.Payperiod);
+            }
             $('.fullScreenSpin').css('display', 'none');
         }
     });
+
+    templateObject.saveEmployeePaySettingsLocalDB = async function () {
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+          employeePayrolApis.collectionNames.TEmployeepaysettings
+        );
+    
+        employeePayrolEndpoint.url.searchParams.append("ListType","'Detail'");
+    
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+        if (employeePayrolEndpointResponse.ok == true) {
+          const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+          if (employeePayrolEndpointJsonResponse.temployeepaysettings.length) {
+            await addVS1Data('TEmployeepaysettings', JSON.stringify(employeePayrolEndpointJsonResponse))
+          }
+          return employeePayrolEndpointJsonResponse
+        }
+        return '';
+      };
 
     templateObject.saveAssignLeaveType = async() => {
         const employeePayrolApis = new EmployeePayrollApi();
@@ -35,10 +79,7 @@ Template.newLeaveRequestModal.onRendered(() => {
             employeePayrolApis.collectionNames.TAssignLeaveType
         );
 
-        employeePayrolEndpoint.url.searchParams.append(
-            "ListType",
-            "'Detail'"
-        );
+        employeePayrolEndpoint.url.searchParams.append("ListType","'Detail'");
 
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
@@ -55,14 +96,9 @@ Template.newLeaveRequestModal.onRendered(() => {
     templateObject.saveLeaveRequestLocalDB = async function() {
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeavRequest
-        );
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
 
-        employeePayrolEndpoint.url.searchParams.append(
-            "ListType",
-            "'Detail'"
-        );
+        employeePayrolEndpoint.url.searchParams.append("ListType","'Detail'");
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -88,15 +124,12 @@ Template.newLeaveRequestModal.onRendered(() => {
         let employeeID = $("#edtEmpID").val();
 
         if (data.tassignleavetype.length > 0) {
-            let useData = AssignLeaveType.fromList(
-                data.tassignleavetype
-            ).filter((item) => { 
-                    return item; 
+            let useData = AssignLeaveType.fromList(data.tassignleavetype).filter((item) => { 
+                return item; 
             });
 
             templateObject.assignLeaveTypeInfos.set(useData);
             for (let i = 0; i < useData.length; i++) {
-
                 let dataListAllowance = [
                     useData[i].fields.ID || '',
                     useData[i].fields.LeaveType || '',
@@ -117,7 +150,6 @@ Template.newLeaveRequestModal.onRendered(() => {
                 data: splashArrayAssignLeaveList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
-
                     {
                         className: "colALType colALTypeID hiddenColumn",
                         "targets": [0]
@@ -245,12 +277,9 @@ Template.newLeaveRequestModal.onRendered(() => {
                 setTimeout(function() {
                     // MakeNegative();
                 }, 100);
-
             }).on('column-reorder', function() {
-
             }).on('length.dt', function(e, settings, len) {
                 //LoadingOverlay.show();
-
                 let dataLenght = settings._iDisplayLength;
                 splashArrayAssignLeaveList = [];
                 if (dataLenght == -1) {
@@ -261,7 +290,6 @@ Template.newLeaveRequestModal.onRendered(() => {
                         $('.fullScreenSpin').css('display', 'none');
                     } else {
                         sideBarService.getAssignLeaveType(dataLenght, 0).then(function(dataNonBo) {
-
                             addVS1Data('TAssignLeaveType', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                 // templateObject.resetData(dataNonBo);
                                 $('.fullScreenSpin').css('display', 'none');
@@ -292,9 +320,7 @@ Template.newLeaveRequestModal.onRendered(() => {
         let employeeID = $("#edtEmpID").val();
 
         if (data.tleavrequest.length > 0) {
-            let useData = LeaveRequest.fromList(
-                data.tleavrequest
-            ).filter((item) => {
+            let useData = LeaveRequest.fromList(data.tleavrequest).filter((item) => {
                 // if (parseInt(item.fields.EmployeeID) == parseInt(employeeID)) {
                     return item;
                 // }
@@ -311,7 +337,7 @@ Template.newLeaveRequestModal.onRendered(() => {
                 splashArrayList.push(dataListAllowance);
             }
         } else {
-            $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
+            //$("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
         }
 
         setTimeout(function() {
@@ -319,7 +345,6 @@ Template.newLeaveRequestModal.onRendered(() => {
                 data: splashArrayList,
                 "sDom": "Rlfrtip",
                 columnDefs: [
-
                     {
                         className: "colLRID colLeaveRequest hiddenColumn",
                         "targets": [0]
@@ -480,8 +505,8 @@ Template.newLeaveRequestModal.onRendered(() => {
         edate0.setDate(edate0.getDate() + 1);
         $("#edtLeaveStartDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
         $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
-        $("#edtLeaveTypeofRequest").val('Annual Leave');
-        $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
+        // $("#edtLeaveTypeofRequest").val('Annual Leave');
+        // $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
         $('#edtLeavePayPeriod').editableSelect('add', 'Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Fortnightly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Twice Monthly');
@@ -489,7 +514,9 @@ Template.newLeaveRequestModal.onRendered(() => {
         $('#edtLeavePayPeriod').editableSelect('add', 'Monthly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Quarterly');
 
-        $('#edtLeavePayPeriod').val('Weekly');
+        if($('#edtLeavePayPeriod').val() === ''){
+            $('#edtLeavePayPeriod').val('Weekly');
+        }
 
         $('#edtLeavePayStatus').editableSelect('add', 'Awaiting');
         $('#edtLeavePayStatus').editableSelect('add', 'Approved');
@@ -505,7 +532,7 @@ Template.newLeaveRequestModal.onRendered(() => {
         $('#period').editableSelect('add', 'Monthly');
         $('#period').editableSelect('add', 'Quarterly'); 
 
-        $('#edtLeaveTypeofRequest').editableSelect(); 
+        //$('#edtLeaveTypeofRequest').editableSelect();
     }, 1000);
 
 });
@@ -591,6 +618,58 @@ Template.newLeaveRequestModal.events({
                 return false;
             } else {
                 $('.fullScreenSpin').css('display', 'block');
+                let ePaySettings = templateObject.employeePaySettings.get();
+                let useData = EmployeePaySettings.fromList(data.temployeepaysettings).filter((item) => {
+                    if (item.fields.Employeeid == employeeID) {
+                        return item;
+                    }
+                });
+                let currentEmployeePaySettingFields = useData[0].fields;
+                const {FirstPayDate,Employee:oldEmployee} = currentEmployeePaySettingFields
+                let employeePaySettings = {
+                    type: 'TEmployeepaysettings',
+                    fields: {
+                        ID: ePaySettings.ID || 0,
+                        Employeeid: parseInt(employeeID),
+                        Payperiod:PayPeriod,
+                        FirstPayDate,
+                        Employee:{
+                            type: 'TEmployeeDetails',
+                            fields: {
+                                ID: oldEmployee.fields.ID,
+                                TFN: oldEmployee.fields.TFN,
+                                TaxScaleID:oldEmployee.fields.TaxScaleID,
+                                TaxFreeThreshold: oldEmployee.fields.TaxFreeThreshold,
+                                CgtExempt: oldEmployee.fields.CgtExempt,
+                                BasisOfPayment: oldEmployee.fields.BasisOfPayment,
+                                Resident: oldEmployee.fields.Resident,
+                                StudentLoanIndicator: oldEmployee.fields.StudentLoanIndicator,
+                                PaySuperonLeaveLoading: oldEmployee.fields.PaySuperonLeaveLoading,
+                                Pensioner: oldEmployee.fields.Pensioner,
+                                FirstName: oldEmployee.fields.FirstName,
+                                LastName: oldEmployee.fields.LastName,
+                                DateStarted: oldEmployee.fields.DateStarted,
+                                DOB: oldEmployee.fields.DOB,
+                                Sex: oldEmployee.fields.Sex,
+                                Email: oldEmployee.fields.Email
+                            }
+                        },
+                    }
+                };
+                const employeePayrollApi = new EmployeePayrollApi();
+                const apiEndpointForEmployeeSettings = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
+                try {
+                    const ApiResponse = await apiEndpointForEmployeeSettings.fetch(null, {
+                      method: "POST",
+                      headers: ApiService.getPostHeaders(),
+                      body: JSON.stringify(employeePaySettings),
+                    });
+                    if (ApiResponse.ok == true) {
+                      await templateObject.saveEmployeePaySettingsLocalDB();
+                    } else {
+                      $('.fullScreenSpin').css('display', 'none');
+                    }
+                  } catch (error) {}
                 let formattedStartDate = StartDate +' '+ apptStartTime;
                 let formattedEndDate = EndDate +' '+ apptEndTime;
                 let dbStartDate = moment(formattedStartDate, "DD/MM/YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss')
@@ -756,7 +835,6 @@ Template.newLeaveRequestModal.events({
             }
         });
     },
-
 });
 
 Template.newLeaveRequestModal.helpers({

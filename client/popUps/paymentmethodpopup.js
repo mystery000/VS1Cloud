@@ -42,7 +42,8 @@ Template.paymentmethodpop.onRendered(function() {
     const tableHeaderList = [];
     const deptrecords = [];
     let deptprodlineItems = [];
-    let currenttablename = templateObject.data.tablename || "paymentmethodList";
+    console.log(templateObject.data);
+    let currenttablename = "paymentmethodList" + templateObject.data.custid;
     templateObject.tablename.set(currenttablename);
 
     function MakeNegative() {
@@ -650,7 +651,8 @@ Template.paymentmethodpop.events({
     },
     'click .btnAddNewPaymentMethod': function (event) {
           $('#isformcreditcard').prop('checked', false);
-          $('#edtPaymentMethodName').val('');
+          $('#newPaymentMethodModal').find('#paymentMethodHeader').text('Add Payment Method');
+          $('#newPaymentMethodModal').find('#edtPaymentMethodName').val('');
         setTimeout(function () {
           $('#edtPaymentMethodName').focus();
         }, 1000);

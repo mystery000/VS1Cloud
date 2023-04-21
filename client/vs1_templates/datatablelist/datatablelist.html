@@ -230,8 +230,12 @@
             	z-index: 201;
             }
 
+            .checkRowSelected {
+                background-color: #e5f2d9!important;
+                color: black!important;
+            }
         </style>
-        <table id="{{tablename}}" name="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tableclass}}">
+        <table id="{{tablename}}" name="{{tablename}}" class="dtTemplate dataTable table {{#if isselection}} {{else}}table-striped{{/if}} table-bordered {{tableclass}}">
             <thead>
                 <!-- <tr class="dnd-moved">
                     {{#each displayfield in displayfields}}

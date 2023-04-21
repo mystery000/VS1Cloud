@@ -1384,6 +1384,13 @@ Template.departmentpop.events({
     //     });
     // }, delayTimeAfterSound);
     // },
+    'click .btnNewDept':function(){
+        $('#newDepartmentModal').find('#edtDepartmentID').val('');
+        $('#newDepartmentModal').find('#edtNewDeptName').val('');
+        $('#newDepartmentModal').find('#edtSiteCode').val('');
+        $('#newDepartmentModal').find('#edtDeptDesc').val('');
+        $('#newDepartmentModal').find('#newDeptHeader').text('Add New Department');
+    }
 });
 
 Template.departmentpop.helpers({
@@ -1483,4 +1490,9 @@ Template.departmentpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
+    tablename: function () {
+        let templateObject = Template.instance();
+        let custID = templateObject.data.custid ? templateObject.data.custid : '';
+        return 'departmentList'+ custID;
+    }
 });

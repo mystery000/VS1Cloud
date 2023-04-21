@@ -889,9 +889,9 @@ Template.productlistpop.events({
       $(".btnRefreshProduct").trigger("click");
     }
   },
-  'click .btnNewProduct': function (){
-        $('div#newProductModal').modal('show');
-    },
+  // 'click .btnNewProduct': function (){
+  //       $('div#newProductModal').modal('show');
+  //   },
   "click .btnRefreshProduct": function (event) {
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
@@ -1090,6 +1090,19 @@ Template.productlistpop.events({
   "click .btnCloseProdModal": function (event) {
     $("#scanBarcodeModalProduct").modal("toggle");
   },
+  "click .btnNewProduct" : function() {
+    $("#newProductModal").find('#add-product-title').text('Add New Product');
+    $("#newProductModal").find('#edtproductname').val('');
+    $("#newProductModal").find('#edtsellqty1price').val('');
+    $("#newProductModal").find('#txasalesdescription').val('');
+    $("#newProductModal").find('#sltsalesacount').val('');
+    $("#newProductModal").find('#slttaxcodesales').val('');
+    $("#newProductModal").find('#edtbarcode').val('');
+    $("#newProductModal").find('#txapurchasedescription').val('');
+    $("#newProductModal").find('#sltcogsaccount').val('');
+    $("#newProductModal").find('#slttaxcodepurchase').val('');
+    $("#newProductModal").find('#edtbuyqty1cost').val('');
+  }
 });
 
 Template.productlistpop.helpers({

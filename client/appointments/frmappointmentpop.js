@@ -58,7 +58,7 @@ Template.frmappointmentpop.onRendered(function() {
     const templateObject = Template.instance();
 
     $('#edtFrequencyDetail').css('display', 'none');
-    $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
+    $("#dtSODate,#dtSODate2,#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
         buttonImageOnly: true,
