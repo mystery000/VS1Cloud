@@ -562,23 +562,28 @@
                     <!-- <input
                       class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}"
                       lineid="{{item.id}}"> -->
+                      {{#let
+                        accountID = (addString 'lineAccountCode-' item.lineID)
+                        accountModalID = (addString 'lineAccountModal-' item.lineID)
+                      }}
                       {{> vs1___dropdown
-                        data=item.accountname
                         type='search'
-                        id='lineAccountName'
-                        name='lineAccountName'
-                        modalId='accountListModal'
+                        classes='lineAccountName'
+                        id=accountID
+                        modalId=accountModalID
+                        usedModal=false
                         list_template_name='accountlistpop'
-                        modal_title='Account List'
                         innerModal=true
-                        colNameForValue='colAccountName'
-                        target_modal_id='edtAccountModal'
+                        modal_title='Account List'
+                        label = ''
+                        colNameForValue = 'colAccountName'
+                        target_modal_id= 'edtAccountModal'
                         target_template_id='addAccountModal'
                         custid=item.lineID
-                        is_editable=true
+                        is_editable=false
                         noBorder=true
-                    }}
-                  </td>
+                }}
+                    </td>
                   <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
                   <!--                                    <td contenteditable="true" class="lineAmount colAmount" style="text-align: right!important;">{{item.unitPrice}}</td>-->
 
@@ -591,26 +596,8 @@
                   <td contenteditable="false" class="lineTaxRate colTaxRate hiddenColumn"
                     style="text-align: right!important;cursor: pointer;">{{item.taxRate}}</td>
                   <!-- <td contenteditable="false" class="lineTaxCode colTaxCode td-input" style="cursor: pointer;">{{item.taxCode}}</td> -->
-                  <td contenteditable="false" class="colTaxCode">
-                    <!-- <input class="es-input highlightSelect lineTaxCode"
-                      type="search" value="{{item.taxCode}}"> -->
-                      {{> vs1___dropdown
-                        data=item.taxCode
-                        type='search'
-                        id='lineTaxCode'
-                        name='lineTaxCode'
-                        modalId='taxRateListModal'
-                        list_template_name='taxratelistpop'
-                        modal_title='Tax Code List'
-                        innerModal=true
-                        colNameForValue='colName'
-                        target_modal_id='edtTaxRateModal'
-                        target_template_id='newtaxratepop'
-                        custid=item.lineID
-                        is_editable=true
-                        noBorder=true
-                    }}
-                    </td>
+                  <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode"
+                      type="search" value="{{item.taxCode}}"></td>
                   <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer"
                     style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                   <td contenteditable="true" class="lineCustomField1 colCustomField1 hiddenColumn">{{item.CustomField1}}

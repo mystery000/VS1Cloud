@@ -1271,10 +1271,9 @@ Template.currencypop.helpers({
     return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 
-  tablename : function() {
+  tablename: () => {
     let templateObject = Template.instance();
-    return "tblCurrencyPopList" + templateObject.data.custid;
-  }
-
-  
+    let CustID = templateObject.data.custid ? templateObject.data.custid : '';
+    return 'tblCurrencyPopList'+ CustID;
+  },
 });

@@ -2,6 +2,7 @@
     <div class="formgoup">
         <div class="form-group">
           <!-- <label>{{label}}</label> -->
+
             {{> vs1___dropdown
               type='search'
               id=id
@@ -18,6 +19,7 @@
               target_template_id=target_template_id
               is_editable=true
               custid = custid
+              innerModal=true
             }}
           <input type="hidden" name="__customer_id" id="__customer_id" value="{{value}}">
         </div>

@@ -37,11 +37,11 @@ Template.newagedpayables.onCreated(() => {
     templateObject.reportOptions = new ReactiveVar();
     templateObject.displaysettings = new ReactiveVar();
     let reset_data = [
-        { index: 0, label: '#', class:'colLineId', active: false, display: true, width: '0'},
-        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "300" },
-        { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
-        { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "100" },
-        { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "100" },
+        { index: 0, label: '#', class:'colLineId', active: false, display: true, width: "10", calc: false},
+        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "300", calc: false},
+        { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "100", calc: false},
+        { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "100", calc: false},
+        { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "100", calc: false},
         { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "100", calc: true },
         { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "100", calc: true },
         { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "100", calc: true },

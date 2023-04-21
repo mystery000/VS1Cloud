@@ -12,7 +12,8 @@ Template.daterangefromto.onCreated(function(){
 Template.daterangefromto.onRendered(function() {
   const templateObject = Template.instance();
   templateObject.initDate = () => {
-    Datehandler.initOneMonth();
+    // Datehandler.initOneMonth();
+      Datehandler.initHalfYear();
   };
 
   var url = FlowRouter.current().path;

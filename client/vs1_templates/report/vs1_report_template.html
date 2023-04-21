@@ -200,7 +200,7 @@
                                             }
                                         </style>
                                         <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 40px;"><i class="fas fa-ellipsis-v"></i></button>
-                                        {{> daterangedropdownoption}}
+                                        {{> daterangedropdownoption type='report'}}
                                     </div>
                                     {{> daterangefromto}}
                                 </div>
@@ -369,43 +369,7 @@
             }
         }
     </style>
-    <div class="modal fade {{tablename}}_Modal divDisplaySettings" role="dialog" tabindex="-1" id="{{tablename}}_Modal">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                            <form class="d-xl-flex align-items-xl-center">
-                                <div class="flex-grow-1">
-                                  {{#each displayfield in report_displayfields}}
-                                      {{#if displayfield.display}}
-                                          <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
-                                              <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                  <input class="custom-control-input chkDatatable chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
-                                                  <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
-                                                  <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
-                                              </div>
-                                              <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                  <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                  <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" valueclass="{{displayfield.class}}" min="0" max="1000">
-                                              </div>
-                                          </div>
-                                      {{/if}}
-                                  {{/each}}
-                                </div>
-                            </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary saveTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-warning resetTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button" style='margin: 14px !important;'><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
@@ -497,5 +461,51 @@
 
     <!-- End Help Video Modal -->
     {{> FxRateModal currencies=currencyList}}
+    {{#if report_displayfields}}
+    <div class="modal fade {{tablename}}_Modal divDisplaySettings" role="dialog" tabindex="-1" id="{{tablename}}_Modal">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                            <form class="d-xl-flex align-items-xl-center">
+                                <div class="flex-grow-1">
+                                  {{#each displayfield in report_displayfields}}
+                                      {{#if displayfield.display}}
+                                          <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                              <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                  <input class="custom-control-input chkDatatable chk{{displayfield.class}}"
+                                                     type="checkbox" id="formCheck-0{{displayfield.id}}"
+                                                      checked="{{displayfield.active}}">
+                                                  <label class="custom-control-label"
+                                                     for="formCheck-0{{displayfield.id}}"></label>
+                                                  <div contenteditable="true" class="groove divcolumn" type="text"
+                                                     value="{{displayfield.custfieldlabel}}"
+                                                     valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                              </div>
+                                              <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                  <label class="text-nowrap"
+                                                     style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                  <input class="custom-range widthElement rngRange{{displayfield.class}}"
+                                                     type="number" style="margin: 8px;" value="{{displayfield.width}}" valueclass="{{displayfield.class}}" min="0" max="1000" >
+                                              </div>
+                                          </div>
+                                      {{/if}}
+                                  {{/each}}
+                                </div>
+                            </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary saveTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-warning resetTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" style='margin: 14px !important;'><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
 
 </template>

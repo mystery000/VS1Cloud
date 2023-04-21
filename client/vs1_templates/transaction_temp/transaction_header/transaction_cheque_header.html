@@ -13,6 +13,7 @@
         label="Supplier"
         id='edtSupplierName'
         modalId='supplierListModal'
+        name='edtSupplierName'
         list_template_name='supplierlistpop'
         target_modal_id='edtSupplierModal'
         target_template_id='addsupplierpop'
@@ -46,13 +47,14 @@
         type="search"
         name="sltChequeBankAccountName"
       }} -->
+      <div class="form-group">
       {{> vs1___dropdown
         type='search'
         id='sltChequeBankAccountName'
         name='sltChequeBankAccountName'
         modalId='accountListModal'
         list_template_name='accountlistpop'
-        modal_title='Account List'
+        modal_title='Customer List'
         label="Account"
         innerModal=true
         colNameForValue='colAccountName'
@@ -61,12 +63,16 @@
         custid="transaction_cheque_header"
         is_editable=true
         noBorder=false
-    }}
-      {{> sale_date_selector
-        label="Order Date"
-        SODate=data.saledate
-        DueDate=data.duedate
       }}
+    </div>
+    <div class="form-group">
+      {{> single_date_picker
+        label="Date"
+        id="dtSODate"
+        name="dtSODate"
+        defaultValue=data.saledate
+      }}
+    </div>
     </div>
     <div class="col-6 col-md-3">
       {{> default_input

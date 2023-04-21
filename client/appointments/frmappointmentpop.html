@@ -18,8 +18,22 @@
                         <div class="row m-2">
                             <div class="col-md-6 colCustJobName" id="colCustJobName">
                                 <div class="form-group flex-grow-1 my-2"><label>Customer / Job</label>
-                                    <select type="search" class="form-control" id="customer" name="customer"
-                                        style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                    {{> vs1___dropdown
+                                            data=''
+                                            type='search'
+                                            id='customer'
+                                            name='customer'
+                                            modalId= 'customerListsModal'
+                                            list_template_name='customerlistpopup'
+                                            modal_title='Customer List'
+                                            innerModal=true
+                                            colNameForValue ='colCompany'
+                                            target_modal_id='editCustomerModal'
+                                            target_template_id='addcustomerpop'
+                                            custid="129kT9261BNu"
+                                            is_editable=true
+                                            noBorder=false
+                                    }}
                                 </div>
                             </div>
                             <div class="col-md-2 colMobno" id="colMobno">
@@ -132,28 +146,22 @@
                                 </div>
                             </div>
                             <div class="col-md-3 colStartDate" id="colStartDate">
-                                <div class="form-group" style="margin: 8px 0px;">
-                                    <label>Start Date</label>
-                                    <div class="input-group date" style="cursor: pointer;">
-                                        <input type="text" class="form-control formClassDate statementDate"
-                                            id="dtSODate" name="dtSODate">
-                                        <div class="input-group-addon" style="">
-                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{> single_date_picker
+                                        classes="formClassDate statementDate"
+                                        label="Start Date"
+                                        id="dtSODate"
+                                        name="dtSODate"
+                                        defaultValue=invoicerecord.saledate
+                                }}
                             </div>
                             <div class="col-md-3 colEndDate" id="colEndDate">
-                                <div class="form-group" style="margin: 8px 0px;">
-                                    <label>End Date</label>
-                                    <div class="input-group date" style="cursor: pointer;">
-                                        <input type="text" class="form-control formClassDate statementDate"
-                                            id="dtSODate2" name="dtSODate2">
-                                        <div class="input-group-addon" style="">
-                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{> single_date_picker
+                                        classes="formClassDate statementDate"
+                                        label="End Date"
+                                        id="dtSODate2"
+                                        name="dtSODate2"
+                                        defaultValue=invoicerecord.saledate
+                                }}
                             </div>
                             <div class="col-md-4 colNotesParent" id="colNotesParent">
                                 <div class="row" style="padding: 0px 8px;">
@@ -258,18 +266,25 @@
 
 
                             <div class="col-xl-4 col-12 colProductService2" id="colProductService2">
-                                <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
-                                        Service for Appointment</label>
+                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
 
-                                    <select type="search" id="product-list" name="product-list"
-                                        class="form-control product-list"
-                                        style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        <!-- {{#if datatablerecords}}
-                                            {{#each item in datatablerecords}}
-                                                <option value="{{item.id}}">{{item.productname}}</option>
-                                            {{/each}}
-                                        {{/if}} -->
-                                    </select>
+                                    {{> vs1___dropdown
+                                            type='search'
+                                            id='product-list'
+                                            name='product-list'
+                                            usedModal=false
+                                            modalId= 'productionModal'
+                                            list_template_name='productlistpopwithcheckboxes'
+                                            innerModal=true
+                                            modal_title='Product List'
+                                            label = 'Product / Service for Appointment'
+                                            colNameForValue = 'colProductName'
+                                            target_modal_id= 'newproductpopup'
+                                            target_template_id='newproductpop'
+                                            custid='GP4z5E8SpdZafRfLd'
+                                            is_editable=false
+                                            noBorder=false
+                                    }}
                                 </div>
                             </div>
 
@@ -684,12 +699,7 @@
         Description: Moved into the all_transaction_modals
     -->
 
-    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop customerRecord=customerRecord}}
-    </div> -->
-
     <!-- <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-        {{> newproductpop}}
     </div> -->
 
     {{> deletepop itemName1="Appointment" itemName2="appointment" itemName3="Appointment" button1="btnDeleteAppointment"
@@ -701,31 +711,6 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal1">
         {{> productlistpopwithcheckboxes}}
     </div>
-
-    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="productListModal2">
-        {{> productlistpop}}
-    </div> -->
-
-    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
-        {{> copyfrequencypop}}
-    </div> -->
-
-    <!-- <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
-            <div class="modal-content customerListContent">
-                <div class="modal-header">
-                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
-                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
-                    {{> customerlistpop}}
-
-                </div>
-                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <div class="modal fade employeeListModal" role="dialog" tabindex="-1" id="employeeListModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"

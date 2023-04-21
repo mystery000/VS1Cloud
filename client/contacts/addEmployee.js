@@ -132,26 +132,44 @@ Template.employeescard.onCreated(function () {
   templateObject.all_projects = new ReactiveVar([]);
 
   templateObject.getPaysLipsDataTableList = function (data) {
+    let linestatus = '';
+    if (data.fields.Active == true) {
+      linestatus = "";
+    } else if (data.fields.Active == false) {
+      linestatus = "In-Active";
+    }
+    let paymentDate = '<span style="display:none;">'+(data.fields.PaymentDate !=''? moment(data.fields.PaymentDate).format("YYYY/MM/DD"): data.fields.PaymentDate)+'</span>'+(data.fields.PaymentDate !=''? moment(data.fields.PaymentDate).format("DD/MM/YYYY"): data.fields.PaymentDate);
+
     let dataList = [
         data.fields.ID || '0',
-        data.fielde,mPortfolio,
-        bage 
+        data.fields.Period,
+        paymentDate,
+        utilityService.modifynegativeCurrencyFormat(data.fields.TotalPay) || '',
+        linestatus,
+        `<button type="button"" class="btn btn-success btn-rounded btn-sm btnDownloadPayslip smallFontSizeBtn"><i class="fas fa-file-download"></i></button>
+        <button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
     ];
 
     return dataList;
   }
   let headerstructurepayslip = [
-    { index: 0, label: '#ID', class: 'colPayslipID', active: false, display: true, width: "" },
-    { index: 1, label: 'Period', class: 'colPayslipPeriod', active: true, display: true, width: "200" },
-    { index: 2, label: 'Payment Date', class: 'colPayslipPaymentDate', active: true, display: true, width: "200" },
-    { index: 3, label: 'Total Pay', class: 'colPayslipTotalPay', active: true, display: true, width: "200" },
-    { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
-    { index: 5, label: '', class: 'colPayslipDownload', active: true, display: true, width: "10" },
+    { index: 0, label: 'ID', class:'colPayslipID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Period', class:'colPayslipPeriod', active: true, display: true, width: "1000" },
+    { index: 2, label: 'Payment Date', class:'colPayslipPaymentDate', active: true, display: true, width: "200" },
+    { index: 3, label: 'Total Pay', class:'colPayslipTotalPay', active: true, display: true, width: "200" },
+    { index: 4, label: 'Status', class:'colStatus', active: true, display: true, width: "120" },
+    { index: 5, label: '', class:'colPayslipDownload', active: true, display: false, width: "10" },
   ]
   templateObject.paysliptableheaderrecords.set(headerstructurepayslip);
 
 
   templateObject.getDataTableListpayrun = function(data){
+    let linestatus = '';
+    if (data.fields.PayrollCalendarActive == true) {
+      linestatus = "";
+    } else if (data.fields.PayrollCalendarActive == false) {
+      linestatus = "In-Active";
+    }
     var status = data.fields.PayrollCalendarActive == true ? 'In-Active' : 'Active';
     let dataList = [
         data.fields.ID || "",
@@ -159,7 +177,7 @@ Template.employeescard.onCreated(function () {
         data.fields.PayrollCalendarPayPeriod || "",
         moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
         moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
-        data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
+        linestatus
     ];
     return dataList;
 }
@@ -186,6 +204,8 @@ templateObject.getDataTableList = function(data) {
       data.fields.Active == true ? '' : 'In-Active',
     ];
   }
+
+  
   return dataList;
 }
 
@@ -3667,7 +3687,7 @@ Template.employeescard.onRendered(function () {
       }
 
       // templateObject.datatablerecords.set(splashArrayPaySlipList);
-
+      /*
       setTimeout(function () {
         $('#tblPayslipHistory').DataTable({
           data: splashArrayPaySlipList,
@@ -3808,12 +3828,12 @@ Template.employeescard.onRendered(function () {
           }, 100);
         });
       }, 1000);
-
+      */
     } catch (error) {
       $('.fullScreenSpin').css('display', 'none');
     }
   };
-  templateObject.getPaySlips();
+  //templateObject.getPaySlips();
 
   // Display pay template tab inputs
   templateObject.displayPayTempEarningLines = function () {
@@ -10595,7 +10615,6 @@ apiParamspayrun: ()=>{
 
 
   paysliptableheaderrecords: () => {
-    console.log(paysliptableheaderrecords, paysliptableheaderrecords.get());
     return Template.instance().paysliptableheaderrecords.get();
   },
 
