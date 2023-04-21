@@ -1679,4 +1679,5 @@ Template.depositlist.helpers({
     apiParams: function() {
         return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
     },
+
 });

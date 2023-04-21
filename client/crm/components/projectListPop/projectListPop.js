@@ -364,6 +364,6 @@ Template.projectListPop.helpers({
     },
 
     apiParams: function() {
-        return ["EnteredByID"];
+        return ["limitCount", "limitFrom", "deleteFilter", "EnteredByID"];
     },
 });

@@ -23,6 +23,9 @@
         #templatePreviewModal .table-responsive {
             overflow-x :  hidden !important;
         }
+        .top-panel {
+            display: none;
+        }
     </style>
 
 
@@ -54,10 +57,10 @@
                 </h2>
             </div>
             <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
-            <div class="col-6" style="padding: 0px;">
+            <div class="col-6 top-panel" style="padding: 0px;">
                 <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px 0px;" autocomplete="off"><i class="icon ion-android-bulb" style="margin-right: 8px;"></i>Refresh</button>
             </div>
-            <div class="col-6" style="padding: 0px;">
+            <div class="col-6 top-panel" style="padding: 0px;">
                 <button class="btn btn-secondary btnBack float-right" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
                 <button class="btn btn-warning float-right resetcards" id="resetcards" type="button" style="margin:8px 3px 44px;" autocomplete="off">
                     <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset
@@ -254,7 +257,7 @@
                                                     {{/if}}
 
 
-                                                    <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%); width: 85%;" value="Template {{index}}" />
+                                                    <input type="text" class="template-name-input" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%); width: 85%;" value="Template {{index}}" />
                                                 </div>
                                                 <div class="d-flex align-items-center" style="gap: 2px;">
                                                     <button data-id="{{title}}" class="btn btn-success btnPreviewTemplate" data-toggle="modal" style="width: 51px;">View</button>
@@ -298,4 +301,7 @@
     <script>
         modalDraggable();
     </script>
+    <!-- Alex: add { -->
+    {{> init_form_page_script}}
+    <!-- @} -->
 </template>

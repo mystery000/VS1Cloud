@@ -458,19 +458,36 @@
                         <style type="text/css">
                             .formCreateLayout {
                                 max-width: 40%;
-                                min-width: 100px;
+                                min-width: 275px;
                             }
                             .pnlSideLayout {
                                 max-width: 40%;
-                                min-width: 100px;
+                                min-width: 275px;
                                 margin-left: 20px;
                             }
                         </style>
                         <div class="div pnlSideLayout hidden" id="pnlSideLayout">
                             <div style="display: flex; flex-direction: column;">
                                 <h5 class="selectedRowCount" id="selectedRowCount" style="text-align: center">Rows</h5>
-                                <hr style="width: 100%">
-                                <button class="btn btnGroupSelection btn-primary" id="btnGroupSelection">Group selection</button>
+                                <hr style="width: 100%; margin-bottom: 20px;">
+                                <div class="selectedRowName">
+                                    <h6>Name</h6>
+                                    <input class="form-control selectedNameEdit" type="text" id="selectedNameEdit" placeholder="Untitled Group" style="width: 100%"/>
+                                    <hr style="width: 100%">
+                                </div>
+                                <div class="selectedRowDisplayBalance">
+                                    <h6>Display Balance</h6>
+                                    <div class="btn btn-outline-primary" style="width: 49%">Debit Positive</div>
+                                    <div class="btn btn-primary" style="width: 49%">Credit Positive</div>
+                                    <hr style="width: 100%; margin-bottom: 10px;">
+                                </div>
+                                <button class="btn btnGroupSelection btn-primary" id="btnGroupSelection" style="margin-bottom: 10px">Group selection</button>
+                                <button class="btn btnAddSwitchRule btn-primary" id="btnAddSwitchRule" style="margin-bottom: 10px">Add Switch Rule</button>
+                                <div class="selectedRowChkBoxTotal" id="selectedRowChkBoxTotal">
+                                    <hr style="width: 100%">
+                                    <input type="checkbox" name="selectedChkBoxTotal" class="selectedChkBoxTotal" id="selectedChkBoxTotal" checked="checked" style="max-width: 20px">
+                                    <span>Total</span>
+                                </div>
                             </div>
                         </div>
                         <nav class="nav formCreateLayout hidden" id="formCreateLayout">

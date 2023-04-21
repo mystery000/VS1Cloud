@@ -200,6 +200,41 @@ Template.npleditlayoutscreen.onRendered(function () {
 
           var nodes = pnlLayoutTree.tree('getSelectedNodes');
           $(".selectedRowCount").text(`${nodes.length} Rows`);
+
+          if(!nodes.length) {
+            /* Cases for no selected row. Hide side layout. */
+            $(".pnlSideLayout").addClass("hidden");
+          }
+
+          if(nodes.length == 1) {
+            if(nodes[0].children.length) {
+              $(".selectedRowCount").text("Group");
+              $(".selectedNameEdit").val(nodes[0].name);
+
+              $(".selectedRowName").removeClass("hidden");
+              $(".selectedRowDisplayBalance").removeClass("hidden");
+              $(".btnAddSwitchRule").removeClass("hidden");
+              $(".selectedRowChkBoxTotal").removeClass("hidden");
+
+              let child_len = nodes[0].children.length;
+              if(nodes[0].children[child_len - 1].name.includes("Total"))
+                $('.selectedChkBoxTotal').prop("checked", "checked");
+              else $('.selectedChkBoxTotal').prop("checked", "");
+            }
+            else{
+              $(".selectedRowCount").text("Row");
+              $(".selectedRowName").addClass("hidden");
+              $(".selectedRowDisplayBalance").addClass("hidden");
+              $(".btnAddSwitchRule").addClass("hidden");
+              $(".selectedRowChkBoxTotal").addClass("hidden");
+            }
+          }
+          else {
+              $(".selectedRowName").addClass("hidden");
+              $(".selectedRowDisplayBalance").addClass("hidden");
+              $(".btnAddSwitchRule").addClass("hidden");
+              $(".selectedRowChkBoxTotal").addClass("hidden");
+            }
         }
     );
   });
@@ -288,7 +323,7 @@ Template.npleditlayoutscreen.events({
     let firstNode = nodes[0];
     let newNode = {
       name:"Untitled Group",
-      id: parseInt(Math.random() * 100),
+      id: parseInt(Math.random() * 1000),
       children: [],
     }
     pnlLayoutTree.tree("addNodeAfter", newNode, firstNode);
@@ -296,8 +331,25 @@ Template.npleditlayoutscreen.events({
     pnlLayoutTree.tree("refresh");
     nodes.forEach(function (node) {
       pnlLayoutTree.tree('moveNode', node, newNode, 'inside');
+      pnlLayoutTree.tree('removeFromSelection', node);
     })
     pnlLayoutTree.tree("refresh");
+    pnlLayoutTree.tree('addToSelection', newNode);
+
+    /* Show SideLayout for created new Group*/
+    $(".selectedRowCount").text("Group");
+
+    $(".selectedRowName").removeClass("hidden");
+    $(".selectedRowDisplayBalance").removeClass("hidden");
+    $(".btnAddSwitchRule").removeClass("hidden");
+    $(".selectedRowChkBoxTotal").removeClass("hidden");
+
+    $(".selectedNameEdit").val("");
+    $(".selectedNameEdit").get(0).focus();
+
+    /* Set Total checkbox true and make a Total subtree */
+    $(".selectedChkBoxTotal").prop("checked", true);
+    pnlLayoutTree.tree("appendNode", {name: "Total " + newNode.name, id: Math.random() * 1000}, newNode);
   },
   "click .saveProfitLossLayouts": async function () {
     let id = $("#nplLayoutID").val();
@@ -454,6 +506,40 @@ Template.npleditlayoutscreen.events({
     $(".pnlSideLayout").addClass("hidden");
     $(".formCreateLayout").removeClass('hidden');
   },
+
+  "blur .selectedNameEdit" : function (event, template) {
+    let pnlLayoutTree = $('#pnlLayoutTree');
+    let nodes = pnlLayoutTree.tree("getSelectedNodes");
+    let changedName = $(".selectedNameEdit").val() || "Untitled Group";
+    nodes[0].name = changedName;
+    if($('.selectedChkBoxTotal').prop("checked"))
+    {
+      let child_len = nodes[0].children.length;
+      if(child_len)
+        nodes[0].children[child_len - 1].name = "Total " + changedName;
+    }
+    pnlLayoutTree.tree("refresh");
+  },
+
+  "change .selectedChkBoxTotal" : function(event, template) {
+    let pnlLayoutTree = $('#pnlLayoutTree');
+    let nodes = pnlLayoutTree.tree("getSelectedNodes");
+    let firstNode = nodes[0];
+    let child_len = firstNode.children.length;
+    if(!child_len) return;
+    if(event.target.checked)
+    {
+        if(!firstNode.children[child_len - 1].name.includes("Total"))
+          pnlLayoutTree.tree("appendNode", {name: "Total "+ firstNode.name, id: Math.random() * 1000} ,firstNode);
+        else
+          firstNode.children[child_len - 1].name = "Total "+ firstNode.name;
+    }
+    else {
+      if(firstNode.children[child_len - 1].name.includes("Total"))
+          pnlLayoutTree.tree("removeNode", firstNode.children[child_len - 1]);
+    }
+    pnlLayoutTree.tree("refresh");
+  }
 });
 
 Template.npleditlayoutscreen.helpers({
