@@ -432,26 +432,6 @@ Template.transaction_frm_journal.helpers({
                 });
         }, 1000);
     },
-    onloadDepartmentSelect: function(id, value){
-
-        setTimeout(() => {
-            let obj = $("#select-department-" + id);
-
-            obj.editableSelect();
-
-            $(".select-department").editableSelect()
-                .on('click.editable-select', function(e, li) {
-                    var $earch = $(this);
-                    var offset = $earch.offset();
-                    var deptDataName = e.target.value || '';
-                    $('#edtDepartmentID').val('');
-
-                    $("#selected-department").val(e.target.id);
-
-                    $('#departmentModal').modal('toggle');
-                });
-        }, 1000);
-    },
     isForeignEnabled: () => {
         let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicenceModule') ? true : false;
         // return isFxCurrencyLicence;
@@ -486,9 +466,17 @@ Template.transaction_frm_journal.helpers({
     },
     convertToForeignAmount: (amount) => {
         return FxGlobalFunctions.convertToForeignAmount(amount, $('#exchange_rate').val(), FxGlobalFunctions.getCurrentCurrencySymbol());
+    },
+    addString: (arg1, arg2) => {
+        return `${arg1}${arg2}`
     }
 });
 
 Template.registerHelper("equals", function (a, b) {
     return a === b;
 });
+
+Template.registerHelper("addString", function (a, b) {
+    return `${a}${b}`;
+});
+
