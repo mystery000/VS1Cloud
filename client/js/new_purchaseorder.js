@@ -1233,10 +1233,10 @@ Template.purchaseordercard.onRendered(async () => {
                 fields: {
                     "Product Name": ["25", "left"],
                     "Description": ["30", "left"],
-                    "Qty": ["10", "right"],
-                    "Unit Price": ["10", "right"],
-                    "Tax": ["10", "right"],
-                    "Amount": ["15", "right"]
+                    "Qty": ["7", "right"],
+                    "Unit Price": ["15", "right"],
+                    "Tax": ["7", "right"],
+                    "Amount": ["15", "right"],
                 },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
@@ -1289,10 +1289,10 @@ Template.purchaseordercard.onRendered(async () => {
                 fields: {
                     "Product Name": ["25", "left"],
                     "Description": ["30", "left"],
-                    "Qty": ["10", "right"],
-                    "Unit Price": ["10", "right"],
-                    "Tax": ["10", "right"],
-                    "Amount": ["15", "right"]
+                    "Qty": ["7", "right"],
+                    "Unit Price": ["15", "right"],
+                    "Tax": ["7", "right"],
+                    "Amount": ["15", "right"],
                 },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
@@ -1345,10 +1345,10 @@ Template.purchaseordercard.onRendered(async () => {
                 fields: {
                     "Product Name": ["25", "left"],
                     "Description": ["30", "left"],
-                    "Qty": ["10", "right"],
-                    "Unit Price": ["10", "right"],
-                    "Tax": ["10", "right"],
-                    "Amount": ["15", "right"]
+                    "Qty": ["7", "right"],
+                    "Unit Price": ["15", "right"],
+                    "Tax": ["7", "right"],
+                    "Amount": ["15", "right"],
                 },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
