@@ -64,10 +64,10 @@
                                                     modalId= 'myModalDepartment'
                                                     list_template_name='departmentModal'
                                                     innerModal=true
-                                                    modal_title='Departments'
+                                                    modal_title='Departments List'
                                                     label = 'Departments'
                                                     colNameForValue = 'colName'
-                                                    target_modal_id= 'newDepartmentModal'
+                                                    target_modal_id= 'edtDepartmentModal'
                                                     target_template_id='newdepartmentpop'
                                                     is_editable=true
                                                     noBorder=false
@@ -281,13 +281,13 @@
         </div>
     </div>
     <!-- End Edit Bin Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
         {{> departmentModal}}
-    </div>
+    </div>-->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
         {{> newdepartmentpop}}
-    </div>
+    </div> 
     <script>
         modalDraggable();
     </script>

@@ -1384,6 +1384,13 @@ Template.departmentpop.events({
     //     });
     // }, delayTimeAfterSound);
     // },
+    'click .btnNewDept':function(){
+        $('#newDepartmentModal').find('#edtDepartmentID').val('');
+        $('#newDepartmentModal').find('#edtNewDeptName').val('');
+        $('#newDepartmentModal').find('#edtSiteCode').val('');
+        $('#newDepartmentModal').find('#edtDeptDesc').val('');
+        $('#newDepartmentModal').find('#newDeptHeader').text('Add New Department');
+    }
 });
 
 Template.departmentpop.helpers({

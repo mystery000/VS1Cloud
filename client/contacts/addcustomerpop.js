@@ -424,7 +424,10 @@ Template.addcustomerpop.onRendered( async function() {
 
         }
         if(templateObject.data.name != undefined) {
-            let data = await getCustomerFromName(templateObject.data.name)
+            let data = await getCustomerFromName(templateObject.data.name);
+            if(!data.fields){
+                data.fields = data;
+            }
             lineItemObj = {
                 id: data.fields.ID || '',
                 lid: 'Edit Customer',

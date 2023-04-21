@@ -27,7 +27,7 @@
         }
     </style>
             <div class="CurrencyWidget currency-module currency-js"  type="{{rate}}">
-                {{> currencydropdown }}
+                {{> currencydropdown custid=custid}}
             </div>
 
 
@@ -50,7 +50,7 @@
             <div class="CurrencyWidget currency-module currency-js"  type="{{rate}}">
 
                 <div class="col-12 col-md-6 col-lg-6 col-xl-6 " type="{{rate}}">
-                    {{> currencydropdown}}
+                    {{> currencydropdown custid=custid}}
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-6 col-xl-6 " type="{{rate}}">
@@ -78,7 +78,7 @@
         </style>
             <div class="col-12 col-md-6" type="{{rate}}" style="padding-left: 0;">
                 <div class="form-group">
-                {{> currencydropdown}}
+                {{> currencydropdown custid=custid}}
                 </div>
             </div>
 
@@ -109,7 +109,7 @@
             </style>
             <div class="CurrencyWidget currency-module currency-js" type="{{rate}}" >
                 <div>
-                    {{> currencydropdown}}
+                    {{> currencydropdown custid=custid}}
                 </div>
                 <div>
                     {{> CurrencyRate }}
