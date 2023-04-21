@@ -5,10 +5,12 @@
 <template name="transaction_cheque_header">
   <div class="row" style="margin: 8px 16px 0px 16px;">
     <div class="col-12 col-md-3">
-      {{> customer_selector
-        label="Supplier"
-        id='edtSupplierName'
-      }}
+        {{> customer_selector
+            label="Supplier"
+            id='edtSupplierName'
+            name='edtSupplierName'
+            templateName='supplierlistpopup'
+        }}
     </div>
     <div class="col-12 col-md-3">
       {{> customer_email_input
@@ -27,17 +29,32 @@
       }}{{data.invoiceToDesc}}{{/vs1_textarea}}
     </div>
     <div class="col-12 col-md-3">
-      {{> default_select
-        label="Account"
-        id="sltChequeBankAccountName"
-        type="search"
-        name="sltChequeBankAccountName"
-      }}
-      {{> sale_date_selector
-        label="Order Date"
-        SODate=data.saledate
-        DueDate=data.duedate
-      }}
+        <div class="form-group">
+            {{> vs1___dropdown
+                    type='search'
+                    id='sltChequeBankAccountName'
+                    name='sltChequeBankAccountName'
+                    modalId= 'accountlistpopModal'
+                    list_template_name='accountlistpop'
+                    modal_title='Customer List'
+                    innerModal=true
+                    colNameForValue ='colAccountName'
+                    target_modal_id='addaccountPopModal'
+                    target_template_id='addaccountpop'
+                    custid="129kT9261BNu"
+                    is_editable=true
+                    noBorder=false
+                    label="Account"
+            }}
+        </div>
+        <div class="form-group">
+            {{> single_date_picker
+                    label="Date"
+                    id="dtSODate"
+                    name="dtSODate"
+                    defaultValue=data.saledate
+            }}
+        </div>
     </div>
     <div class="col-6 col-md-3">
       {{> default_input
