@@ -224,7 +224,7 @@ Template.datatablelist.onRendered(async function () {
             if (templateObject.data.istransaction == false) {
               if (templateObject.data.typefilter) {//Martin Tony
                     let that = templateObject.data.service;
-                    let params = [initialDatatableLoad, 0, deleteFilter, templateObject.data.typefilter]
+                    let params = [initialDatatableLoad, 0, deleteFilter, templateObject.data.typefilter];
                     templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
                         resolve(dataReturn)
                     })
@@ -290,7 +290,9 @@ Template.datatablelist.onRendered(async function () {
                     $('.' + currenttablename+" #dateFrom").attr('readonly', false);
                     $('.' + currenttablename+" #dateTo").attr('readonly', false);
                     if (dataObject.length == 0) {
-                        if (templateObject.data.apiParams == undefined) { $('.fullScreenSpin').css('display', 'none'); resolve([]); }
+                        if (templateObject.data.apiParams == undefined) {
+                          $('.fullScreenSpin').css('display', 'none'); resolve([]);
+                        }
                         let params = cloneDeep(templateObject.apiParams.get());
                         for (let i = 0; i < params.length; i++) {
                             if (params[i] == 'ignoredate') {
@@ -408,6 +410,25 @@ Template.datatablelist.onRendered(async function () {
                   $('.' + currenttablename+" #dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
 
                 }
+            }else{
+              function allAreEqual(array) {
+                //console.log(array);
+                // const result = array.every(element => {
+                //   console.log(element);
+                //   if (element === array[0]) {
+                //     return true;
+                //   }
+                // });
+
+                //array.forEach(function(item) {
+                  array.map((item) => {
+                  //console.log(item);
+                      // do something with `item`
+                });
+
+                return result;
+              };
+              //allAreEqual(data);
             }
             if (isEx == false) {
                 for (let i = 0; i < data[indexDBLowercase]?.length; i++) {
@@ -454,7 +475,17 @@ Template.datatablelist.onRendered(async function () {
         let items = [];
         let aitems = [];
 
+        let checkColumnOrderable = {};
+        if( templateObject.data.isselection == true ){
+            checkColumnOrderable = {
+              colReorder: {
+                  fixedColumnsLeft: 1
+              },
+            }
+        };
+
         const tabledraw = () => {
+
             $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,
@@ -463,6 +494,9 @@ Template.datatablelist.onRendered(async function () {
                 // aoColumns:acolDef,
                 //columns: acolDef,
                 columnDefs: colDef,
+               'select': {
+                  'style': 'multi'
+               },
                 // fixedColumns: true ,
                 // "ordering": false,
                 // deferRender: true,
@@ -543,6 +577,7 @@ Template.datatablelist.onRendered(async function () {
                 select: true,
                 destroy: true,
                 colReorder: true,
+                ...checkColumnOrderable,
                 pageLength: initialDatatableLoad,
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
@@ -650,7 +685,7 @@ Template.datatablelist.onRendered(async function () {
                       if(templateObject.data.showPlusButton == true){
                         $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='"+templateObject.data.showModalID+"' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                       };
-
+                      //console.log(data);
                       if (data.Params) {
                         if (data.Params.Search.replace(/\s/g, "") == "") {
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
@@ -662,12 +697,14 @@ Template.datatablelist.onRendered(async function () {
                           }
                         }
                     } else {
+                        // const allEqual = data.every(val => val.Active === true);
+                        // console.log(allEqual);
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;margin-right: 14px;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     if(typeof templateObject.data.callBack == 'function'){//Alexei
                       templateObject.data.callBackFunc();
-                    }
+                    };
                 },
                 "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = 0;
@@ -798,16 +835,34 @@ Template.datatablelist.onRendered(async function () {
             let items =await templateObject.displayfields.get();
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
-                    let item = {
-                        targets: i,
-                        visible: items[i].active,
-                        className: items[i].class,
-                        // className: items[i].class,
-                        title: items[i].custfieldlabel,
-                        width: items[i].width,
-                    };
-                    colDef.push(item);
+                  let item = '';
+                   item = {
+                      targets: i,
+                      visible: items[i].active,
+                      className: items[i].class,
+                      orderable: items[i].display||false,
+                      // className: items[i].class,
+                      title: items[i].custfieldlabel,
+                      width: items[i].width,
+                  };
+
+                  colDef.push(item);
                 }
+
+               //  if(templateObject.data.isselection == true){
+                // updatedItem = {
+                //      targets: 0,
+                //      visible: true,
+                //      className: 'colChkBox pointer',
+                //      orderable: false,
+                //      width: "15px",
+                //      'checkboxes': {
+                //         'selectRow': true
+                //      }
+                //  };
+               //   //colDef.push(item);
+               // };
+                //colDef[0] = updatedItem;
                 templateObject.columnDef.set(colDef)
                 tabledraw();
                 tableResize();
@@ -832,7 +887,7 @@ Template.datatablelist.onRendered(async function () {
         // your function after closing modal goes here
     })
     $(document).ready(function () {
-    $('.' + currenttablename+" #dateTo").on("change paste keyup", function() {
+    $('#' + currenttablename+" #dateTo").on("change paste keyup", function() {
          $('.fullScreenSpin').css('display', 'inline-block');
          $('.' + currenttablename+" #dateFrom").attr('readonly', false);
          $('.' + currenttablename+" #dateTo").attr('readonly', false);
@@ -851,7 +906,7 @@ Template.datatablelist.onRendered(async function () {
          }
     });
 
-    $('.' + currenttablename+" #dateFrom").on("change paste keyup", function() {
+    $('#' + currenttablename+" #dateFrom").on("change paste keyup", function() {
          $('.fullScreenSpin').css('display', 'inline-block');
          $('.' + currenttablename+" #dateFrom").attr('readonly', false);
          $('.' + currenttablename+" #dateTo").attr('readonly', false);
@@ -870,7 +925,19 @@ Template.datatablelist.onRendered(async function () {
          }
     });
 
-
+    $('#'+currenttablename+" tbody").sortable({
+      start: function (e, ui) {
+          var elements = ui.item.siblings('.selected.hidden').not('.ui-sortable-placeholder');
+          ui.item.data('items', elements);
+      },
+      update: function (e, ui) {
+          ui.item.after(ui.item.data("items"));
+      },
+      stop: function (e, ui) {
+          ui.item.siblings('.selected').removeClass('hidden');
+          $('tr.selected').removeClass('selected');
+      }
+  });
     });
 
 })
@@ -934,6 +1001,51 @@ Template.datatablelist.events({
         // setTimeout(() => {
         //     window.dispatchEvent(new Event('resize'));
         // }, 500);
+    },
+    'click .colChkBoxAll': function(event) {
+      const templateObject = Template.instance();
+      let currenttablename = templateObject.data.tablename || '';
+      if ($(event.target).is(':checked')) {
+          $(".chkBox").prop("checked", true);
+          $(`.${currenttablename} tbody .colCheckBox`).closest('tr').addClass('checkRowSelected');
+      } else {
+          $(".chkBox").prop("checked", false);
+          $(`.${currenttablename} tbody .colCheckBox`).closest('tr').removeClass('checkRowSelected');
+      }
+    },
+    'change .chkBox': async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+
+        const templateObject = Template.instance();
+        let currenttablename = templateObject.data.tablename || '';
+
+        if ($(event.target).closest('tr').hasClass('selected')) {
+            //$(event.target).closest('tr').removeClass('selected');
+        } else {
+            $('#'+currenttablename+' > tbody tr').removeClass('selected');
+            $(event.target).closest('tr').addClass('selected');
+        };
+
+        var row = $('#'+currenttablename).find('.selected'); //$(this).parents('tr');
+        var rowSelected = $('#'+currenttablename).find('.checkRowSelected'); //$(this).parents('tr');
+        if (row.length === 0 && rowSelected == 0) {
+            return;
+        };
+
+        if ($(event.target).is(':checked')) {
+            await $(event.target).closest('tr').addClass('checkRowSelected');
+
+            row.insertBefore($('#'+currenttablename+" > tbody tr:first"));
+            $('html, body').animate({
+              scrollTop: $('#'+currenttablename+"_wrapper").offset().top
+            }, 'slow');
+        } else {
+
+          await row.insertAfter($('#'+currenttablename+" > tbody tr:last"));
+          $(event.target).closest('tr').removeClass('checkRowSelected');
+        }
     },
     // "click .exportbtn": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");

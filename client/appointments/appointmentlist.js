@@ -103,8 +103,12 @@ Template.appointmentlist.onCreated(function() {
         } else {
             confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
         }
+
+        let chkBox = '<div class="custom-control custom-switch chkBox pointer text-center"><input name="pointer" class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + dataList_origin.id + '" name="' + dataList_origin.id + '"><label class="custom-control-label chkBox pointer" for="f--' + dataList_origin.id +
+            '"></label></div>'; //switchbox
+
         let dataList = [
-            '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.id + '" name="' + data.id + '"> <label class="custom-control-label" for="f-' + data.id + '"></label></div>' || '',
+            chkBox,
             dataList_origin.id || '',
             '<span style="display:none;">' + dataList_origin.sortdate + '</span> ' + dataList_origin.appointmentdate || '',
             dataList_origin.accountname || '',
@@ -122,9 +126,12 @@ Template.appointmentlist.onCreated(function() {
         ];
         return dataList;
     }
-
+    let checkBoxHeader = `<div class="custom-control custom-switch colChkBoxAll pointer" style="width:15px;">
+        <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0">
+        <label class="custom-control-label colChkBoxAll" for="colChkBoxAll"></label>
+        </div>`;
     let headerStructure = [
-        { index: 0, label: '', class: 'colCheckBox', active: true, display: true, width: "10" },
+        { index: 0, label: checkBoxHeader, class: 'colCheckBox', active: true, display: false, width: "10" },
         { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "200" },
         { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "235" },
@@ -2274,7 +2281,7 @@ Template.appointmentlist.events({
         jQuery('#tblappointmentlist_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
     },
-    'click #check-all': function(event) {
+    'click .colChkBoxAll': function(event) {
         if ($(event.target).is(':checked')) {
             $(".chkBox").prop("checked", true);
         } else {
