@@ -9,6 +9,7 @@ import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 import Datehandler from '../../DateHandler';
 import GlobalFunctions from '../../GlobalFunctions';
 import LoadingOverlay from '../../LoadingOverlay';
+import '../../lib/global/colResizable.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { cloneDeep } from 'lodash';
@@ -35,6 +36,7 @@ Template.reportcard.onCreated(function(){
     templateObject.recordCount = new ReactiveVar(0);
     templateObject.ignoreDate = new ReactiveVar(false);
     templateObject.fxCurrencies = new ReactiveVar([]);
+    templateObject.totalCount = new ReactiveVar(0)
 
     let tempData = localStorage.getItem('fx_'+templateObject.data.tablename);
     if(tempData) {
@@ -68,13 +70,13 @@ Template.reportcard.onRendered(async function() {
     // await reportService.getBalanceSheetReport(dateAOsf) :
   
     // --------------------------------------------------------------------------------------------------
-    templateObject.initDate = () => {
-      Datehandler.initOneMonth();
-    };
+    // templateObject.initDate = () => {
+    //   Datehandler.initOneMonth();
+    // };
     templateObject.setDateAs = (dateFrom = null) => {
       templateObject.dateAsAt.set((dateFrom) ? moment(new Date(dateFrom)).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
     };
-    templateObject.initDate();
+    // templateObject.initDate();
   
     templateObject.getReportData = async function (limitCount, limitFrom,  dateFrom, dateTo, ignoreDate, contactID=null) {
       templateObject.setDateAs(dateFrom);
@@ -138,7 +140,7 @@ Template.reportcard.onRendered(async function() {
       templateObject.recordCount.set(initialReportLoad)
     }
 
-    templateObject.getFilteredReportData = async function (dateFrom, dateTo, ignoreDate, limitCount=initialReportLoad, limitFrom=0) {
+    templateObject.getFilteredReportData = async function (dateFrom, dateTo, ignoreDate, limitCount=initialReportLoad, limitFrom=0, updateCount = true) {
       $('#'+tablename).DataTable().destroy();
       $('#tablePrint').DataTable().destroy();
       setTimeout(function(){
@@ -174,10 +176,10 @@ Template.reportcard.onRendered(async function() {
 
             objData[keyname]= tempRecords
             templateObject.reportrecords.set(tempRecords)
-            templateObject.displayReportData(objData)
+            templateObject.displayReportData(objData, updateCount)
           } else {
             templateObject.reportrecords.set(data[templateObject.data.lowercasename])
-            templateObject.displayReportData(data)
+            templateObject.displayReportData(data, updateCount)
           }
           templateObject.recordCount.set(templateObject.recordCount.get() + initialReportLoad)
         }).catch(function(err) {})
@@ -203,10 +205,16 @@ Template.reportcard.onRendered(async function() {
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false,
     );
-    templateObject.displayReportData = async function (data) {
-    
+    templateObject.displayReportData = async function (data, updateCount = true) {
       let lowercasename = templateObject.data.lowercasename || templateObject.data.indexDBName.toLowerCase();
       if(data[lowercasename] && data[lowercasename].length > 0) {
+        if(updateCount == true) {
+          if(data.Params) {
+            templateObject.totalCount.set(data.Params.Count || 0);
+          } else {
+            templateObject.totalCount.set(data[lowercasename].length);
+          }
+        }
         function groupBy(xs, prop) {
           var grouped = {};
           for (var i=0; i<xs.length; i++) {
@@ -326,6 +334,10 @@ Template.reportcard.onRendered(async function() {
           searching: false,
           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
           // columnDefs: getColumnDef(),
+          columnDefs: [
+            { targets: '_all', orderable: false } // make all columns not sortable
+          ],
+          colResize: true, 
           order: [[0, 'asc']], // default order by first column (type)
           
           buttons: [{
@@ -365,7 +377,7 @@ Template.reportcard.onRendered(async function() {
           }],
           select: true,
           destroy: true,
-          colReorder: true,
+          colReorder: false,
           pageLength: initialDatatableLoad,
           lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
           info: true,
@@ -438,7 +450,8 @@ Template.reportcard.onRendered(async function() {
                   GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
                   templateObject.ignoreDate.get(),
                   initialReportLoad,
-                  templateObject.recordCount.get()
+                  templateObject.recordCount.get(),
+                  false
                 )
 
                 
@@ -466,7 +479,16 @@ Template.reportcard.onRendered(async function() {
                 // })
             });
             
-        },
+          },
+          "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+            let countTableData = 0;
+            // if (data.Params) {
+            //     countTableData = data.Params.Count || 0; //get count from API data
+            // } else {
+                countTableData = templateObject.totalCount.get()
+            // }
+            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+          },
         }).on('column-reorder', function () {
   
         }).on('length.dt', function (e, settings, len) {
@@ -483,6 +505,8 @@ Template.reportcard.onRendered(async function() {
             $(".fullScreenSpin").css("display", "none");
           }
         });
+
+        $('#'+tablename).colResizable();
 
         $('#tablePrint').DataTable({
           searching: false,
@@ -510,6 +534,13 @@ Template.reportcard.onRendered(async function() {
                   }
                 }
           },
+          "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+            let countTableData = 0;
+            if (data.Params) {
+                countTableData = data.Params.Count || 0; //get count from API data
+            } 
+            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+          },
         }).on('column-reorder', function () {
   
         }).on('length.dt', function (e, settings, len) {
@@ -527,6 +558,7 @@ Template.reportcard.onRendered(async function() {
           }
         });
         $(".fullScreenSpin").css("display", "none");
+        tableResize()
         LoadingOverlay.hide();
       }, 0);
   
@@ -574,6 +606,22 @@ Template.reportcard.onRendered(async function() {
     }
 
     templateObject.currencyList.set(currencyList)
+
+    let _fxCurrencies = templateObject.fxCurrencies.get();
+    let cloneCurrenyList = cloneDeep(templateObject.currencyList.get());
+    for(let i = 0; i < _fxCurrencies.length; i++) {
+      let _index = cloneCurrenyList.findIndex(item => {
+        return item.id == _fxCurrencies[i].id
+      })
+
+      if(_index > -1) {
+        cloneCurrenyList[_index].active = true
+      } else {
+        cloneCurrenyList[_index].active = false
+      }
+    }
+    templateObject.currencyList.set(cloneCurrenyList)
+
   
     $(document).on('change', '#dateTo, #dateFrom', function () {
     // $(document).on('change', '#dateTo, #dateFrom', function () {
@@ -638,7 +686,7 @@ Template.reportcard.events({
     } else {
       let index = currencies.findIndex(item => {return item.id.toString() == currencyId.toString()});
       if(index > -1) {
-        currencies = currencies.splice(index, 1)
+        currencies.splice(index, 1)
       }
     }
     templateObject.fxCurrencies.set(currencies)
@@ -654,17 +702,7 @@ Template.reportcard.events({
     }
   },
 
-  'click .btnOpenReportSettings': () => {
-    let templateObject = Template.instance();
-    // let currenttranstablename = templateObject.data.tablename||";
-    $(`thead tr th`).each(function (index) {
-      var $tblrow = $(this);
-      var colWidth = $tblrow.width() || 0;
-      var colthClass = $tblrow.attr('data-class') || "";
-      $('.rngRange' + colthClass).val(colWidth);
-    });
-    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
-  },
+ 
 
   'change .custom-range': async function (event) {
     //   const tableHandler = new TableHandler();
