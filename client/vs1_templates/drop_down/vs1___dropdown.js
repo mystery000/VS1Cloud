@@ -78,7 +78,9 @@ Template.vs1___dropdown.onRendered(async function(){
         let edtmodal = $(parent).find('> .'+ edtModalId);
         if (event.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.targetTemp.set('');
+            if(templateObject.is_editable == false){
+                templateObject.targetTemp.set('');
+            }
             $(popupmodal).modal('show');
 
         } else {

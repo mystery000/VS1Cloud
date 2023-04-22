@@ -378,7 +378,6 @@ Template.onsuccesswaterfall.onRendered(function () {
     // Alex: add for print templates {
     getVS1Data("TTemplateSettings")
         .then(function (dataObject) {
-          console.log('as');
           if (dataObject.length == 0) {
             sideBarService
                 .getTemplateInformation(initialBaseDataLoad, 0)
@@ -390,7 +389,6 @@ Template.onsuccesswaterfall.onRendered(function () {
           }
         })
         .catch(function (err) {
-          console.log("Getting TemplateSettings failed", err);
         });
     // @}
 
@@ -5188,7 +5186,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                       $('.headerprogressbar').addClass('headerprogressbarShow');
                       $('.headerprogressbar').removeClass('headerprogressbarHidden');
                     }
-                    
+
                   } else if (Math.round(progressPercentage) >= 100) {
                     $('.checkmarkwrapper').removeClass("hide");
                     templateObject.dashboardRedirectOnLogin();

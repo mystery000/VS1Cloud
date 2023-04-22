@@ -1013,7 +1013,7 @@ Template.customerlist.helpers({
     },
 
     searchAPI: function() {
-        return sideBarService.getNewCustomerByNameOrID;
+        return sideBarService.searchAllCustomersDataVS1ByName;
     },
 
     service: ()=>{

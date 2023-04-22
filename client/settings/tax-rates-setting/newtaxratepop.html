@@ -2,12 +2,12 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable generated-id modal-md" role="document">
       <div class="modal-content">
           <div class="modal-header">
-              <h4><span class="taxcodepopheader">New Tax Code</span></h4><button type="button" class="close taxRateBtn" aria-label="Close"><span aria-hidden="true">×</span></button>
+              <h4><span class="taxcodepopheader">New Tax Code</span></h4><button type="button" class="close taxRateBtn" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
           </div>
           <div class="modal-body">
               <input type="hidden" class="form-control" id="edtTaxID" name="edtTaxID" style="display:none;" value="{{record.id}}">
               <input type="hidden" class="form-control" id="taxSelected" name="taxSelected" style="display:none;" value="{{record.id}}">
-              {{#unless equals record ''}}
+              <!-- {{#unless equals record ''}} -->
               <div class="row no-gutters">
                   <div class="col d-xl-flex align-items-xl-end">
                       <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Name</label>
@@ -28,11 +28,11 @@
                       <!-- <div class="form-group" style="margin: 8px;"><label>Rate</label><input type="text" class="form-control" style="width: 110px;" placeholder="0 %"></div> -->
                   </div>
               </div>
-              {{/unless}}
+              <!-- {{/unless}} -->
           </div>
           <div class="modal-footer">
               <button class="btn btn-success btnSaveTaxRate" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-              <button class="btn btn-secondary taxRateBtn" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+              <button class="btn btn-secondary taxRateBtn" type="button" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
           </div>
       </div>
   </div>

@@ -395,7 +395,7 @@
                 <tbody>
                     {{#each item in recordLineItems}}
 
-                    <tr class="dnd-moved" id={{item.lineID}}>
+                    <tr class="dnd-moved" id="{{item.lineID}}">
                         {{#if displayfields.[0].display}}
                         <td contenteditable="false"
                             class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">
@@ -407,13 +407,13 @@
                                 type='search'
                                 id='lineProductName'
                                 name=name
-                                modalId='productListModal'
+                                modalId='productList_Modal'
                                 list_template_name='productlistpop'
                                 modal_title='Product List'
                                 innerModal=true
                                 label = ''
-                                colNameForValue='productName'
-                                target_modal_id='newProductModal'
+                                colNameForValue='colproductName'
+                                target_modal_id='edtProductModal'
                                 target_template_id='newproductpop'
                                 custid=item.lineID
                                 is_editable=true
@@ -454,7 +454,7 @@
                                     innerModal=true
                                     colNameForValue='colAccountName'
                                     target_modal_id='edtAccountModal'
-                                    target_template_id='addaccountpop'
+                                    target_template_id='addAccountModal'
                                     custid=item.lineID
                                     is_editable=true
                                     noBorder=true
@@ -571,7 +571,7 @@
                                     modalId= 'customerListModal'
                                     list_template_name='customerlistpop'
                                     modal_title='Customer List'
-                                    innerModal=true
+                                    innerModal=false
                                     colNameForValue ='colCompany'
                                     target_modal_id='editCustomerModal'
                                     target_template_id='addcustomerpop'
@@ -637,7 +637,26 @@
                         {{#if displayfields.[17].display}}
                         <td contenteditable="false"
                             class="lineTaxRate colTaxRate pointer {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}"
-                            style="text-align: right!important;">{{item.taxRate}}</td>
+                            style="text-align: right!important;">
+                            {{item.taxRate}}
+                            <!-- {{> vs1___dropdown
+                                data=item.taxCode
+                                type='search'
+                                id='lineTaxRate'
+                                name='lineTaxRate'
+                                modalId='taxRateListModal'
+                                list_template_name='taxratelistpop'
+                                modal_title='Tax Code List'
+                                innerModal=true
+                                colNameForValue='colRate'
+                                target_modal_id='edtTaxRateModal'
+                                target_template_id='newtaxratepop'
+                                custid=item.lineID
+                                is_editable=true
+                                noBorder=true
+                                data=item.taxRate
+                            }} -->
+                        </td>
                         {{/if}}
                         {{#if displayfields.[18].display}}
                         <td contenteditable="false"
@@ -651,10 +670,10 @@
                                     name=name
                                     modalId='taxRateListModal'
                                     list_template_name='taxratelistpop'
-                                    modal_title='Customer List'
+                                    modal_title='Tax Code List'
                                     innerModal=true
                                     colNameForValue='colName'
-                                    target_modal_id='newTaxRateModal'
+                                    target_modal_id='edtTaxRateModal'
                                     target_template_id='newtaxratepop'
                                     custid=item.lineID
                                     is_editable=true

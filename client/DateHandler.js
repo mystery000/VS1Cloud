@@ -115,6 +115,55 @@ export default class Datehandler {
     // $("#dateTo").trigger("change");
   }
 
+  static initHalfYear() {
+    const currentDate = new Date();
+    /**
+     * This will init dates
+     */
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+    let fromDateMonth = currentDate.getMonth() + 1;
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (
+          currentDate.getMonth() + 1);
+    }
+
+    let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
+    // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
+    let differ = 0;
+    if(currentDate.getMonth() < 7) differ = 1;
+    var fromDate = fromDateDay + "/" + (new Date(prevMonth11Date).getMonth()+1) + "/" + (currentDate.getFullYear() - differ);
+
+    $("#date-input,#dateTo,#dateFrom").datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
+      buttonImageOnly: true,
+      buttonImage: "/img/imgCal2.png",
+      dateFormat: "dd/mm/yy",
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+      onChangeMonthYear: function (year, month, inst) {
+        // Set date to picker
+        $(this).datepicker("setDate", new Date(year, inst.selectedMonth, inst.selectedDay));
+        // Hide (close) the picker
+        // $(this).datepicker('hide');
+        //  Change ttrigger the on change function
+        // $(this).trigger('change');
+      }
+    });
+
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
+
+  }
+
   static todayDate( format = "DD/MM/YYYY", templateObject = null ){
     let dateFrom = moment().format("YYYY-MM-DD");
     let dateTo = moment().format("YYYY-MM-DD");

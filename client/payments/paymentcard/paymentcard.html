@@ -21,7 +21,9 @@
     {{#if record.deleted}}
     {{> deletedOverlay}}
     {{/if}}
-
+    <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
+      {{> newcurrencypop}}
+    </div>
     <form>
       {{> transaction_payment_header
         type="Customer"
@@ -1340,6 +1342,10 @@
     {{> paymentmethodpop}}
   </div>
 
+  <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+      {{> addcustomerpop record=customerRecord}}
+  </div>
+ 
   <!-- End Help Video Modal -->
   <script>
     modalDraggable();

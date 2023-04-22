@@ -961,7 +961,7 @@ Template.vs1_report_template.onRendered(function () {
         custfieldlabel: reset_data[r].label,
         class: reset_data[r].class,
         display: reset_data[r].display,
-        width: reset_data[r].width ? reset_data[r].width : ''
+        width: reset_data[r].width != undefined ? reset_data[r].width : ''
       };
       // if(reset_data[r].active == true){
       //   $('#'+currenttablename+' .'+reset_data[r].class).removeClass('hiddenColumn');
@@ -988,9 +988,16 @@ Template.vs1_report_template.events({
   'click .btnOpenReportSettings': () => {
     let templateObject = Template.instance();
     // let currenttranstablename = templateObject.data.tablename||";
-    $(`thead tr th`).each(function (index) {
+    let tblExport  = $('#tableExport');
+    let ths;
+    if(tblExport.length > 0) {
+      ths = $('#tableExport thead tr th')
+    } else {
+      ths = $('.tableExport thead tr th')
+    }
+    ths.each(function (index) {
       var $tblrow = $(this);
-      var colWidth = $tblrow.width() || 0;
+      var colWidth = $tblrow.width() || $($tblrow[0]).width() || 0;
       var colthClass = $tblrow.attr('data-class') || "";
       $('.rngRange' + colthClass).val(colWidth);
     });
