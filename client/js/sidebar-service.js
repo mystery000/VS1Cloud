@@ -3161,6 +3161,19 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TDeptClassList, options);
   }
 
+  getDepartmentDataListByName(dataSearchName) {
+    let options = "";
+
+    options = {
+      OrderBy: "Description desc",
+      IgnoreDates: true,
+      IsDetailReport: false,
+      Search: 'ClassName = "' + dataSearchName + '" OR Description = "' + dataSearchName + '"',
+    };
+
+    return this.getList(this.ERPObjects.TDeptClassList, options);
+  }
+
   getTripGroup(limitfrom, limitcount, deleteFilter) {
     let options = {
       PropertyList:"ID,TripName,Description,Active",
