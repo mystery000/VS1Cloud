@@ -855,7 +855,7 @@ Template.billcard.onRendered(() => {
             let colMemo = $('#' + lineID + " .colMemo").text();
             let colTaxAmount = $('#' + lineID + " .colTaxAmount").first().text();
 
-            let colAmount = $('#' + lineID + " .colAmount").first().val();
+            let colAmount = $('#' + lineID + " .colAmount").first().text();
 
             let targetRow = $('#' + lineID);
             let targetTaxCode = targetRow.find('.lineTaxCode').val();
