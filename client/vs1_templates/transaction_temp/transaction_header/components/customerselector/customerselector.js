@@ -416,7 +416,6 @@ Template.customerselector.onRendered(function() {
                     }
                 }
             }
-            if(price == 0) {price = price.toString();}
             const subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
             if ((taxrateamount === '') || (taxrateamount === ' ')) {
                 taxTotal = 0;

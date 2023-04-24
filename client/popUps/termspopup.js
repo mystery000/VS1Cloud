@@ -151,12 +151,6 @@ Template.termlistpop.onRendered(function() {
 Template.termlistpop.events({
 
     'click .btnAddNewTerm': function (event) {
-        let modal = $('#newTermsModal');
-        modal.find('#termModalHeader').text('Add New Terms');
-        modal.find('#edtTermsID').val('');
-        modal.find('#edtDays').val('');
-        modal.find('#edtName').val('');
-        modal.find('#edtDesc').val('');
         setTimeout(function () {
           $('#edtName').focus();
         }, 1000);
@@ -748,14 +742,6 @@ Template.termlistpop.helpers({
             return dataReturn
         }
     },
-    tablename : function() {
-        let templateObject = Template.instance();
-        return "tblTermsList" + templateObject.data.custid;
-    },
-    showModalID : function() {
-        let templateObject = Template.instance();
-        return "#newTermsModal" + templateObject.data.custid;
-    }
 
 });
 

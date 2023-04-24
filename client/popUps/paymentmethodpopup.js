@@ -651,8 +651,7 @@ Template.paymentmethodpop.events({
     },
     'click .btnAddNewPaymentMethod': function (event) {
           $('#isformcreditcard').prop('checked', false);
-          $('#newPaymentMethodModal').find('#paymentMethodHeader').text('Add Payment Method');
-          $('#newPaymentMethodModal').find('#edtPaymentMethodName').val('');
+          $('#edtPaymentMethodName').val('');
         setTimeout(function () {
           $('#edtPaymentMethodName').focus();
         }, 1000);

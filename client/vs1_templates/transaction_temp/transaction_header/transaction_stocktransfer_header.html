@@ -27,28 +27,12 @@
   <div class="col-12 col-md-6 col-lg-5 col-xl-6">
     <div class="row row-middle">
       <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-        <!-- {{> default_select
+        {{> default_select
               label="Transfer From"
               type="search"
               id="sltDepartment"
               name="sltDepartment"
-            }} -->
-            {{> vs1___dropdown
-              type='search'
-              id='sltDepartment'
-              name='sltDepartment'
-              modalId= 'departmentModal'
-              list_template_name='departmentpop'
-              innerModal=true
-              modal_title='Departments'
-              label = 'Transfer From'
-              colNameForValue = 'colDeptName'
-              target_modal_id= 'newDepartmentModal'
-              target_template_id='newdepartmentpop'
-              is_editable=true
-              noBorder=false
-              data="Default"
-      }}
+            }}
       </div>
       <div class="col-12 col-md-6 col-lg-5 col-xl-3">
         {{> single_date_picker
@@ -59,27 +43,12 @@
           }}
       </div>
       <div class="col-12 col-md-6 col-lg-5 col-xl-5">
-        <!-- {{> default_select
+        {{> default_select
             label="To Account"
             id="sltBankAccountName"
             name="sltBankAccountName"
             type="search"
-          }} -->
-          {{> vs1___dropdown
-            type='search'
-            id='sltBankAccountName'
-            name='sltBankAccountName'
-            modalId= 'accountListModal'
-            list_template_name='accountlistpop'
-            innerModal=true
-            modal_title='Account List'
-            label = 'To Account'
-            colNameForValue = 'colAccountName'
-            target_modal_id= 'addAccountModal'
-            target_template_id='addAccountModal'
-            is_editable=true
-            noBorder=false
-    }}
+          }}
       </div>
       <div class="col-12 col-md-6 col-lg-4 col-xl-2">
         {{> default_input
@@ -91,27 +60,12 @@
           }}
       </div>
       <div class="col-12 col-md-6 col-lg-4 col-xl-4">
-        <!-- {{> default_select
+        {{> default_select
             label="Ship Via"
             type="search"
             id="shipvia"
             name="shipvia"
-          }} -->
-          {{> vs1___dropdown
-            type='search'
-            id='shipvia'
-            name='shipvia'
-            modalId= 'shipViaModal'
-            list_template_name='shipviapop'
-            innerModal=true
-            modal_title='Account List'
-            label = 'Ship Via'
-            colNameForValue = 'colShipName'
-            target_modal_id= 'newShipViaModal'
-            target_template_id='newshipvia'
-            is_editable=true
-            noBorder=false
-    }}
+          }}
       </div>
       <div class="col-12 col-md-6 col-lg-4 col-xl-6">
         {{> customer_email_input

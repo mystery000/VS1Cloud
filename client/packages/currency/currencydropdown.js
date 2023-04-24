@@ -14,12 +14,11 @@ Template.currencydropdown.onCreated(function () {
   templateObject.currencyData = new ReactiveVar();
 });
 
-
+let templateObject = Template.instance();
 
 Template.currencydropdown.onRendered(function () {
   let taxRateService = new TaxRateService();
   const currencyData = [];
-  let templateObject = Template.instance();
   templateObject.getCurrencies = async function () {
     let currencyData = [];
     let dataObject = await getVS1Data("TCurrencyList");

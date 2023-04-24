@@ -227,7 +227,6 @@
                   modal_title=getModalTitle
                   lineTableId=gridTableId
                   printTableId=printTableId
-                  custid = "transaction_header"
                 }}
               </div>
               <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -271,7 +270,6 @@
                 modal_title=getModalTitle
                 lineTableId=getgridTableId
                 printTableId=printTableId
-                custid = "transaction_header"
               }}
             </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -336,27 +334,12 @@
               {{/if}}
               {{#if showVia}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-                <!-- {{> default_select
+                {{> default_select
                   label="Via"
                   id="shipvia"
                   type="search"
                   name="shipvia"
-                }} -->
-                {{>vs1___dropdown
-                  type='search'
-                  id='sltShipVia'
-                  name='sltShipVia'
-                  modalId= 'shipVia_modal'
-                  list_template_name='shipviapop'
-                  innerModal=true
-                  modal_title='Ship Via List'
-                  label = 'Via'
-                  colNameForValue = 'colShipName'
-                  target_modal_id= 'edtShipViaModal'
-                  target_template_id='newshipvia'
-                  is_editable=true
-                  custid="transaction_header"
-              }}
+                }}
               </div>
               {{/if}}
               {{#if showTerms}}
@@ -379,10 +362,9 @@
                   modal_title="Terms List"
                   label = 'Terms'
                   colNameForValue = 'colName'
-                  target_modal_id= 'edtTermsModal'
+                  target_modal_id= 'newTerms_modal'
                   target_template_id='newtermspop'
                   is_editable=true
-                  custid="transaction_header"
                 }}
 
               </div>
@@ -405,10 +387,9 @@
                   modal_title="Status List"
                   label = 'Status'
                   colNameForValue = 'colStatusName'
-                  target_modal_id= 'edtStatusPop_modal'
+                  target_modal_id= 'newStatusPop_modal'
                   target_template_id='newstatuspop'
                   is_editable=true
-                  custid="transaction_header"
                 }}
               </div>
               {{/if}}
@@ -453,22 +434,20 @@
                   modal_title="Department List"
                   label = 'Department'
                   colNameForValue = 'colDeptName'
-                  target_modal_id= 'edtDepartmentModal'
+                  target_modal_id= 'newDepartment_modal'
                   target_template_id='newdepartmentpop'
                   is_editable=true
-                  data="Default"
-                  custid="transaction_header"
                 }}
               </div>
               {{/if}}
               {{#if isCurrencyEnable}}
                 {{#if equals cardType 'Invoice'}}
-                {{> CurrencyWidget rate="sell" trans="true" custid="transaction_header"}}
+                {{> CurrencyWidget rate="sell" trans="true"}}
                 {{else}}
                 {{#if equals cardType 'Sales Order'}}
-                {{> CurrencyWidget rate="sell" trans="true" custid="transaction_header"}}
+                {{> CurrencyWidget rate="sell" trans="true"}}
                 {{else}}
-                {{> CurrencyWidget rate="buy" trans="true" custid="transaction_header"}}
+                {{> CurrencyWidget rate="buy" trans="true"}}
                 <!-- {{> CurrencyWidget rate="buy" row="true"}} -->
                 {{/if}}
                 {{/if}}

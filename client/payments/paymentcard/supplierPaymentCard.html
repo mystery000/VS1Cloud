@@ -20,12 +20,6 @@
     </style>
 
     {{#if record}} {{#if record.deleted}} {{> deletedOverlay}} {{/if}}
-    <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
-      {{> newcurrencypop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-      {{> addAccountModal}}
-    </div>
     <form>
       {{> transaction_payment_header type="Supplier" data=record
       isCurrencyEnable=isCurrencyEnable }}
@@ -2274,13 +2268,13 @@
 
   <!-- End Modal Supplier -->
 
-  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
     {{> accountlistpop}}
-  </div> -->
+  </div>
 
-  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
     {{> addaccountpop}}
-  </div> -->
+  </div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
     {{> addsupplierpop}}

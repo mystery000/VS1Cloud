@@ -124,35 +124,8 @@ Template.customerlistpop.events({
       FlowRouter.go('/customerscard');
   },
   'click .btnAddNewCustomer': function (event) {
-    let modal = $('#addCustomerModal');
-    modal.find('#edtCustomerCompany').val(popCustomerName);
-    modal.find('#edtCustomerPOPID').val(popCustomerID);
-    modal.find('#edtCustomerPOPEmail').val(popCustomerEmail);
-    modal.find('#edtTitle').val(popCustomerTitle);
-    modal.find('#edtFirstName').val(popCustomerFirstName);
-    modal.find('#edtMiddleName').val(popCustomerMiddleName);
-    modal.find('#edtLastName').val(popCustomerLastName);
-    modal.find('#edtCustomerPhone').val(popCustomerPhone);
-    modal.find('#edtCustomerMobile').val(popCustomerMobile);
-    modal.find('#edtCustomerFax').val(popCustomerFaxnumber);
-    modal.find('#edtCustomerSkypeID').val(popCustomerSkypeName);
-    modal.find('#edtCustomerWebsite').val(popCustomerURL);
-    modal.find('#edtCustomerShippingAddress').val(popCustomerStreet);
-    modal.find('#edtCustomerShippingCity').val(popCustomerStreet2);
-    modal.find('#edtCustomerShippingState').val(popCustomerState);
-    modal.find('#edtCustomerShippingZIP').val(popCustomerPostcode);
-    modal.find('#sedtCountry').val(popCustomerCountry);
-    modal.find('#txaNotes').val(popCustomernotes);
-    modal.find('#sltPreferedPayment').val(popCustomerpreferedpayment);
-    modal.find('#sltTermsPOP').val(popCustomerterms);
-    modal.find('#sltCustomerType').val(popCustomerType);
-    modal.find('#edtCustomerCardDiscount').val(popCustomerDiscount);
-    modal.find('#edtCustomeField1').val(popCustomercustfield1);
-    modal.find('#edtCustomeField2').val(popCustomercustfield2);
-    modal.find('#edtCustomeField3').val(popCustomercustfield3);
-    modal.find('#edtCustomeField4').val(popCustomercustfield4);
       setTimeout(function () {
-        modal.find('#edtCustomerCompany').focus();
+        $('#edtCustomerCompany').focus();
       }, 1000);
   },
   'click .chkDatatable' : function(event){

@@ -28,33 +28,6 @@
         cursor: pointer;
       }
     </style>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newShipViaModal">
-      {{> newshipvia}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
-      {{> newtermspop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-      {{> newstatuspop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-      {{> newdepartmentpop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
-      {{> newcurrencypop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-      {{> newproductpop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-      {{> newtaxratepop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-      {{> addsupplierpop}}
-    </div>
 
     {{#if purchaseorderrecord}}
     <form>
@@ -1098,29 +1071,13 @@
             <div class="col-6 col-md-6 col-lg-6">
               <div class="form-group">
                 <label>Fixed Asset</label>
-                <!-- <select
+                <select
                   type="search"
                   class="form-control"
                   id="fixedAssetLine"
                   name="fixedAssetLine"
                   style="background-color: rgb(255, 255, 255); cursor: pointer"
-                ></select> -->
-                {{> vs1___dropdown
-                  data=item.taxCode
-                  type='search'
-                  id='fixedAssetLine'
-                  name='fixedAssetLine'
-                  modalId='fixedAssetListModal'
-                  list_template_name='fixedassetlistpop'
-                  modal_title='Fixed Asset List'
-                  innerModal=true
-                  colNameForValue='colRegisterAssetName'
-                  target_modal_id='edtFixedAssetModal'
-                  target_template_id='fixedassetcard'
-                  custid=item.lineID
-                  is_editable=false
-                  noBorder=true
-              }}
+                ></select>
               </div>
             </div>
             <div class="col-6 col-md-6 col-lg-6">
@@ -1142,13 +1099,10 @@
     </div>
   </div>
 
-  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal" style="padding: 32px;">
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal" style="padding: 32px;">
     <h4>Fixed Asset List</h4>
     {{> fixedassetlistpop}}
-  </div> -->
-  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
-    {{> addsupplierpop}}
-  </div> -->
+  </div>
   <!-- <div class="modal fade" role="dialog" tabindex="-1" id="costtypelistpopModal">
     {{> costtypelistpop}}
   </div> -->

@@ -7,12 +7,7 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
-                    <style>
-                        .colQuantity {
-                            text-align: right!important;
-                        }
-                    </style>
-                    <!-- <div class="table-responsive">
+                    <div class="table-responsive">
                         <table id="tblStatusPopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblStatusPopList">
                             <thead>
                                 <tr class="dnd-moved">
@@ -48,28 +43,7 @@
                                 {{/if}}
                             </tbody>
                         </table>
-                    </div> -->
-                    {{>datatablelist
-                        tableclass="tblStatusPopList"
-                        tablename=tablename
-                        apiName= apiFunction
-                        service = service
-                        indexeddbname = 'TLeadStatusType'
-                        datahandler = datahandler
-                        tableheaderrecords = tableheaderrecords
-                        exportfilename = 'Lead Status List'
-                        istransaction = false
-                        apiParams=apiParams
-                        lowercaseDataName='tleadstatustype'
-                        exIndexDBName = 'tleadstatustype'
-                        exdatahandler = exDataHandler
-                        searchAPI = searchAPI
-                        showPlusButton = true
-                        showPlusButtonDataTarget = "newStatusPopModal"
-                        showPlusButtonClass = "btnAddNewStatus"
-                        showModalID ="#newStatusPopModal"
-                    }}
-
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
