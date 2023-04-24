@@ -1488,6 +1488,7 @@ getPrintMainSettings = function () {
             "ABN": ['', 'left', true],
             "HEADER_TITLE": ['', 'left', true],
             "NO": ['', 'left', true],
+            "DATE": ['', 'left', true],
             "CUSTOMER_ADDRESS": ['', 'left', true],
             "COMPANY_NAME": ['', 'left', true],
             "COMPANY_ADDRESS": ['', 'left', true],

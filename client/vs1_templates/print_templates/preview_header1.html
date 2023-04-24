@@ -29,8 +29,12 @@
             left: 350px;
             color: red;
         }
-        .pdfCustomerAddress_wrap {
+        .o_date_wrap {
             top: 150px;
+            display: none;
+        }
+        .pdfCustomerAddress_wrap {
+            top: 170px;
         }
         .barcode-wrap {
             position: absolute !important;
@@ -113,6 +117,7 @@
     <span class="HEADER_TITLE print-header_wrap bold center-item divDraggable divResize"><span class="print-header">Bill</span></span>
     <span class="NO no_label_wrap bold divDraggable divResize"><span class="no_label">NO:</span></span>
     <span class="NO print-header-value_wrap bold divDraggable divResize"><span class="print-header-value"></span></span>
+    <span class="DATE o_date_wrap divDraggable divResize center-item"><span class="date"></span></span>
     <span class="CUSTOMER_ADDRESS pdfCustomerAddress_wrap center-item divDraggable divResize"><span class="pdfCustomerAddress"></span></span>
 
     <span class="COMPANY_NAME o_name_wrap divDraggable divResize"><span class="o_name"></span></span>
@@ -149,7 +154,7 @@
                     <span class="po">&nbsp;</span>
                 </th>
                 <th class="AMOUNT_DUE">
-                    <span>AMOUNT DUE</span>
+                    <span class="amountdue_label">AMOUNT DUE</span>
                     <br>
                     <span class="amountdue">&nbsp;</span>
                 </th>

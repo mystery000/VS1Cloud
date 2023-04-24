@@ -1566,9 +1566,9 @@ Template.invoice_temp.onCreated(function () {
         fields: {
           "Product Name": ["25", "left"],
           "Description": ["30", "left"],
-          "Qty": ["10", "right"],
-          "Unit Price": ["10", "right"],
-          "Tax": ["10", "right"],
+          "Qty": ["7", "right"],
+          "Unit Price": ["15", "right"],
+          "Tax": ["7", "right"],
           "Amount": ["15", "right"],
         },
         subtotal: subtotal_total,
@@ -1618,9 +1618,9 @@ Template.invoice_temp.onCreated(function () {
         fields: {
           "Product Name": ["25", "left"],
           "Description": ["30", "left"],
-          "Qty": ["10", "right"],
-          "Unit Price": ["10", "right"],
-          "Tax": ["10", "right"],
+          "Qty": ["7", "right"],
+          "Unit Price": ["15", "right"],
+          "Tax": ["7", "right"],
           "Amount": ["15", "right"],
         },
         subtotal: subtotal_total,
@@ -1670,9 +1670,9 @@ Template.invoice_temp.onCreated(function () {
         fields: {
           "Product Name": ["25", "left"],
           "Description": ["30", "left"],
-          "Qty": ["10", "right"],
-          "Unit Price": ["10", "right"],
-          "Tax": ["10", "right"],
+          "Qty": ["7", "right"],
+          "Unit Price": ["15", "right"],
+          "Tax": ["7", "right"],
           "Amount": ["15", "right"],
         },
         subtotal: subtotal_total,
@@ -2042,6 +2042,56 @@ Template.invoice_temp.onCreated(function () {
     let printSettings = await getPrintSettings(template_title, number);
     for (key in printSettings) {
       $('.' + key).css('display', printSettings[key][2] ? 'revert' : 'none');
+    }
+
+    if (template_title == 'Delivery Docket') {
+      $("#templatePreviewModal .horizontal_blue_line").hide();
+      $("#templatePreviewModal .ACCOUNT_NAME").hide();
+      $("#templatePreviewModal .BANK_NAME").hide();
+      $("#templatePreviewModal .BSB").hide();
+      $("#templatePreviewModal .ACC").hide();
+      $("#templatePreviewModal .SUB_TOTAL").hide();
+      $("#templatePreviewModal .sub_total_underline").hide();
+      $("#templatePreviewModal .TOTAL_TAX").hide();
+      $("#templatePreviewModal .GST").hide();
+      $("#templatePreviewModal .less_amount_underline").hide();
+      $("#templatePreviewModal .BALANCE").hide();
+
+      $("#templatePreviewModal .horizontal_black_line").hide();
+      $("#templatePreviewModal .ACCOUNT_NAME2").hide();
+      $("#templatePreviewModal .BANK_NAME2").hide();
+      $("#templatePreviewModal .BSB2").hide();
+      $("#templatePreviewModal .ACC2").hide();
+      $("#templatePreviewModal .SUB_TOTAL2").hide();
+      $("#templatePreviewModal .sub_total_underline").hide();
+      $("#templatePreviewModal .TOTAL_AUD2").hide();
+      $("#templatePreviewModal .PAID_AMOUNT2").hide();
+      $("#templatePreviewModal .less_amount_underline").hide();
+      $("#templatePreviewModal .AMOUNT_DUE_AUD2").hide();
+
+      $("#templatePreviewModal .PAYMENT_DETAILS3").hide();
+      $("#templatePreviewModal .ACCOUNT_NAME3").hide();
+      $("#templatePreviewModal .BANK_NAME3").hide();
+      $("#templatePreviewModal .SORT_CODE3").hide();
+      $("#templatePreviewModal .ACC3").hide();
+      $("#templatePreviewModal .ACCOUNT_DETAIL3").hide();
+      $("#templatePreviewModal .PAYMENT_TERMS3").hide();
+      $("#templatePreviewModal .SUB_TOTAL3").hide();
+
+      $('.PAY_LINK, .PAY_LINK2, .PAY_LINK3').hide();
+
+      $('.amountdue_label, .amountdue3_label').text('Ship Date');
+      $('.o_date_wrap').show();
+      var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+      let saleDate =
+          saledateTime.getFullYear() +
+          "-" +
+          (saledateTime.getMonth() + 1) +
+          "-" +
+          saledateTime.getDate();
+      $('.amountdue, .amountdue3').text(saleDate);
+    } else {
+      $('.o_date_wrap').hide();
     }
   };
 
@@ -2644,6 +2694,56 @@ Template.invoice_temp.onCreated(function () {
     } else if (template_title == "Invoice Back Orders") {
       templateObject.showInvoiceBack1(template_title, number, true);
     } else { }
+
+    if (template_title == 'Delivery Docket') {
+      $("#templatePreviewModal .horizontal_blue_line").hide();
+      $("#templatePreviewModal .ACCOUNT_NAME").hide();
+      $("#templatePreviewModal .BANK_NAME").hide();
+      $("#templatePreviewModal .BSB").hide();
+      $("#templatePreviewModal .ACC").hide();
+      $("#templatePreviewModal .SUB_TOTAL").hide();
+      $("#templatePreviewModal .sub_total_underline").hide();
+      $("#templatePreviewModal .TOTAL_TAX").hide();
+      $("#templatePreviewModal .GST").hide();
+      $("#templatePreviewModal .less_amount_underline").hide();
+      $("#templatePreviewModal .BALANCE").hide();
+
+      $("#templatePreviewModal .horizontal_black_line").hide();
+      $("#templatePreviewModal .ACCOUNT_NAME2").hide();
+      $("#templatePreviewModal .BANK_NAME2").hide();
+      $("#templatePreviewModal .BSB2").hide();
+      $("#templatePreviewModal .ACC2").hide();
+      $("#templatePreviewModal .SUB_TOTAL2").hide();
+      $("#templatePreviewModal .sub_total_underline").hide();
+      $("#templatePreviewModal .TOTAL_AUD2").hide();
+      $("#templatePreviewModal .PAID_AMOUNT2").hide();
+      $("#templatePreviewModal .less_amount_underline").hide();
+      $("#templatePreviewModal .AMOUNT_DUE_AUD2").hide();
+
+      $("#templatePreviewModal .PAYMENT_DETAILS3").hide();
+      $("#templatePreviewModal .ACCOUNT_NAME3").hide();
+      $("#templatePreviewModal .BANK_NAME3").hide();
+      $("#templatePreviewModal .SORT_CODE3").hide();
+      $("#templatePreviewModal .ACC3").hide();
+      $("#templatePreviewModal .ACCOUNT_DETAIL3").hide();
+      $("#templatePreviewModal .PAYMENT_TERMS3").hide();
+      $("#templatePreviewModal .SUB_TOTAL3").hide();
+
+      $('.PAY_LINK, .PAY_LINK2, .PAY_LINK3').hide();
+
+      $('.amountdue_label, .amountdue3_label').text('Ship Date');
+      $('.o_date_wrap').show();
+      var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+      let saleDate =
+          saledateTime.getFullYear() +
+          "-" +
+          (saledateTime.getMonth() + 1) +
+          "-" +
+          saledateTime.getDate();
+      $('.amountdue, .amountdue3').text(saleDate);
+    } else {
+      $('.o_date_wrap').hide();
+    }
 
     let invoice_data_info = templateObject.invoicerecord.get();
     var source;

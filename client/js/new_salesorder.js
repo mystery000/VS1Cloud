@@ -282,7 +282,8 @@ Template.new_salesorder.onCreated(function () {
 
       const tdQty = $(this).find('.lineQty').val();
       const tdunitprice = $(this).find('.colUnitPriceExChange').val();
-      const taxamount = $(this).find('.lineTaxAmount').val();
+      const taxamount = $(this).find('.lineTaxAmount:not(.convert-to-foreign)').text();
+      const tdlineamt = $(this).find('.lineAmount').text();
       const targetRow = $(this);
       const targetTaxCode = targetRow.find('.lineTaxCode').val();
       let qty = targetRow.find(".lineQty").val() || 0
@@ -309,8 +310,7 @@ Template.new_salesorder.onCreated(function () {
         tdQty,
         tdunitprice,
         taxamount,
-        // tdlineamt,
-        ""
+        tdlineamt,
       ]);
       const lineItemObj = {
         description: tddescription || '',
@@ -357,10 +357,10 @@ Template.new_salesorder.onCreated(function () {
         fields: {
           "Product Name": ["25", "left"],
           "Description": ["30", "left"],
-          "Qty": ["10", "right"],
-          "Unit Price": ["10", "right"],
-          "Tax": ["10", "right"],
-          "Amount": ["15", "right"]
+          "Qty": ["7", "right"],
+          "Unit Price": ["15", "right"],
+          "Tax": ["7", "right"],
+          "Amount": ["15", "right"],
         },
         subtotal: subtotal_total,
         gst: subtotal_tax,
@@ -406,10 +406,10 @@ Template.new_salesorder.onCreated(function () {
         fields: {
           "Product Name": ["25", "left"],
           "Description": ["30", "left"],
-          "Qty": ["10", "right"],
-          "Unit Price": ["10", "right"],
-          "Tax": ["10", "right"],
-          "Amount": ["15", "right"]
+          "Qty": ["7", "right"],
+          "Unit Price": ["15", "right"],
+          "Tax": ["7", "right"],
+          "Amount": ["15", "right"],
         },
         subtotal: subtotal_total,
         gst: subtotal_tax,
@@ -455,10 +455,10 @@ Template.new_salesorder.onCreated(function () {
         fields: {
           "Product Name": ["25", "left"],
           "Description": ["30", "left"],
-          "Qty": ["10", "right"],
-          "Unit Price": ["10", "right"],
-          "Tax": ["10", "right"],
-          "Amount": ["15", "right"]
+          "Qty": ["7", "right"],
+          "Unit Price": ["15", "right"],
+          "Tax": ["7", "right"],
+          "Amount": ["15", "right"],
         },
         subtotal: subtotal_total,
         gst: subtotal_tax,
@@ -539,7 +539,7 @@ Template.new_salesorder.onCreated(function () {
       const tddescription = $(this).find('.lineProductDesc').text();
       const tdQty = $(this).find('.lineQty').val();
       const tdunitprice = $(this).find('.colUnitPriceExChange').val();
-      const taxamount = $(this).find('.lineTaxAmount').val();
+      const taxamount = $(this).find('.lineTaxAmount:not(.convert-to-foreign)').text();
       const targetRow = $(this);
       const targetTaxCode = targetRow.find('.lineTaxCode').val();
       array_data.push([

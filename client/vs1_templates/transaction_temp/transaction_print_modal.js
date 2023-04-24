@@ -221,7 +221,7 @@ Template.transaction_print_modal.onCreated(async function () {
         .filter((item) => item.active)
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
-            .filter((item) => item.fields.SettingName == template.name)
+            .filter((item) => item.fields.SettingName == template.name && item.fields.GlobalRef == template.name)
             .map((item) => ({
               fields: {
                 SettingName: item.fields.SettingName,
@@ -487,17 +487,42 @@ Template.transaction_print_modal.events({
     const dataKey = $selectedPrintOption.data('id')
     $(`#${dataKey}-modal`).modal("hide");
     $(`#${dataKey}-modal`).modal("show");
-
+    modalDraggable();
   },
-  "click #printModal .btnPreview": function (event) {
-    // const templateObject = Template.instance();
-    // const transactionType = templateObject.data.TransactionType;
-    // const component = templateObject.parent().parent();
-    // const chooseTemplateCheckboxes = $("#printModal .chooseTemplateBtn:checked");
-    // const chosenTemplates = [];
-    // chooseTemplateCheckboxes.each((item) => {
-    //   chosenTemplates.push(`#${$(chooseTemplateCheckboxes[item]).attr("data-id")}-modal .chkGlobalSettings:checked`)
-    // })
-    // component.generateInvoiceData('Sales Orders', '3')
+  "click #printModal #previewTemplate": function (event) {
+    let checkedTemplate = $("#printModal.show .chooseTemplateBtn:checked").first();
+    if (checkedTemplate.length > 0) {
+      let defaultTemplates = $('.chooseTemplateModal .chkGlobalSettings:checked');
+      for (let i = 0; i < defaultTemplates.length; i++) {
+        let template_name = defaultTemplates[i].id.substr(0, defaultTemplates[i].id.lastIndexOf('_'));
+        if ($(checkedTemplate[0]).data('id') == template_name) {
+          let previewButton = $(defaultTemplates[i]).parents('.templateItem').children('.btnPreviewTemplate');
+          previewButton.trigger('click');
+          break;
+        }
+      }
+    }
+  },
+  "click .chooseTemplateOk": function(event) {
+    let currentModal = $('.chooseTemplateModal.show');
+    $('.chooseTemplateModal.show').modal('hide');
+    if (currentModal.length > 0) {
+      let currentTemplate = currentModal[0].id.split('-')[0];
+      let startChecking = false;
+      let checkedInputs = $("#printModal.show .chooseTemplateBtn:checked");
+      for (let i = 0;i < checkedInputs.length; i++) {
+        if ($(checkedInputs[i]).data('id') == currentTemplate) {
+          startChecking = true;
+          continue;
+        }
+        if (startChecking && $(checkedInputs[i]).is(':checked')) {
+          let nextTemplate = $(checkedInputs[i]).data('id');
+          $(`#${nextTemplate}-modal`).modal("hide");
+          $(`#${nextTemplate}-modal`).modal("show");
+          modalDraggable();
+          break;
+        }
+      }
+    }
   },
 });
