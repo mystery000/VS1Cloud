@@ -1,94 +1,54 @@
 <template name="departmentModal">
-    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment"> -->
-        <!-- <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Departments</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          {{#each item in deptrecords}}
-          {{#if equals item.department "Head Office"}}
-          <div class="custom-control custom-switch" style="margin: 8px">
-            <input
-              class="custom-control-input chkDepartment"
-              type="checkbox"
-              id="formCheck-{{item.id}}"
-              name="chkDepartment"
-              checked=""
-              value="{{item.department}}"
-            /><label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-          </div>
-          {{else}}
-          <div class="custom-control custom-switch" style="margin: 8px">
-            <input
-              class="custom-control-input chkDepartment"
-              type="checkbox"
-              id="formCheck-{{item.id}}"
-              name="chkDepartment"
-              value="{{item.department}}"
-            /><label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-          </div>
-          {{/if}}
-          {{/each}}
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary btnSaveSelect" type="button">
-            <i class="fa fa-save" style="margin-right: 8px"></i>Save
-          </button>
-          <button class="btn btn-secondary" data-dismiss="modal" type="button">
-            <i class="fa fa-close" style="margin-right: 8px"></i>Close
-          </button>
-        </div>
-      </div>
-    </div> -->
-        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Departments</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <style>
-                        /* input[type="checkbox"]{
-                      margin: 40px!important
-                  } */
-                        #tblDepartmentCheckbox .colChkBox {
-                            width: 40px !important;
-                        }
-                        #tblDepartmentCheckbox .chkBox {
-                            margin: 0px !important;
-                        }
-                        /* #tblDepartmentCheckbox .colDeptClassName{
-                      width: 25%!important
-                  }
-                  #tblDepartmentCheckbox .colDescription{
-                      width: 30%!important
-                  }
-                  #tblDepartmentCheckbox .colSiteCode{
-                      width: 20%!important
-                  }
-                  #tblDepartmentCheckbox .colStatus{
-                      width: 20%!important
-                  } */
-                    </style>
-                    <!-- {{> non_transactional_list tablename="tblDepartmentList"}} -->
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Departments</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <style>
+                    /*#tblDepartmentCheckbox .colChkBox {*/
+                    /*    width: 40px !important;*/
+                    /*}*/
+                    /*#tblDepartmentCheckbox .chkBox {*/
+                    /*    margin: 0px !important;*/
+                    /*}*/
+                </style>
 
-                    {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary btnDepartmentSelect" type="button">
-                        <i class="fa fa-save" style="margin-right: 8px"></i>Ok
-                    </button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">
-                        <i class="fa fa-close" style="margin-right: 8px"></i>Close
-                    </button>
-                </div>
+                {{> datatablelist
+                        tableclass="tbldepartmentlist"
+                        tablename="tbldepartmentlist"
+                        apiName= apiFunction
+                        indexeddbname = 'TDeptClassList'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Department List'
+                        istransaction = false
+                        isselection = true
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tdeptclasslist'
+                        exIndexDBName = 'tdeptclasslist'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                        hideConvertedButton = true
+                        viewCompletedButton = false
+                        attRowID = 1
+                        showPlusButton = true
+                        showModalID = "newDepartmentModal"
+                        showPlusButtonClass = "btnAddNewDepartment"
+                }}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btnDepartmentSelect" type="button">
+                    <i class="fa fa-save" style="margin-right: 8px"></i>Ok
+                </button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                    <i class="fa fa-close" style="margin-right: 8px"></i>Close
+                </button>
             </div>
         </div>
-    <!-- </div> -->
+    </div>
 </template>
