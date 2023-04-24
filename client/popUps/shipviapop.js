@@ -358,11 +358,6 @@ Template.shipviapop.events({
          $(".btnRefreshVia").trigger("click");
       }
     },
-    'click .btnAddNewShipVia': function () {
-        let modal = $('#newShipViaModal');
-        modal.find('#edtShipVia').val('');
-        modal.find('#newShipViaMethodName').text('Add Ship Via');
-    }
     // 'click .chkDatatable': function(event) {
     //     var columns = $('#tblShipViaPopList th');
     //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
@@ -956,11 +951,7 @@ Template.shipviapop.helpers({
             return dataReturn
         }
     },
-    tablename: function() {
-        let templateObject = Template.instance();
-        return "tblShipViaPopList" + templateObject.data.custid;
-    },
-    
+
 
 });
 

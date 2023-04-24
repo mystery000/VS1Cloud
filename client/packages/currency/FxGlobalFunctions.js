@@ -153,9 +153,7 @@ export default class FxGlobalFunctions {
     const currency = utilityService.extractCurrency(amount);
 
     //amount = utilityService.removeCurrency(amount, currency);
-    if(amount ==0){
-      amount = amount.toString();
-    }
+
     amount = amount.replace(/[^0-9.-]+/g, "");
 
     let convert = (amount * rate).toFixed(2);

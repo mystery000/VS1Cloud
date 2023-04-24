@@ -829,7 +829,7 @@ Template.stockadjustmentcard.onRendered(() => {
 
     /* On clik Inventory Line */
     $(document).on("click", ".tblInventory tbody tr", function (e) {
-        let selectLineID = $('#productListModal').attr('selectedid');
+        let selectLineID = $('#selectLineID').val();
 
         var table = $(this);
         let utilityService = new UtilityService();
@@ -905,11 +905,11 @@ Template.stockadjustmentcard.onRendered(() => {
     let table;
     $(document).ready(function () {
         $('#tblEmployeelist tbody').on('click', 'tr', function (event) {
-            $('#edtSupplierEmail').val($(event.target).closest("tr").find('.colEmail').text());
+            $('#edtCustomerEmail').val($(event.target).closest("tr").find('.colEmail').text());
             $('#employeeList').modal('hide');
-            $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));
+            $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));
             if ($('.chkEmailCopy').is(':checked')) {
-                let checkEmailData = $('#edtSupplierEmail').val();
+                let checkEmailData = $('#edtCustomerEmail').val();
                 if (checkEmailData.replace(/\s/g, '') === '') {
                     $('.chkEmailCopy').prop('checked', false);
                     swal('Employee Email cannot be blank!', '', 'warning');
@@ -1000,22 +1000,20 @@ Template.stockadjustmentcard.onRendered(() => {
 
     });
 
-    // $(document).on("click", "#departmentList tbody tr", function (e) {
-    //     // let templateObject = Template.instance();
-    //     // let $tblrows = $("#tblStockAdjustmentLine tbody tr");
-    //     let departmentData = $(this).find(".colDeptName").text() || '';
-    //     let selectLineID = $('#selectLineID').val();
-    //     if (selectLineID) {
-    //         $('#' + selectLineID + " .lineDepartment").val(departmentData);
+    $(document).on("click", "#departmentList tbody tr", function (e) {
+        // let templateObject = Template.instance();
+        // let $tblrows = $("#tblStockAdjustmentLine tbody tr");
+        let departmentData = $(this).find(".colDeptName").text() || '';
+        let selectLineID = $('#selectLineID').val();
+        if (selectLineID) {
+            $('#' + selectLineID + " .lineDepartment").val(departmentData);
 
-    //         let productname = $('#' + selectLineID + " .lineProductName").val() || '';
-    //         templateObject.getProductQty(selectLineID, productname, departmentData);
-    //     }
-    //     $('#departmentModal').modal('toggle');
+            let productname = $('#' + selectLineID + " .lineProductName").val() || '';
+            templateObject.getProductQty(selectLineID, productname, departmentData);
+        }
+        $('#departmentModal').modal('toggle');
 
-    // });
-
-    $('#sltAccountName').attr('style',"background-color:rgb(255, 255, 255); cursor: pointer;");
+    });
 
     $('#sltAccountName').editableSelect().on('click.editable-select', function (e, li) {
         var $earch = $(this);
@@ -1518,33 +1516,27 @@ Template.stockadjustmentcard.helpers({
 });
 
 Template.stockadjustmentcard.events({
-    'click .btnAddNewEmployee' : function (event) {
-        $("#addEmployeeModal").modal('toggle');
-    },
-
     'click .lineDepartment, keydown .lineDepartment': function (event) {
         var $earch = $(event.currentTarget);
         var offset = $earch.offset();
-        let selectedID = $(event.target).attr('custid');
-        let parent = $(event.target).parent();
-        let customername = $(parent).find('#sltAccountName').val();
+        let customername = $('#sltAccountName').val();
         if (customername === '') {
             swal('Account has not been selected!', '', 'warning');
             event.preventDefault();
         } else {
             var departmentDataName = $(event.target).val() || '';
             if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-                $('#departmentModal' + selectedID).modal('toggle');
+                $('#departmentModal').modal('toggle');
                 var targetID = $(event.target).closest('tr').attr('id');
-                $(parent).find('#selectLineID').val(targetID);
+                $('#selectLineID').val(targetID);
                 setTimeout(function () {
-                    $(parent).find('#departmentList_filter .form-control-sm').focus();
-                    $(parent).find('#departmentList_filter .form-control-sm').val('');
-                    $(parent).find('#departmentList_filter .form-control-sm').trigger("input");
+                    $('#departmentList_filter .form-control-sm').focus();
+                    $('#departmentList_filter .form-control-sm').val('');
+                    $('#departmentList_filter .form-control-sm').trigger("input");
 
-                    var datatable = $('#departmentList' + selectedID).DataTable();
+                    var datatable = $('#departmentList').DataTable();
                     datatable.draw();
-                    $(parent).find('#departmentList_filter .form-control-sm').trigger("input");
+                    $('#departmentList_filter .form-control-sm').trigger("input");
 
                 }, 500);
             } else {
@@ -1552,7 +1544,7 @@ Template.stockadjustmentcard.events({
                     let lineExtaSellItems = [];
                     let lineExtaSellObj = {};
                     $('.fullScreenSpin').css('display', 'inline-block');
-                    $("#newDepartmentModal").find('#newDeptHeader').text('Edit Department');
+                    $('#newDeptHeader').text('Edit Department');
 
                     getVS1Data('TDeptClass').then(function (dataObject) {
                         if (dataObject.length == 0) {
@@ -1560,15 +1552,15 @@ Template.stockadjustmentcard.events({
                             sideBarService.getDepartment().then(function (data) {
                                 for (let i = 0; i < data.tdeptclass.length; i++) {
                                     if (data.tdeptclass[i].DeptClassName === departmentDataName) {
-                                        $("#newDepartmentModal").find('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                        $("#newDepartmentModal").find('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                        $("#newDepartmentModal").find('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                        $("#newDepartmentModal").find('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                        $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                        $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                        $('#edtDeptDesc').val(data.tdeptclass[i].Description);
                                     }
                                 }
                                 setTimeout(function () {
                                     $('.fullScreenSpin').css('display', 'none');
-                                    // $(parent).find('#newDepartmentModal').modal('toggle');
+                                    $('#newDepartmentModal').modal('toggle');
                                 }, 200);
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -1578,15 +1570,15 @@ Template.stockadjustmentcard.events({
                             let useData = data.tdeptclass;
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $("#newDepartmentModal").find('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $("#newDepartmentModal").find('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $("#newDepartmentModal").find('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $("#newDepartmentModal").find('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
                                 }
                             }
                             setTimeout(function () {
                                 $('.fullScreenSpin').css('display', 'none');
-                                // $(parent).find('#newDepartmentModal').modal('toggle');
+                                $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }
                     }).catch(function (err) {
@@ -1594,32 +1586,32 @@ Template.stockadjustmentcard.events({
                         sideBarService.getDepartment().then(function (data) {
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === departmentDataName) {
-                                    $("#newDepartmentModal").find('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $("#newDepartmentModal").find('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $("#newDepartmentModal").find('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $("#newDepartmentModal").find('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
                                 }
                             }
                             setTimeout(function () {
                                 $('.fullScreenSpin').css('display', 'none');
-                                // $(parent).find('#newDepartmentModal').modal('toggle');
+                                $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }).catch(function (err) {
                             $('.fullScreenSpin').css('display', 'none');
                         });
                     });
                 } else {
-                    $('#departmentModal' + selectedID).modal('toggle');
+                    $('#departmentModal').modal('toggle');
                     var targetID = $(event.target).closest('tr').attr('id');
-                    $(parent).find('#selectLineID').val(targetID);
+                    $('#selectLineID').val(targetID);
                     setTimeout(function () {
-                        $(parent).find('#departmentList_filter .form-control-sm').focus();
-                        $(parent).find('#departmentList_filter .form-control-sm').val('');
-                        $(parent).find('#departmentList_filter .form-control-sm').trigger("input");
+                        $('#departmentList_filter .form-control-sm').focus();
+                        $('#departmentList_filter .form-control-sm').val('');
+                        $('#departmentList_filter .form-control-sm').trigger("input");
 
-                        var datatable = $(parent).find('#departmentList').DataTable();
+                        var datatable = $('#departmentList').DataTable();
                         datatable.draw();
-                        $(parent).find('#departmentList_filter .form-control-sm').trigger("input");
+                        $('#departmentList_filter .form-control-sm').trigger("input");
 
                     }, 500);
                 }
@@ -1799,23 +1791,22 @@ Template.stockadjustmentcard.events({
     'click .lineProductName, keydown .lineProductName': function (event) {
         var $earch = $(event.currentTarget);
         var offset = $earch.offset();
-        let selectedID = $(event.target).attr('custid');
-        let parent = $(event.target).parent();
+
         const templateObject = Template.instance();
         $("#selectProductID").val('');
         var productDataName = $(event.target).val() || '';
         if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-            $('#productListModal' + selectedID).modal('toggle');
+            $('#productListModal').modal('toggle');
             var targetID = $(event.target).closest('tr').attr('id');
-            $(parent).find('#selectLineID').val(targetID);
+            $('#selectLineID').val(targetID);
             setTimeout(function () {
-                $(parent).find('#tblInventory_filter .form-control-sm').focus();
-                $(parent).find('#tblInventory_filter .form-control-sm').val('');
-                $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                $('#tblInventory_filter .form-control-sm').focus();
+                $('#tblInventory_filter .form-control-sm').val('');
+                $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                var datatable = $(parent).find('.tblInventory').DataTable();
+                var datatable = $('.tblInventory').DataTable();
                 datatable.draw();
-                $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                $('#tblInventory_filter .form-control-sm').trigger("input");
 
             }, 500);
         } else {
@@ -1850,21 +1841,21 @@ Template.stockadjustmentcard.events({
                             let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
                             let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
                             let barcode = data.tproduct[0].fields.BARCODE || '';
-                            $(parent).find("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                            $(parent).find('#add-product-title').text('Edit Product');
-                            $(parent).find('#edtproductname').val(productname);
-                            $(parent).find('#edtsellqty1price').val(sellqty1price);
-                            $(parent).find('#txasalesdescription').val(salesdescription);
-                            $(parent).find('#sltsalesacount').val(incomeaccount);
-                            $(parent).find('#slttaxcodesales').val(taxcodesales);
-                            $(parent).find('#edtbarcode').val(barcode);
-                            $(parent).find('#txapurchasedescription').val(purchasedescription);
-                            $(parent).find('#sltcogsaccount').val(cogsaccount);
-                            $(parent).find('#slttaxcodepurchase').val(taxcodepurchase);
-                            $(parent).find('#edtbuyqty1cost').val(buyqty1cost);
+                            $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                            $('#add-product-title').text('Edit Product');
+                            $('#edtproductname').val(productname);
+                            $('#edtsellqty1price').val(sellqty1price);
+                            $('#txasalesdescription').val(salesdescription);
+                            $('#sltsalesacount').val(incomeaccount);
+                            $('#slttaxcodesales').val(taxcodesales);
+                            $('#edtbarcode').val(barcode);
+                            $('#txapurchasedescription').val(purchasedescription);
+                            $('#sltcogsaccount').val(cogsaccount);
+                            $('#slttaxcodepurchase').val(taxcodepurchase);
+                            $('#edtbuyqty1cost').val(buyqty1cost);
 
                             setTimeout(function () {
-                                $(parent).find('#newProductModal').modal('show');
+                                $('#newProductModal').modal('show');
                             }, 500);
                         }).catch(function (err) {
 
@@ -1901,21 +1892,21 @@ Template.stockadjustmentcard.events({
                                 let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
                                 let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
                                 let barcode = data.tproductvs1[i].fields.BARCODE || '';
-                                $(parent).find("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
-                                $(parent).find('#add-product-title').text('Edit Product');
-                                $(parent).find('#edtproductname').val(productname);
-                                $(parent).find('#edtsellqty1price').val(sellqty1price);
-                                $(parent).find('#txasalesdescription').val(salesdescription);
-                                $(parent).find('#sltsalesacount').val(incomeaccount);
-                                $(parent).find('#slttaxcodesales').val(taxcodesales);
-                                $(parent).find('#edtbarcode').val(barcode);
-                                $(parent).find('#txapurchasedescription').val(purchasedescription);
-                                $(parent).find('#sltcogsaccount').val(cogsaccount);
-                                $(parent).find('#slttaxcodepurchase').val(taxcodepurchase);
-                                $(parent).find('#edtbuyqty1cost').val(buyqty1cost);
+                                $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
+                                $('#add-product-title').text('Edit Product');
+                                $('#edtproductname').val(productname);
+                                $('#edtsellqty1price').val(sellqty1price);
+                                $('#txasalesdescription').val(salesdescription);
+                                $('#sltsalesacount').val(incomeaccount);
+                                $('#slttaxcodesales').val(taxcodesales);
+                                $('#edtbarcode').val(barcode);
+                                $('#txapurchasedescription').val(purchasedescription);
+                                $('#sltcogsaccount').val(cogsaccount);
+                                $('#slttaxcodepurchase').val(taxcodepurchase);
+                                $('#edtbuyqty1cost').val(buyqty1cost);
 
                                 setTimeout(function () {
-                                    $(parent).find('#newProductModal').modal('show');
+                                    $('#newProductModal').modal('show');
                                 }, 500);
                             }
                         }
@@ -1943,21 +1934,21 @@ Template.stockadjustmentcard.events({
                                 let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
                                 let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
                                 let barcode = data.tproduct[0].fields.BARCODE || '';
-                                $(parent).find("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                $(parent).find('#add-product-title').text('Edit Product');
-                                $(parent).find('#edtproductname').val(productname);
-                                $(parent).find('#edtsellqty1price').val(sellqty1price);
-                                $(parent).find('#txasalesdescription').val(salesdescription);
-                                $(parent).find('#sltsalesacount').val(incomeaccount);
-                                $(parent).find('#slttaxcodesales').val(taxcodesales);
-                                $(parent).find('#edtbarcode').val(barcode);
-                                $(parent).find('#txapurchasedescription').val(purchasedescription);
-                                $(parent).find('#sltcogsaccount').val(cogsaccount);
-                                $(parent).find('#slttaxcodepurchase').val(taxcodepurchase);
-                                $(parent).find('#edtbuyqty1cost').val(buyqty1cost);
+                                $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                                $('#add-product-title').text('Edit Product');
+                                $('#edtproductname').val(productname);
+                                $('#edtsellqty1price').val(sellqty1price);
+                                $('#txasalesdescription').val(salesdescription);
+                                $('#sltsalesacount').val(incomeaccount);
+                                $('#slttaxcodesales').val(taxcodesales);
+                                $('#edtbarcode').val(barcode);
+                                $('#txapurchasedescription').val(purchasedescription);
+                                $('#sltcogsaccount').val(cogsaccount);
+                                $('#slttaxcodepurchase').val(taxcodepurchase);
+                                $('#edtbuyqty1cost').val(buyqty1cost);
 
                                 setTimeout(function () {
-                                    $(parent).find('#newProductModal').modal('show');
+                                    $('#newProductModal').modal('show');
                                 }, 500);
                             }).catch(function (err) {
 
@@ -1990,21 +1981,21 @@ Template.stockadjustmentcard.events({
                         let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
                         let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
                         let barcode = data.tproduct[0].fields.BARCODE || '';
-                        $(parent).find("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                        $(parent).find('#add-product-title').text('Edit Product');
-                        $(parent).find('#edtproductname').val(productname);
-                        $(parent).find('#edtsellqty1price').val(sellqty1price);
-                        $(parent).find('#txasalesdescription').val(salesdescription);
-                        $(parent).find('#sltsalesacount').val(incomeaccount);
-                        $(parent).find('#slttaxcodesales').val(taxcodesales);
-                        $(parent).find('#edtbarcode').val(barcode);
-                        $(parent).find('#txapurchasedescription').val(purchasedescription);
-                        $(parent).find('#sltcogsaccount').val(cogsaccount);
-                        $(parent).find('#slttaxcodepurchase').val(taxcodepurchase);
-                        $(parent).find('#edtbuyqty1cost').val(buyqty1cost);
+                        $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                        $('#add-product-title').text('Edit Product');
+                        $('#edtproductname').val(productname);
+                        $('#edtsellqty1price').val(sellqty1price);
+                        $('#txasalesdescription').val(salesdescription);
+                        $('#sltsalesacount').val(incomeaccount);
+                        $('#slttaxcodesales').val(taxcodesales);
+                        $('#edtbarcode').val(barcode);
+                        $('#txapurchasedescription').val(purchasedescription);
+                        $('#sltcogsaccount').val(cogsaccount);
+                        $('#slttaxcodepurchase').val(taxcodepurchase);
+                        $('#edtbuyqty1cost').val(buyqty1cost);
 
                         setTimeout(function () {
-                            $(parent).find('#newProductModal').modal('show');
+                            $('#newProductModal').modal('show');
                         }, 500);
                     }).catch(function (err) {
 
@@ -2090,15 +2081,15 @@ Template.stockadjustmentcard.events({
             } else {
                 $('#productListModal').modal('toggle');
                 var targetID = $(event.target).closest('tr').attr('id');
-                $(parent).find('#selectLineID').val(targetID);
+                $('#selectLineID').val(targetID);
                 setTimeout(function () {
-                    $(parent).find('#tblInventory_filter .form-control-sm').focus();
-                    $(parent).find('#tblInventory_filter .form-control-sm').val('');
-                    $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                    $('#tblInventory_filter .form-control-sm').focus();
+                    $('#tblInventory_filter .form-control-sm').val('');
+                    $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                    var datatable = $(parent).find('.tblInventory').DataTable();
+                    var datatable = $('.tblInventory').DataTable();
                     datatable.draw();
-                    $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                    $('#tblInventory_filter .form-control-sm').trigger("input");
 
                 }, 500);
             }

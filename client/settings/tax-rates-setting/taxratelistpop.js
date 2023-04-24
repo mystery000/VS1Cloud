@@ -152,12 +152,6 @@ Template.taxratelistpop.events({
         if (event.keyCode == 13) {
             $(".btnRefreshTax").trigger("click");
         }
-    },
-    'click .btnNewTaxRate' : function (event) {
-        let modal = $('#newTaxRateModal');
-        modal.find('#edtTaxNamePop').val('');
-        modal.find('#edtTaxRatePop').val('');
-        modal.find('#edtTaxDescPop').val('');
     }
 });
 

@@ -44,7 +44,6 @@
                                 modal_title=getModalTitle
                                 lineTableId=getgridTableId
                                 printTableId=printTableId
-                                custid = "transactionheader"
                               }}
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
@@ -101,8 +100,6 @@
                                     target_modal_id= item.editModalId
                                     target_template_id=item.editModalTemp
                                     is_editable=item.editable
-                                    data=item.data
-                                    custid="transactionheader"
                                 }}
                             {{else}}
                                 {{#if equals item.type 'date'}}
@@ -132,9 +129,9 @@
 <!--                        <div class="d-flex align-items-center">-->
                             {{#if currency}}
                                 {{#if equals Category 'purchase'}}
-                                    {{> CurrencyWidget rate="sell" trans="true" custid="transactionheader"}}
+                                    {{> CurrencyWidget rate="sell" trans="true"}}
                                 {{else}}
-                                    {{> CurrencyWidget rate="buy" row="true" custid="transactionheader"}}
+                                    {{> CurrencyWidget rate="buy" row="true"}}
                                 {{/if}}
                             {{/if}}
 <!--                        </div>-->

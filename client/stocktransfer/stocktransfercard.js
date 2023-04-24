@@ -778,7 +778,7 @@ Template.stocktransfercard.onRendered(function() {
             $('#txtTransfer').val(newTransferID);
             if(newDepartmentData != ''){
             setTimeout(function() {
-                // $('#sltDepartment').val(newDepartmentData);
+                $('#sltDepartment').val(newDepartmentData);
                 setTimeout(function() {
                     getVS1Data('TDeptClass').then(function(dataObject) {
                         if (dataObject.length == 0) {
@@ -1135,7 +1135,7 @@ Template.stocktransfercard.onRendered(function() {
                             let getDepartmentVal = data.fields.Lines[0].fields.TransferFromClassName || defaultDept;
 
                             setTimeout(function() {
-                                // $('#sltDepartment').val(record.department);
+                                $('#sltDepartment').val(record.department);
                                 $('#edtCustomerName').val(data.fields.Lines[0].fields.CustomerName);
                                 $('#sltBankAccountName').val(data.fields.AccountName);
                                 $('#shipvia').val(data.fields.Shipping);
@@ -1396,7 +1396,7 @@ Template.stocktransfercard.onRendered(function() {
                                 let getDepartmentVal = useData[d].fields.Lines[0].fields.TransferFromClassName || defaultDept;
                                 $('.shippingHeader').html('Edit Stock Transfer #' + useData[d].fields.ID + '<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                                 setTimeout(function() {
-                                    // $('#sltDepartment').val(record.department);
+                                    $('#sltDepartment').val(record.department);
                                     $('#edtCustomerName').val(useData[d].fields.Lines[0].fields.CustomerName);
                                     $('#sltBankAccountName').val(useData[d].fields.AccountName);
                                     $('#shipvia').val(useData[d].fields.Shipping);
@@ -1568,7 +1568,7 @@ Template.stocktransfercard.onRendered(function() {
                                 let getDepartmentVal = data.fields.Lines[0].fields.TransferFromClassName || defaultDept;
 
                                 setTimeout(function() {
-                                    // $('#sltDepartment').val(record.department);
+                                    $('#sltDepartment').val(record.department);
                                     $('#edtCustomerName').val(data.fields.Lines[0].fields.CustomerName);
                                     $('#sltBankAccountName').val(data.fields.AccountName);
                                     $('#shipvia').val(data.fields.Shipping);
@@ -1744,7 +1744,7 @@ Template.stocktransfercard.onRendered(function() {
                         let getDepartmentVal = data.fields.Lines[0].fields.TransferFromClassName || defaultDept;
 
                         setTimeout(function() {
-                            // $('#sltDepartment').val(record.department);
+                            $('#sltDepartment').val(record.department);
                             $('#edtCustomerName').val(data.fields.Lines[0].fields.CustomerName);
                             $('#sltBankAccountName').val(data.fields.AccountName);
                             $('#shipvia').val(data.fields.Shipping);
@@ -1909,7 +1909,7 @@ Template.stocktransfercard.onRendered(function() {
 
         };
         setTimeout(function() {
-            // $('#sltDepartment').val(defaultDept);
+            $('#sltDepartment').val(defaultDept);
             $('#sltBankAccountName').val('Stock Adjustment');
             $('#edtSupplierEmail').val(localStorage.getItem('mySession'));
             setTimeout(function() {
@@ -2261,7 +2261,8 @@ Template.stocktransfercard.onRendered(function() {
             }
         });
 
-    $('#sltDepartment').editableSelect().on('click.editable-select', function(e, li) {
+    $('#sltDepartment').editableSelect()
+        .on('click.editable-select', function(e, li) {
             var $earch = $(this);
             var offset = $earch.offset();
             var deptDataName = e.target.value || '';
@@ -2341,7 +2342,8 @@ Template.stocktransfercard.onRendered(function() {
             }
         });
 
-        $('#edtCustomerName').editableSelect().on('click.editable-select', function(e, li) {
+        $('#edtCustomerName').editableSelect()
+            .on('click.editable-select', function(e, li) {
                 var $earch = $(this);
                 var offset = $earch.offset();
                 $('#edtCustomerPOPID').val('');
@@ -3145,40 +3147,40 @@ Template.stocktransfercard.onRendered(function() {
 
         });
 
-    // $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
-    //     $('#shipvia').val($(this).find(".colShipName ").text());
-    //     $('#shipViaModal').modal('toggle');
+    $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
+        $('#shipvia').val($(this).find(".colShipName ").text());
+        $('#shipViaModal').modal('toggle');
 
-    //     $('#tblShipViaPopList_filter .form-control-sm').val('');
-    //     setTimeout(function () {
-    //         $('.btnRefreshVia').trigger('click');
-    //         $('.fullScreenSpin').css('display', 'none');
-    //     }, 1000);
-    // });
+        $('#tblShipViaPopList_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshVia').trigger('click');
+            $('.fullScreenSpin').css('display', 'none');
+        }, 1000);
+    });
 
-    // $(document).on("click", "#departmentList tbody tr", function(e) {
-    //     let $tblrows = $("#tblStocktransfer tbody tr");
-    //     let selectLineID = $('#selectLineID').val();
-    //     let departmentData = $(this).find(".colDeptName").text() || '';
-    //     let departmentDataID = $(this).attr("id") || '';
-    //     if (selectLineID != '') {
-    //         $('#' + selectLineID + " .lineDepartment").val(departmentData);
-    //         $('#' + selectLineID + " .linedeptid").text(departmentDataID);
-    //     } else {
-    //         $('#sltDepartment').val(departmentData);
+    $(document).on("click", "#departmentList tbody tr", function(e) {
+        let $tblrows = $("#tblStocktransfer tbody tr");
+        let selectLineID = $('#selectLineID').val();
+        let departmentData = $(this).find(".colDeptName").text() || '';
+        let departmentDataID = $(this).attr("id") || '';
+        if (selectLineID != '') {
+            $('#' + selectLineID + " .lineDepartment").val(departmentData);
+            $('#' + selectLineID + " .linedeptid").text(departmentDataID);
+        } else {
+            $('#sltDepartment').val(departmentData);
 
-    //         $tblrows.each(function(index) {
-    //             var $tblrow = $(this);
-    //             let productname = $tblrow.find(".lineProductName").val() || '';
-    //             let selectLineIDRow = $tblrow.closest('tr').attr('id');
-    //             templateObject.getProductQty(selectLineIDRow, productname);
-    //             $('input[name="deptID"]').val(departmentDataID);
+            $tblrows.each(function(index) {
+                var $tblrow = $(this);
+                let productname = $tblrow.find(".lineProductName").val() || '';
+                let selectLineIDRow = $tblrow.closest('tr').attr('id');
+                templateObject.getProductQty(selectLineIDRow, productname);
+                $('input[name="deptID"]').val(departmentDataID);
 
-    //         });
-    //     }
-    //     $('#departmentModal').modal('toggle');
+            });
+        }
+        $('#departmentModal').modal('toggle');
 
-    // });
+    });
     $(document).on("click", ".chkEmailCopy", function(e) {
         if ($(event.target).is(':checked')) {
             $('#employeeList').modal('show');
@@ -3207,19 +3209,18 @@ Template.stocktransfercard.onRendered(function() {
     /* On clik Inventory Line */
     $(document).on("click", ".tblInventory tbody tr", function(e) {
         $(".colProductName").removeClass('boldtablealertsborder');
-        let selectLineID = $('#productListModal').attr('selectedid');
-        // let selectLineID = $('#selectLineID').val();
+        let selectLineID = $('#selectLineID').val();
         var table = $(this);
         let utilityService = new UtilityService();
         let $tblrows = $("#tblStocktransfer tbody tr");
-        // let transferDepartment = $('#sltDepartment').val() || defaultDept;
+        let transferDepartment = $('#sltDepartment').val() || defaultDept;
 
         if (selectLineID) {
-            let lineProductName = table.find(".colproductName").text();
-            let lineProductDesc = table.find(".colproductDesc").text();
-            let lineUnitPrice = table.find(".colsalePrice").text();
-            // let lineExtraSellPrice = JSON.parse(table.find(".colExtraSellPrice").text()) || null;
-            let lineAvailQty = table.find(".colprdqty").text() || 0;
+            let lineProductName = table.find(".productName").text();
+            let lineProductDesc = table.find(".productDesc").text();
+            let lineUnitPrice = table.find(".salePrice").text();
+            let lineExtraSellPrice = JSON.parse(table.find(".colExtraSellPrice").text()) || null;
+            let lineAvailQty = table.find(".prdqty").text() || 0;
             let lineBarcode = table.find(".colBarcode").text();
             let lineProductID = table.find(".colProuctPOPID").text();
 
@@ -3324,21 +3325,20 @@ Template.stocktransfercard.events({
     'click .lineProductName, keydown .lineProductName': function(event) {
         var $earch = $(event.currentTarget);
         var offset = $earch.offset();
-        let parent = $(event.target).parent();
-        let selectedID = $(event.target).custid;
+
         var productDataName = $(event.target).val() || '';
         if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-            $('#productListModal' + selectedID).modal('toggle');
-            var targetID = $(parent).find(event.target).closest('tr').attr('id');
-            $("#newProductModal").find('#selectLineID').val(targetID);
+            $('#productListModal').modal('toggle');
+            var targetID = $(event.target).closest('tr').attr('id');
+            $('#selectLineID').val(targetID);
             setTimeout(function() {
-                $(parent).find('#tblInventory_filter .form-control-sm').focus();
-                $(parent).find('#tblInventory_filter .form-control-sm').val('');
-                $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                $('#tblInventory_filter .form-control-sm').focus();
+                $('#tblInventory_filter .form-control-sm').val('');
+                $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                var datatable = $(parent).find('#tblInventory').DataTable();
+                var datatable = $('#tblInventory').DataTable();
                 datatable.draw();
-                $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                $('#tblInventory_filter .form-control-sm').trigger("input");
 
             }, 500);
         } else {
@@ -3372,21 +3372,21 @@ Template.stocktransfercard.events({
                             let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
                             let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
                             let barcode = data.tproduct[0].fields.BARCODE || '';
-                            $("#newProductModal").find("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                            $("#newProductModal").find('#add-product-title').text('Edit Product');
-                            $("#newProductModal").find('#edtproductname').val(productname);
-                            $("#newProductModal").find('#edtsellqty1price').val(sellqty1price);
-                            $("#newProductModal").find('#txasalesdescription').val(salesdescription);
-                            $("#newProductModal").find('#sltsalesacount').val(incomeaccount);
-                            $("#newProductModal").find('#slttaxcodesales').val(taxcodesales);
-                            $("#newProductModal").find('#edtbarcode').val(barcode);
-                            $("#newProductModal").find('#txapurchasedescription').val(purchasedescription);
-                            $("#newProductModal").find('#sltcogsaccount').val(cogsaccount);
-                            $("#newProductModal").find('#slttaxcodepurchase').val(taxcodepurchase);
-                            $("#newProductModal").find('#edtbuyqty1cost').val(buyqty1cost);
+                            $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                            $('#add-product-title').text('Edit Product');
+                            $('#edtproductname').val(productname);
+                            $('#edtsellqty1price').val(sellqty1price);
+                            $('#txasalesdescription').val(salesdescription);
+                            $('#sltsalesacount').val(incomeaccount);
+                            $('#slttaxcodesales').val(taxcodesales);
+                            $('#edtbarcode').val(barcode);
+                            $('#txapurchasedescription').val(purchasedescription);
+                            $('#sltcogsaccount').val(cogsaccount);
+                            $('#slttaxcodepurchase').val(taxcodepurchase);
+                            $('#edtbuyqty1cost').val(buyqty1cost);
 
                             setTimeout(function() {
-                                // $(parent).find('#newProductModal').modal('show');
+                                $('#newProductModal').modal('show');
                             }, 500);
                         }).catch(function(err) {
 
@@ -3423,21 +3423,21 @@ Template.stocktransfercard.events({
                                 let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
                                 let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
                                 let barcode = data.tproductvs1[i].fields.BARCODE || '';
-                                $("#newProductModal").find("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
-                                $("#newProductModal").find('#add-product-title').text('Edit Product');
-                                $("#newProductModal").find('#edtproductname').val(productname);
-                                $("#newProductModal").find('#edtsellqty1price').val(sellqty1price);
-                                $("#newProductModal").find('#txasalesdescription').val(salesdescription);
-                                $("#newProductModal").find('#sltsalesacount').val(incomeaccount);
-                                $("#newProductModal").find('#slttaxcodesales').val(taxcodesales);
-                                $("#newProductModal").find('#edtbarcode').val(barcode);
-                                $("#newProductModal").find('#txapurchasedescription').val(purchasedescription);
-                                $("#newProductModal").find('#sltcogsaccount').val(cogsaccount);
-                                $("#newProductModal").find('#slttaxcodepurchase').val(taxcodepurchase);
-                                $("#newProductModal").find('#edtbuyqty1cost').val(buyqty1cost);
+                                $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
+                                $('#add-product-title').text('Edit Product');
+                                $('#edtproductname').val(productname);
+                                $('#edtsellqty1price').val(sellqty1price);
+                                $('#txasalesdescription').val(salesdescription);
+                                $('#sltsalesacount').val(incomeaccount);
+                                $('#slttaxcodesales').val(taxcodesales);
+                                $('#edtbarcode').val(barcode);
+                                $('#txapurchasedescription').val(purchasedescription);
+                                $('#sltcogsaccount').val(cogsaccount);
+                                $('#slttaxcodepurchase').val(taxcodepurchase);
+                                $('#edtbuyqty1cost').val(buyqty1cost);
 
                                 setTimeout(function() {
-                                    // $(parent).find('#newProductModal').modal('show');
+                                    $('#newProductModal').modal('show');
                                 }, 500);
                             }
                         }
@@ -3465,21 +3465,21 @@ Template.stocktransfercard.events({
                                 let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
                                 let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
                                 let barcode = data.tproduct[0].fields.BARCODE || '';
-                                $("#newProductModal").find("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                $("#newProductModal").find('#add-product-title').text('Edit Product');
-                                $("#newProductModal").find('#edtproductname').val(productname);
-                                $("#newProductModal").find('#edtsellqty1price').val(sellqty1price);
-                                $("#newProductModal").find('#txasalesdescription').val(salesdescription);
-                                $("#newProductModal").find('#sltsalesacount').val(incomeaccount);
-                                $("#newProductModal").find('#slttaxcodesales').val(taxcodesales);
-                                $("#newProductModal").find('#edtbarcode').val(barcode);
-                                $("#newProductModal").find('#txapurchasedescription').val(purchasedescription);
-                                $("#newProductModal").find('#sltcogsaccount').val(cogsaccount);
-                                $("#newProductModal").find('#slttaxcodepurchase').val(taxcodepurchase);
-                                $("#newProductModal").find('#edtbuyqty1cost').val(buyqty1cost);
+                                $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                                $('#add-product-title').text('Edit Product');
+                                $('#edtproductname').val(productname);
+                                $('#edtsellqty1price').val(sellqty1price);
+                                $('#txasalesdescription').val(salesdescription);
+                                $('#sltsalesacount').val(incomeaccount);
+                                $('#slttaxcodesales').val(taxcodesales);
+                                $('#edtbarcode').val(barcode);
+                                $('#txapurchasedescription').val(purchasedescription);
+                                $('#sltcogsaccount').val(cogsaccount);
+                                $('#slttaxcodepurchase').val(taxcodepurchase);
+                                $('#edtbuyqty1cost').val(buyqty1cost);
 
                                 setTimeout(function() {
-                                    // $(parent).find('#newProductModal').modal('show');
+                                    $('#newProductModal').modal('show');
                                 }, 500);
                             }).catch(function(err) {
 
@@ -3512,21 +3512,21 @@ Template.stocktransfercard.events({
                         let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
                         let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
                         let barcode = data.tproduct[0].fields.BARCODE || '';
-                        $("#newProductModal").find("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                        $("#newProductModal").find('#add-product-title').text('Edit Product');
-                        $("#newProductModal").find('#edtproductname').val(productname);
-                        $("#newProductModal").find('#edtsellqty1price').val(sellqty1price);
-                        $("#newProductModal").find('#txasalesdescription').val(salesdescription);
-                        $("#newProductModal").find('#sltsalesacount').val(incomeaccount);
-                        $("#newProductModal").find('#slttaxcodesales').val(taxcodesales);
-                        $("#newProductModal").find('#edtbarcode').val(barcode);
-                        $("#newProductModal").find('#txapurchasedescription').val(purchasedescription);
-                        $("#newProductModal").find('#sltcogsaccount').val(cogsaccount);
-                        $("#newProductModal").find('#slttaxcodepurchase').val(taxcodepurchase);
-                        $("#newProductModal").find('#edtbuyqty1cost').val(buyqty1cost);
+                        $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                        $('#add-product-title').text('Edit Product');
+                        $('#edtproductname').val(productname);
+                        $('#edtsellqty1price').val(sellqty1price);
+                        $('#txasalesdescription').val(salesdescription);
+                        $('#sltsalesacount').val(incomeaccount);
+                        $('#slttaxcodesales').val(taxcodesales);
+                        $('#edtbarcode').val(barcode);
+                        $('#txapurchasedescription').val(purchasedescription);
+                        $('#sltcogsaccount').val(cogsaccount);
+                        $('#slttaxcodepurchase').val(taxcodepurchase);
+                        $('#edtbuyqty1cost').val(buyqty1cost);
 
                         setTimeout(function() {
-                            // $(parent).find('#newProductModal').modal('show');
+                            $('#newProductModal').modal('show');
                         }, 500);
                     }).catch(function(err) {
 
@@ -3535,17 +3535,17 @@ Template.stocktransfercard.events({
 
                 });
             } else {
-                $('#productListModal'+ selectedID).modal('toggle');
+                $('#productListModal').modal('toggle');
                 var targetID = $(event.target).closest('tr').attr('id');
-                $(parent).find('#selectLineID').val(targetID);
+                $('#selectLineID').val(targetID);
                 setTimeout(function() {
-                    $(parent).find('#tblInventory_filter .form-control-sm').focus();
-                    $(parent).find('#tblInventory_filter .form-control-sm').val('');
-                    $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                    $('#tblInventory_filter .form-control-sm').focus();
+                    $('#tblInventory_filter .form-control-sm').val('');
+                    $('#tblInventory_filter .form-control-sm').trigger("input");
 
-                    var datatable = $(parent).find('#tblInventory').DataTable();
+                    var datatable = $('#tblInventory').DataTable();
                     datatable.draw();
-                    $(parent).find('#tblInventory_filter .form-control-sm').trigger("input");
+                    $('#tblInventory_filter .form-control-sm').trigger("input");
 
                 }, 500);
             }
@@ -3601,13 +3601,10 @@ Template.stocktransfercard.events({
     },
     'click .lineDepartment, keydown .lineDepartment': function(event) {
         var $earch = $(event.currentTarget);
-        let selectedID = $(event.target).attr('custid');
-        let parent = $(event.target).parent();
         var offset = $earch.offset();
         var departmentDataName = $(event.target).val() || '';
         if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-            $('#departmentModal' + selectedID).modal('toggle');
-            
+            $('#departmentModal').modal('toggle');
             var targetID = $(event.target).closest('tr').attr('id');
             $('#selectLineID').val(targetID);
             setTimeout(function() {
@@ -3633,15 +3630,15 @@ Template.stocktransfercard.events({
                         sideBarService.getDepartment().then(function(data) {
                             for (let i = 0; i < data.tdeptclass.length; i++) {
                                 if (data.tdeptclass[i].DeptClassName === departmentDataName) {
-                                    $(parent).find('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $(parent).find('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $(parent).find('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $(parent).find('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
                                 }
                             }
                             setTimeout(function() {
                                 $('.fullScreenSpin').css('display', 'none');
-                                $(parent).find('#newDepartmentModal').modal('toggle');
+                                $('#newDepartmentModal').modal('toggle');
                             }, 200);
                         }).catch(function(err) {
                             $('.fullScreenSpin').css('display', 'none');
@@ -3651,15 +3648,15 @@ Template.stocktransfercard.events({
                         let useData = data.tdeptclass;
                         for (let i = 0; i < data.tdeptclass.length; i++) {
                             if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                $(parent).find('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                $(parent).find('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                $(parent).find('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                $(parent).find('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                $('#edtDeptDesc').val(data.tdeptclass[i].Description);
                             }
                         }
                         setTimeout(function() {
                             $('.fullScreenSpin').css('display', 'none');
-                            $(parent).find('#newDepartmentModal').modal('toggle');
+                            $('#newDepartmentModal').modal('toggle');
                         }, 200);
                     }
                 }).catch(function(err) {
@@ -3667,30 +3664,30 @@ Template.stocktransfercard.events({
                     sideBarService.getDepartment().then(function(data) {
                         for (let i = 0; i < data.tdeptclass.length; i++) {
                             if (data.tdeptclass[i].DeptClassName === departmentDataName) {
-                                $(parent).find('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                $(parent).find('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                $(parent).find('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                $(parent).find('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                $('#edtDeptDesc').val(data.tdeptclass[i].Description);
                             }
                         }
                         setTimeout(function() {
                             $('.fullScreenSpin').css('display', 'none');
-                            $(parent).find('#newDepartmentModal').modal('toggle');
+                            $('#newDepartmentModal').modal('toggle');
                         }, 200);
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
                     });
                 });
             } else {
-                $(parent).find('#departmentModal').modal('toggle');
+                $('#departmentModal').modal('toggle');
                 var targetID = $(event.target).closest('tr').attr('id');
-                $(parent).find('#selectLineID').val(targetID);
+                $('#selectLineID').val(targetID);
                 setTimeout(function() {
-                    $(parent).find('#departmentList_filter .form-control-sm').focus();
-                    $(parent).find('#departmentList_filter .form-control-sm').val('');
-                    $(parent).find('#departmentList_filter .form-control-sm').trigger("input");
+                    $('#departmentList_filter .form-control-sm').focus();
+                    $('#departmentList_filter .form-control-sm').val('');
+                    $('#departmentList_filter .form-control-sm').trigger("input");
 
-                    var datatable = $(parent).find('#departmentList').DataTable();
+                    var datatable = $('#departmentList').DataTable();
                     datatable.draw();
                     $('#departmentList_filter .form-control-sm').trigger("input");
 
