@@ -8,14 +8,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <style>
-                    /*#tblDepartmentCheckbox .colChkBox {*/
-                    /*    width: 40px !important;*/
-                    /*}*/
-                    /*#tblDepartmentCheckbox .chkBox {*/
-                    /*    margin: 0px !important;*/
-                    /*}*/
-                </style>
 
                 {{> datatablelist
                         tableclass="tbldepartmentlist"
@@ -33,8 +25,6 @@
                         exIndexDBName = 'tdeptclasslist'
                         exdatahandler = exDataHandler
                         searchAPI = searchAPI
-                        hideConvertedButton = true
-                        viewCompletedButton = false
                         attRowID = 1
                         showPlusButton = true
                         showModalID = "newDepartmentModal"
