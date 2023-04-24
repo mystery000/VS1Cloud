@@ -126,7 +126,7 @@ Template.appointmentlist.onCreated(function() {
         ];
         return dataList;
     }
-    let checkBoxHeader = `<div class="custom-control custom-switch colChkBoxAll pointer" style="width:15px;">
+    let checkBoxHeader = `<div class="custom-control custom-switch colChkBoxAll  text-center pointer">
         <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0">
         <label class="custom-control-label colChkBoxAll" for="colChkBoxAll"></label>
         </div>`;

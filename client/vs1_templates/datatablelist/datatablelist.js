@@ -957,7 +957,6 @@ Template.datatablelist.events({
         let tableData = await templateObject.getTableData(true);
         templateObject.displayTableData(tableData)
     },
-
     "click .btnHideDeleted": async function (e) {
         $(".fullScreenSpin").css("display", "inline-block");
         e.stopImmediatePropagation();
@@ -970,7 +969,6 @@ Template.datatablelist.events({
         let tableData = await templateObject.getTableData(false);
         templateObject.displayTableData(tableData)
     },
-
     'change .chkDatatable': async function (event) {
         event.preventDefault();
         // event.stopImmediatePropagation();
@@ -1004,7 +1002,7 @@ Template.datatablelist.events({
     },
     'click .colChkBoxAll': function(event) {
       const templateObject = Template.instance();
-      let currenttablename = templateObject.data.tablename || '';
+      let currenttablename = $(event.target).closest('table').attr('id') || templateObject.data.tablename;
       if ($(event.target).is(':checked')) {
           $(".chkBox").prop("checked", true);
           $(`.${currenttablename} tbody .colCheckBox`).closest('tr').addClass('checkRowSelected');
@@ -1016,10 +1014,8 @@ Template.datatablelist.events({
     'change .chkBox': async function(event) {
         event.preventDefault();
         event.stopPropagation();
-
-
         const templateObject = Template.instance();
-        let currenttablename = templateObject.data.tablename || '';
+        let currenttablename = $(event.target).closest('table').attr('id') || templateObject.data.tablename;
 
         if ($(event.target).closest('tr').hasClass('selected')) {
             //$(event.target).closest('tr').removeClass('selected');
