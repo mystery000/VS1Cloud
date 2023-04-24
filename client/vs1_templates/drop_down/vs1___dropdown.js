@@ -120,7 +120,8 @@ Template.vs1___dropdown.helpers({
         return listempname
     },
     listparam:()=>{
-        let obj = {custid: Template.instance().data.custid}
+        //let obj = {custid: Template.instance().data.custid}
+        let obj = {custid: Template.instance().data.custid, typefilter: Template.instance().data.typefilter}
         return obj
     }
 })
