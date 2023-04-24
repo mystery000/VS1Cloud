@@ -674,7 +674,7 @@ Template.datatablelist.onRendered(async function () {
                       };
 
                       if(templateObject.data.showPlusButtonCRM == true){
-                        $(`<div class="btn-group btnNav btnAddLineGroup" style="height:35px">
+                        $(`<div class="btn-group btnNav btnAddLineGroup" style="height:35px; margin-left: 14px;">
                             <button type="button" class="btn btn-primary btnAddLine" id="btnAddLine" style="margin-right: 0px;"><i class='fas fa-plus'></i></button>
                             <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                             <div class="dropdown-menu">
@@ -701,7 +701,7 @@ Template.datatablelist.onRendered(async function () {
                         // console.log(allEqual);
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
-                    $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;margin-right: 14px;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     if(typeof templateObject.data.callBack == 'function'){//Alexei
                       templateObject.data.callBackFunc();
                     };
@@ -1038,9 +1038,9 @@ Template.datatablelist.events({
             await $(event.target).closest('tr').addClass('checkRowSelected');
 
             row.insertBefore($('#'+currenttablename+" > tbody tr:first"));
-            $('html, body').animate({
-              scrollTop: $('#'+currenttablename+"_wrapper").offset().top
-            }, 'slow');
+            // $('html, body').animate({ // Rasheed Remove scroll
+            //   scrollTop: $('#'+currenttablename+"_wrapper").offset().top
+            // }, 'slow');
         } else {
 
           await row.insertAfter($('#'+currenttablename+" > tbody tr:last"));

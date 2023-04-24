@@ -2418,6 +2418,9 @@ Template.leadscard.events({
             <td class="colCompleteTask" align="right">
                 <span class="btnRemoveLine"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0" style="margin-top:0!important"><i class="fa fa-remove"></i></button></span>
             </td>
+            <td class="colStatus" >
+
+            </td>
         </tr>`;
 
         $("#tblLeadCrmListWithDate tbody").prepend(rowData);
